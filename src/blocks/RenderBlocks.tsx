@@ -4,16 +4,28 @@ import type { Page } from '@/payload-types'
 
 import { ArchiveBlock } from '@/blocks/ArchiveBlock/Component'
 import { CallToActionBlock } from '@/blocks/CallToAction/Component'
+import { ContactFormBlock } from '@/blocks/ContactForm/Component'
 import { ContentBlock } from '@/blocks/Content/Component'
+import { ExpertiseHighlightBlock } from '@/blocks/ExpertiseHighlight/Component'
+import { FeaturedCasesBlock } from '@/blocks/FeaturedCases/Component'
 import { FormBlock } from '@/blocks/Form/Component'
+import { HeroHomeBlock } from '@/blocks/HeroHome/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
+import { SolutionApproachBlock } from '@/blocks/SolutionApproach/Component'
+import { TargetAudienceBlock } from '@/blocks/TargetAudience/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
+  contactForm: ContactFormBlock,
   content: ContentBlock,
   cta: CallToActionBlock,
+  expertiseHighlight: ExpertiseHighlightBlock,
+  featuredCases: FeaturedCasesBlock,
   formBlock: FormBlock,
+  heroHome: HeroHomeBlock,
   mediaBlock: MediaBlock,
+  solutionApproach: SolutionApproachBlock,
+  targetAudience: TargetAudienceBlock,
 }
 
 export const RenderBlocks: React.FC<{

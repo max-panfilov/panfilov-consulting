@@ -1,0 +1,274 @@
+import type { CollectionConfig } from 'payload'
+
+import {
+  BlocksFeature,
+  FixedToolbarFeature,
+  HeadingFeature,
+  HorizontalRuleFeature,
+  InlineToolbarFeature,
+  lexicalEditor,
+} from '@payloadcms/richtext-lexical'
+
+import { authenticated } from '../access/authenticated'
+import { authenticatedOrPublished } from '../access/authenticatedOrPublished'
+import { Banner } from '../blocks/Banner/config'
+import { Code } from '../blocks/Code/config'
+import { MediaBlock } from '../blocks/MediaBlock/config'
+import { generatePreviewPath } from '../utilities/generatePreviewPath'
+
+import {
+  MetaDescriptionField,
+  MetaImageField,
+  MetaTitleField,
+  OverviewField,
+  PreviewField,
+} from '@payloadcms/plugin-seo/fields'
+import { slugField } from 'payload'
+
+export const Cases: CollectionConfig<'cases'> = {
+  slug: 'cases',
+  access: {
+    create: authenticated,
+    delete: authenticated,
+    read: authenticatedOrPublished,
+    update: authenticated,
+  },
+  // Определяем что будет подтягиваться при связях с Cases
+  defaultPopulate: {
+    title: true,
+    slug: true,
+    industry: true,
+    shortDescription: true,
+    coverImage: true,
+    featured: true,
+  },
+  admin: {
+    defaultColumns: ['title', 'industry', 'featured', 'updatedAt'],
+    livePreview: {
+      url: ({ data, req }) =>
+        generatePreviewPath({
+          slug: data?.slug,
+          collection: 'cases',
+          req,
+        }),
+    },
+    preview: (data, { req }) =>
+      generatePreviewPath({
+        slug: data?.slug as string,
+        collection: 'cases',
+        req,
+      }),
+    useAsTitle: 'title',
+  },
+  fields: [
+    {
+      name: 'title',
+      type: 'text',
+      required: true,
+      label: 'Название кейса',
+    },
+    {
+      type: 'tabs',
+      tabs: [
+        {
+          label: 'Контент',
+          fields: [
+            {
+              name: 'industry',
+              type: 'select',
+              required: true,
+              label: 'Отрасль',
+              options: [
+                {
+                  label: 'Электротехника',
+                  value: 'electronics',
+                },
+                {
+                  label: 'Металлопрокат',
+                  value: 'metallurgy',
+                },
+                {
+                  label: 'Юридические услуги',
+                  value: 'legal',
+                },
+                {
+                  label: 'Финансы',
+                  value: 'finance',
+                },
+                {
+                  label: 'Ритейл',
+                  value: 'retail',
+                },
+                {
+                  label: 'Логистика',
+                  value: 'logistics',
+                },
+                {
+                  label: 'Производство',
+                  value: 'manufacturing',
+                },
+                {
+                  label: 'Другое',
+                  value: 'other',
+                },
+              ],
+            },
+            {
+              name: 'coverImage',
+              type: 'upload',
+              relationTo: 'media',
+              label: 'Изображение для превью',
+              required: true,
+            },
+            {
+              name: 'shortDescription',
+              type: 'textarea',
+              required: true,
+              label: 'Краткое описание',
+              admin: {
+                description: 'Для карточки кейса на главной странице (до 150 символов)',
+              },
+              maxLength: 150,
+            },
+            {
+              name: 'challenge',
+              type: 'textarea',
+              required: true,
+              label: 'Задача клиента',
+              admin: {
+                description: 'Описание проблемы или задачи, которую нужно было решить',
+              },
+            },
+            {
+              name: 'solution',
+              type: 'richText',
+              editor: lexicalEditor({
+                features: ({ rootFeatures }) => {
+                  return [
+                    ...rootFeatures,
+                    HeadingFeature({ enabledHeadingSizes: ['h2', 'h3', 'h4'] }),
+                    BlocksFeature({ blocks: [Banner, Code, MediaBlock] }),
+                    FixedToolbarFeature(),
+                    InlineToolbarFeature(),
+                    HorizontalRuleFeature(),
+                  ]
+                },
+              }),
+              label: 'Решение',
+              admin: {
+                description: 'Подробное описание предложенного решения',
+              },
+              required: true,
+            },
+            {
+              name: 'results',
+              type: 'richText',
+              editor: lexicalEditor({
+                features: ({ rootFeatures }) => {
+                  return [
+                    ...rootFeatures,
+                    HeadingFeature({ enabledHeadingSizes: ['h2', 'h3', 'h4'] }),
+                    BlocksFeature({ blocks: [Banner, Code, MediaBlock] }),
+                    FixedToolbarFeature(),
+                    InlineToolbarFeature(),
+                    HorizontalRuleFeature(),
+                  ]
+                },
+              }),
+              label: 'Результаты',
+              admin: {
+                description: 'Достигнутые результаты с конкретными метриками',
+              },
+              required: true,
+            },
+            {
+              name: 'technologies',
+              type: 'array',
+              label: 'Использованные технологии',
+              admin: {
+                description: 'Технологии и инструменты, использованные в проекте',
+              },
+              fields: [
+                {
+                  name: 'technology',
+                  type: 'text',
+                  required: true,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          label: 'Настройки',
+          fields: [
+            {
+              name: 'featured',
+              type: 'checkbox',
+              label: 'Показывать на главной странице',
+              defaultValue: false,
+              admin: {
+                position: 'sidebar',
+                description: 'Отметьте, чтобы кейс отображался в блоке Featured Cases',
+              },
+            },
+            {
+              name: 'publishedAt',
+              type: 'date',
+              label: 'Дата публикации',
+              admin: {
+                date: {
+                  pickerAppearance: 'dayAndTime',
+                },
+                position: 'sidebar',
+              },
+              hooks: {
+                beforeChange: [
+                  ({ siblingData, value }) => {
+                    // Автоматически устанавливаем дату при первой публикации
+                    if (siblingData._status === 'published' && !value) {
+                      return new Date()
+                    }
+                    return value
+                  },
+                ],
+              },
+            },
+          ],
+        },
+        {
+          name: 'meta',
+          label: 'SEO',
+          fields: [
+            OverviewField({
+              titlePath: 'meta.title',
+              descriptionPath: 'meta.description',
+              imagePath: 'meta.image',
+            }),
+            MetaTitleField({
+              hasGenerateFn: true,
+            }),
+            MetaImageField({
+              relationTo: 'media',
+            }),
+            MetaDescriptionField({}),
+            PreviewField({
+              hasGenerateFn: true,
+              titlePath: 'meta.title',
+              descriptionPath: 'meta.description',
+            }),
+          ],
+        },
+      ],
+    },
+    slugField(),
+  ],
+  versions: {
+    drafts: {
+      autosave: {
+        interval: 100, // Оптимальный интервал для live preview
+      },
+      schedulePublish: true,
+    },
+    maxPerDoc: 50,
+  },
+}

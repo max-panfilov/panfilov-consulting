@@ -69,6 +69,7 @@ export interface Config {
   collections: {
     pages: Page;
     posts: Post;
+    cases: Case;
     media: Media;
     categories: Category;
     users: User;
@@ -85,6 +86,7 @@ export interface Config {
   collectionsSelect: {
     pages: PagesSelect<false> | PagesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
+    cases: CasesSelect<false> | CasesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -191,7 +193,19 @@ export interface Page {
       | null;
     media?: (number | null) | Media;
   };
-  layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock)[];
+  layout: (
+    | HeroHomeBlock
+    | TargetAudienceBlock
+    | SolutionApproachBlock
+    | FeaturedCasesBlock
+    | ExpertiseHighlightBlock
+    | ContactFormBlock
+    | CallToActionBlock
+    | ContentBlock
+    | MediaBlock
+    | ArchiveBlock
+    | FormBlock
+  )[];
   meta?: {
     title?: string | null;
     /**
@@ -403,10 +417,124 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "CallToActionBlock".
+ * via the `definition` "HeroHomeBlock".
  */
-export interface CallToActionBlock {
-  richText?: {
+export interface HeroHomeBlock {
+  heading: string;
+  subheading: string;
+  primaryCTA: {
+    text: string;
+    /**
+     * Якорная ссылка (например, #form) или URL
+     */
+    link: string;
+  };
+  secondaryCTA?: {
+    text?: string | null;
+    /**
+     * Якорная ссылка (например, #cases) или URL
+     */
+    link?: string | null;
+  };
+  mediaType?: ('image' | 'video') | null;
+  backgroundImage?: (number | null) | Media;
+  /**
+   * Формат MP4 или WebM
+   */
+  backgroundVideo?: (number | null) | Media;
+  /**
+   * Добавляет темный оверлей для лучшей читаемости текста
+   */
+  backgroundOverlay?: boolean | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'heroHome';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TargetAudienceBlock".
+ */
+export interface TargetAudienceBlock {
+  heading: string;
+  audiences?:
+    | {
+        title: string;
+        description: string;
+        /**
+         * Название иконки из react-icons (например: FaUserTie, FaBriefcase, FaCode, FaDatabase)
+         */
+        icon: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'targetAudience';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SolutionApproachBlock".
+ */
+export interface SolutionApproachBlock {
+  heading: string;
+  subheading?: string | null;
+  steps?:
+    | {
+        title: string;
+        description: string;
+        /**
+         * Название иконки из react-icons (например: FaChartLine, FaCogs, FaGraduationCap)
+         */
+        icon: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'solutionApproach';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeaturedCasesBlock".
+ */
+export interface FeaturedCasesBlock {
+  heading: string;
+  casesToShow?: number | null;
+  /**
+   * Если включено, автоматически отбираются кейсы с отметкой "featured"
+   */
+  autoSelect?: boolean | null;
+  /**
+   * Выберите конкретные кейсы для отображения
+   */
+  manualCases?: (number | Case)[] | null;
+  ctaText?: string | null;
+  ctaLink?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'featuredCases';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cases".
+ */
+export interface Case {
+  id: number;
+  title: string;
+  industry: 'electronics' | 'metallurgy' | 'legal' | 'finance' | 'retail' | 'logistics' | 'manufacturing' | 'other';
+  coverImage: number | Media;
+  /**
+   * Для карточки кейса на главной странице (до 150 символов)
+   */
+  shortDescription: string;
+  /**
+   * Описание проблемы или задачи, которую нужно было решить
+   */
+  challenge: string;
+  /**
+   * Подробное описание предложенного решения
+   */
+  solution: {
     root: {
       type: string;
       children: {
@@ -420,101 +548,11 @@ export interface CallToActionBlock {
       version: number;
     };
     [k: string]: unknown;
-  } | null;
-  links?:
-    | {
-        link: {
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
-          reference?:
-            | ({
-                relationTo: 'pages';
-                value: number | Page;
-              } | null)
-            | ({
-                relationTo: 'posts';
-                value: number | Post;
-              } | null);
-          url?: string | null;
-          label: string;
-          /**
-           * Choose how the link should be rendered.
-           */
-          appearance?: ('default' | 'outline') | null;
-        };
-        id?: string | null;
-      }[]
-    | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'cta';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ContentBlock".
- */
-export interface ContentBlock {
-  columns?:
-    | {
-        size?: ('oneThird' | 'half' | 'twoThirds' | 'full') | null;
-        richText?: {
-          root: {
-            type: string;
-            children: {
-              type: any;
-              version: number;
-              [k: string]: unknown;
-            }[];
-            direction: ('ltr' | 'rtl') | null;
-            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-            indent: number;
-            version: number;
-          };
-          [k: string]: unknown;
-        } | null;
-        enableLink?: boolean | null;
-        link?: {
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
-          reference?:
-            | ({
-                relationTo: 'pages';
-                value: number | Page;
-              } | null)
-            | ({
-                relationTo: 'posts';
-                value: number | Post;
-              } | null);
-          url?: string | null;
-          label: string;
-          /**
-           * Choose how the link should be rendered.
-           */
-          appearance?: ('default' | 'outline') | null;
-        };
-        id?: string | null;
-      }[]
-    | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'content';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "MediaBlock".
- */
-export interface MediaBlock {
-  media: number | Media;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'mediaBlock';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ArchiveBlock".
- */
-export interface ArchiveBlock {
-  introContent?: {
+  };
+  /**
+   * Достигнутые результаты с конкретными метриками
+   */
+  results: {
     root: {
       type: string;
       children: {
@@ -528,46 +566,77 @@ export interface ArchiveBlock {
       version: number;
     };
     [k: string]: unknown;
-  } | null;
-  populateBy?: ('collection' | 'selection') | null;
-  relationTo?: 'posts' | null;
-  categories?: (number | Category)[] | null;
-  limit?: number | null;
-  selectedDocs?:
+  };
+  /**
+   * Технологии и инструменты, использованные в проекте
+   */
+  technologies?:
     | {
-        relationTo: 'posts';
-        value: number | Post;
+        technology: string;
+        id?: string | null;
       }[]
     | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'archive';
+  /**
+   * Отметьте, чтобы кейс отображался в блоке Featured Cases
+   */
+  featured?: boolean | null;
+  publishedAt?: string | null;
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+    description?: string | null;
+  };
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "FormBlock".
+ * via the `definition` "ExpertiseHighlightBlock".
  */
-export interface FormBlock {
+export interface ExpertiseHighlightBlock {
+  heading: string;
+  subheading?: string | null;
+  /**
+   * Оставьте пустым для показа всех постов, или выберите категорию (например, "Экспертиза")
+   */
+  category?: (number | null) | Category;
+  postsToShow?: number | null;
+  ctaText?: string | null;
+  ctaLink?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'expertiseHighlight';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactFormBlock".
+ */
+export interface ContactFormBlock {
+  heading: string;
+  /**
+   * Пояснительный текст над формой
+   */
+  description?: string | null;
+  /**
+   * Выберите форму, созданную через Form Builder
+   */
   form: number | Form;
-  enableIntro?: boolean | null;
-  introContent?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
+  /**
+   * ID для якорных ссылок (например, #form). По умолчанию: "form"
+   */
+  htmlId?: string | null;
   id?: string | null;
   blockName?: string | null;
-  blockType: 'formBlock';
+  blockType: 'contactForm';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -742,6 +811,174 @@ export interface Form {
     | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CallToActionBlock".
+ */
+export interface CallToActionBlock {
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  links?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: number | Post;
+              } | null);
+          url?: string | null;
+          label: string;
+          /**
+           * Choose how the link should be rendered.
+           */
+          appearance?: ('default' | 'outline') | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'cta';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContentBlock".
+ */
+export interface ContentBlock {
+  columns?:
+    | {
+        size?: ('oneThird' | 'half' | 'twoThirds' | 'full') | null;
+        richText?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        enableLink?: boolean | null;
+        link?: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: number | Post;
+              } | null);
+          url?: string | null;
+          label: string;
+          /**
+           * Choose how the link should be rendered.
+           */
+          appearance?: ('default' | 'outline') | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'content';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MediaBlock".
+ */
+export interface MediaBlock {
+  media: number | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'mediaBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ArchiveBlock".
+ */
+export interface ArchiveBlock {
+  introContent?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  populateBy?: ('collection' | 'selection') | null;
+  relationTo?: 'posts' | null;
+  categories?: (number | Category)[] | null;
+  limit?: number | null;
+  selectedDocs?:
+    | {
+        relationTo: 'posts';
+        value: number | Post;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'archive';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FormBlock".
+ */
+export interface FormBlock {
+  form: number | Form;
+  enableIntro?: boolean | null;
+  introContent?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'formBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -925,6 +1162,10 @@ export interface PayloadLockedDocument {
         value: number | Post;
       } | null)
     | ({
+        relationTo: 'cases';
+        value: number | Case;
+      } | null)
+    | ({
         relationTo: 'media';
         value: number | Media;
       } | null)
@@ -1029,6 +1270,12 @@ export interface PagesSelect<T extends boolean = true> {
   layout?:
     | T
     | {
+        heroHome?: T | HeroHomeBlockSelect<T>;
+        targetAudience?: T | TargetAudienceBlockSelect<T>;
+        solutionApproach?: T | SolutionApproachBlockSelect<T>;
+        featuredCases?: T | FeaturedCasesBlockSelect<T>;
+        expertiseHighlight?: T | ExpertiseHighlightBlockSelect<T>;
+        contactForm?: T | ContactFormBlockSelect<T>;
         cta?: T | CallToActionBlockSelect<T>;
         content?: T | ContentBlockSelect<T>;
         mediaBlock?: T | MediaBlockSelect<T>;
@@ -1048,6 +1295,107 @@ export interface PagesSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HeroHomeBlock_select".
+ */
+export interface HeroHomeBlockSelect<T extends boolean = true> {
+  heading?: T;
+  subheading?: T;
+  primaryCTA?:
+    | T
+    | {
+        text?: T;
+        link?: T;
+      };
+  secondaryCTA?:
+    | T
+    | {
+        text?: T;
+        link?: T;
+      };
+  mediaType?: T;
+  backgroundImage?: T;
+  backgroundVideo?: T;
+  backgroundOverlay?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TargetAudienceBlock_select".
+ */
+export interface TargetAudienceBlockSelect<T extends boolean = true> {
+  heading?: T;
+  audiences?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        icon?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SolutionApproachBlock_select".
+ */
+export interface SolutionApproachBlockSelect<T extends boolean = true> {
+  heading?: T;
+  subheading?: T;
+  steps?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        icon?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeaturedCasesBlock_select".
+ */
+export interface FeaturedCasesBlockSelect<T extends boolean = true> {
+  heading?: T;
+  casesToShow?: T;
+  autoSelect?: T;
+  manualCases?: T;
+  ctaText?: T;
+  ctaLink?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ExpertiseHighlightBlock_select".
+ */
+export interface ExpertiseHighlightBlockSelect<T extends boolean = true> {
+  heading?: T;
+  subheading?: T;
+  category?: T;
+  postsToShow?: T;
+  ctaText?: T;
+  ctaLink?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactFormBlock_select".
+ */
+export interface ContactFormBlockSelect<T extends boolean = true> {
+  heading?: T;
+  description?: T;
+  form?: T;
+  htmlId?: T;
+  id?: T;
+  blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1157,6 +1505,39 @@ export interface PostsSelect<T extends boolean = true> {
     | {
         id?: T;
         name?: T;
+      };
+  generateSlug?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cases_select".
+ */
+export interface CasesSelect<T extends boolean = true> {
+  title?: T;
+  industry?: T;
+  coverImage?: T;
+  shortDescription?: T;
+  challenge?: T;
+  solution?: T;
+  results?: T;
+  technologies?:
+    | T
+    | {
+        technology?: T;
+        id?: T;
+      };
+  featured?: T;
+  publishedAt?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
       };
   generateSlug?: T;
   slug?: T;
@@ -1675,6 +2056,10 @@ export interface TaskSchedulePublish {
       | ({
           relationTo: 'posts';
           value: number | Post;
+        } | null)
+      | ({
+          relationTo: 'cases';
+          value: number | Case;
         } | null);
     global?: string | null;
     user?: (number | null) | User;

@@ -9,6 +9,8 @@ import { imageHero1 } from './image-hero-1'
 import { post1 } from './post-1'
 import { post2 } from './post-2'
 import { post3 } from './post-3'
+import { panfilovSeed } from './panfilov-seed'
+import { homePageSeed } from './homepage-seed'
 
 const collections: CollectionSlug[] = [
   'categories',
@@ -273,6 +275,14 @@ export const seed = async ({
       },
     }),
   ])
+
+  // Запускаем Panfilov seed для создания контента главной страницы
+  payload.logger.info('— Running Panfilov Consulting seed...')
+  await panfilovSeed({ payload, req })
+
+  // Создаем главную страницу с блоками
+  payload.logger.info('— Creating home page...')
+  await homePageSeed({ payload, req })
 
   payload.logger.info('Seeded database successfully!')
 }
