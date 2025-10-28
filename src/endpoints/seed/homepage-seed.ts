@@ -50,6 +50,9 @@ export const homePageSeed = async ({
     const homePage = await payload.create({
       collection: 'pages',
       draft: true,
+      context: {
+        disableRevalidate: true,
+      },
       data: {
         title: 'Главная',
         slug: 'home',
