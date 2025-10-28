@@ -59,7 +59,7 @@ export default async function Post({ params: paramsPromise }: Args) {
   const authorName =
     post.populatedAuthors && post.populatedAuthors.length > 0
       ? typeof post.populatedAuthors[0] === 'object'
-        ? post.populatedAuthors[0].name
+        ? post.populatedAuthors[0].name || 'Автор'
         : 'Автор'
       : 'Автор'
 

@@ -19,7 +19,8 @@ export const HeroHomeBlock: React.FC<HeroHomeBlockType> = ({
   backgroundOverlay,
 }) => {
   // Функция для плавной прокрутки к элементу
-  const scrollToElement = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  const scrollToElement = (e: React.MouseEvent<HTMLAnchorElement>, href?: string | null) => {
+    if (!href) return
     // Проверяем, является ли это якорной ссылкой (начинается с #)
     if (href.startsWith('#')) {
       e.preventDefault()

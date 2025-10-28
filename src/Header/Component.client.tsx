@@ -10,7 +10,7 @@ interface HeaderClientProps {
   data: Header
 }
 
-export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
+export const HeaderClient: React.FC<HeaderClientProps> = () => {
   // Обработчик плавного скролла к форме
   const handleScrollToForm = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
@@ -44,9 +44,11 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
               Блог
             </Link>
             {/* CTA кнопка скрыта на мобильных устройствах - она есть в hero блоке */}
-            <Button asChild size="sm" className="hidden md:inline-flex">
-              <a href="/#form" onClick={handleScrollToForm}>Связаться</a>
-            </Button>
+            <Link href="/#form" onClick={handleScrollToForm}>
+              <Button size="sm" className="hidden md:inline-flex">
+                Связаться
+              </Button>
+            </Link>
           </div>
         </nav>
       </div>

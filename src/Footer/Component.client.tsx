@@ -1,7 +1,7 @@
 'use client'
 
+import Link from 'next/link'
 import React from 'react'
-import type { Footer } from '@/payload-types'
 import { Logo, LogoImage } from '@/components/shadcnblocks/logo'
 
 interface MenuItem {
@@ -18,22 +18,10 @@ type FooterClientProps = {
     alt: string
     title: string
   }
-  tagline: string
-  menuItems: MenuItem[]
   copyright: string
-  bottomLinks: {
-    text: string
-    url: string
-  }[]
 }
 
-export const FooterClient: React.FC<FooterClientProps> = ({
-  logo,
-  tagline,
-  menuItems,
-  copyright,
-  bottomLinks,
-}) => {
+export const FooterClient: React.FC<FooterClientProps> = ({ logo, copyright }) => {
   return (
     <section className="py-8">
       <div className="container">
@@ -55,13 +43,13 @@ export const FooterClient: React.FC<FooterClientProps> = ({
           <div className="flex justify-center mb-6">
             <ul className="flex gap-8 text-sm font-medium">
               <li className="hover:text-primary">
-                <a href="/">Главная</a>
+                <Link href="/">Главная</Link>
               </li>
               <li className="hover:text-primary">
-                <a href="/cases">Кейсы</a>
+                <Link href="/cases">Кейсы</Link>
               </li>
               <li className="hover:text-primary">
-                <a href="/posts">Блог</a>
+                <Link href="/posts">Блог</Link>
               </li>
             </ul>
           </div>

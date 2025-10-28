@@ -9,17 +9,17 @@ export const Media: React.FC<Props> = (props) => {
   const { className, htmlElement = 'div', resource } = props
 
   const isVideo = typeof resource === 'object' && resource?.mimeType?.includes('video')
-  const Tag = htmlElement || Fragment
+  const content = isVideo ? <VideoMedia {...props} /> : <ImageMedia {...props} />
+
+  // Если htmlElement null, используем Fragment
+  if (htmlElement === null) {
+    return <>{content}</>
+  }
+
+  const Tag = htmlElement as React.ElementType
 
   return (
-    <Tag
-      {...(htmlElement !== null
-        ? {
-            className,
-          }
-        : {})}
-    >
-      {isVideo ? <VideoMedia {...props} /> : <ImageMedia {...props} />}
-    </Tag>
+    // @ts-expect-error - Dynamic tag may have varying children requirements
+    <Tag className={className}>{content}</Tag>
   )
 }

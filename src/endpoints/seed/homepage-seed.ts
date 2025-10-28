@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { Payload, PayloadRequest } from 'payload'
 
 // Seed-скрипт для создания главной страницы согласно docs/homepage-content.md

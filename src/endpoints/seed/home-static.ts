@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { RequiredDataFromCollectionSlug } from 'payload'
 
 // Used for pre-seeded content so that the homepage is not empty

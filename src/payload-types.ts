@@ -198,6 +198,7 @@ export interface Page {
     | TargetAudienceBlock
     | SolutionApproachBlock
     | FeaturedCasesBlock
+    | ExpertiseHighlightBlock
     | ContactFormBlock
     | CallToActionBlock
     | ContentBlock
@@ -583,6 +584,24 @@ export interface Case {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ExpertiseHighlightBlock".
+ */
+export interface ExpertiseHighlightBlock {
+  heading: string;
+  subheading?: string | null;
+  /**
+   * Оставьте пустым для показа всех постов, или выберите категорию (например, "Экспертиза")
+   */
+  category?: (number | null) | Category;
+  postsToShow?: number | null;
+  ctaText?: string | null;
+  ctaLink?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'expertiseHighlight';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1248,6 +1267,7 @@ export interface PagesSelect<T extends boolean = true> {
         targetAudience?: T | TargetAudienceBlockSelect<T>;
         solutionApproach?: T | SolutionApproachBlockSelect<T>;
         featuredCases?: T | FeaturedCasesBlockSelect<T>;
+        expertiseHighlight?: T | ExpertiseHighlightBlockSelect<T>;
         contactForm?: T | ContactFormBlockSelect<T>;
         cta?: T | CallToActionBlockSelect<T>;
         content?: T | ContentBlockSelect<T>;
@@ -1344,6 +1364,20 @@ export interface FeaturedCasesBlockSelect<T extends boolean = true> {
   casesToShow?: T;
   autoSelect?: T;
   manualCases?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ExpertiseHighlightBlock_select".
+ */
+export interface ExpertiseHighlightBlockSelect<T extends boolean = true> {
+  heading?: T;
+  subheading?: T;
+  category?: T;
+  postsToShow?: T;
+  ctaText?: T;
+  ctaLink?: T;
   id?: T;
   blockName?: T;
 }

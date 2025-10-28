@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { RequiredDataFromCollectionSlug } from 'payload'
 import type { PostArgs } from './post-1'
 

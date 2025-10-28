@@ -22,9 +22,11 @@ export const Card: React.FC<{
   const { card, link } = useClickableCard({})
   const { className, doc, relationTo, showCategories, title: titleFromProps } = props
 
-  const { slug, categories, meta, title } = doc || {}
+  const { slug, meta, title } = doc || {}
   const { description, image: metaImage } = meta || {}
-
+  
+  // Проверяем, является ли doc постом (у постов есть categories)
+  const categories = 'categories' in (doc || {}) ? (doc as CardPostData).categories : undefined
   const hasCategories = categories && Array.isArray(categories) && categories.length > 0
   const titleToUse = titleFromProps || title
   const sanitizedDescription = description?.replace(/\s/g, ' ') // replace non-breaking space with white space

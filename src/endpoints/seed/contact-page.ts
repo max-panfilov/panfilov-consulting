@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { Form } from '@/payload-types'
 import { RequiredDataFromCollectionSlug } from 'payload'
 

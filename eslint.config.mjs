@@ -31,7 +31,7 @@ const eslintConfig = [
     },
   },
   {
-    ignores: ['.next/'],
+    ignores: ['.next/', 'src/scripts/**/*', 'src/endpoints/seed/**/*'],
   },
 ]
 

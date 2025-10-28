@@ -4,7 +4,7 @@ import type { Footer as FooterType } from '@/payload-types'
 import { FooterClient } from './Component.client'
 
 export async function Footer() {
-  const footerData: FooterType = await getCachedGlobal('footer', 1)()
+  const footerData = (await getCachedGlobal('footer', 1)()) as FooterType
   
   const logo = footerData?.logo || {
     src: '/logo.svg',
@@ -12,18 +12,12 @@ export async function Footer() {
     title: 'Panfilov Consulting',
   }
   
-  const tagline = footerData?.tagline || 'Профессиональные решения для вашего бизнеса'
-  const menuItems = footerData?.menuItems || []
   const copyright = footerData?.copyright || `© ${new Date().getFullYear()} Panfilov Consulting. Все права защищены.`
-  const bottomLinks = footerData?.bottomLinks || []
 
   return (
     <FooterClient
       logo={logo}
-      tagline={tagline}
-      menuItems={menuItems}
       copyright={copyright}
-      bottomLinks={bottomLinks}
     />
   )
 }

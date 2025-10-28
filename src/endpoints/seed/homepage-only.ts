@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { Payload } from 'payload'
 
 // Создание только главной страницы

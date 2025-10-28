@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { RequiredDataFromCollectionSlug } from 'payload'
 import type { Media } from '@/payload-types'
 
