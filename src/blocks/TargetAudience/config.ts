@@ -5,10 +5,23 @@ export const TargetAudience: Block = {
   interfaceName: 'TargetAudienceBlock',
   fields: [
     {
+      name: 'label',
+      type: 'text',
+      label: 'Метка (Badge)',
+      admin: {
+        description: 'Небольшой лейбл над заголовком (необязательно)',
+      },
+    },
+    {
       name: 'heading',
       type: 'text',
       required: true,
       label: 'Заголовок секции',
+    },
+    {
+      name: 'subheading',
+      type: 'textarea',
+      label: 'Подзаголовок',
     },
     {
       name: 'audiences',
@@ -36,7 +49,7 @@ export const TargetAudience: Block = {
           label: 'Иконка',
           admin: {
             description:
-              'Название иконки из react-icons (например: FaUserTie, FaBriefcase, FaCode, FaDatabase)',
+              'Название иконки из lucide-react (например: UserRound, Briefcase, Code, Database)',
           },
         },
       ],

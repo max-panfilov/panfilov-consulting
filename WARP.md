@@ -167,3 +167,36 @@ Demo user after seeding:
 - TypeScript strict mode is enabled
 - Uses pnpm for package management (required)
 - Node.js 18.20.2+ or 20.9.0+ required
+
+## shadcn/ui & shadcnblocks Integration
+
+Проект использует компоненты из shadcn/ui и shadcnblocks для современного интерфейса:
+
+### Установленные shadcn компоненты
+- `Badge` - Метки и бейджи
+- `Button` - Кнопки с вариантами стилей
+- `NavigationMenu` - Навигационное меню (НОВОЕ!)
+- `Sheet` - Sliding мобильное меню (НОВОЕ!)
+- `Accordion` - Раскрывающиеся меню (НОВОЕ!)
+- `Background Beams` - Анимированный фон с лучами света
+- `3D Card` - Интерактивные 3D карточки с эффектом наклона
+
+### Обновленные блоки
+- `Header` - Навигация с NavigationMenu и мобильным Sheet (НОВОЕ!)
+- `HeroHome` - Двухколоночный Hero по шаблону shadcnblocks
+- `FeaturedCases` - Карточки кейсов с 3D эффектом
+- `CallToAction` - Градиентный CTA блок с анимацией
+- `Banner` - Баннеры с иконками и улучшенным дизайном
+- `Content` - Контентные блоки с декоративными элементами
+- `Footer` - Футер с градиентным фоном и анимацией
+
+### Зависимости
+- `framer-motion` - Библиотека для анимаций
+- `lucide-react` - Иконки
+
+### Документация
+- Подробная документация: `docs/shadcn-integration.md`
+- Быстрый старт: `docs/shadcn-quick-start.md`
+- Header shadcnblocks: `docs/header-shadcnblocks-update.md`
+- HeroHome shadcnblocks: `docs/hero-shadcnblocks-update.md`
+- Исправления: `docs/shadcn-fixes.md`

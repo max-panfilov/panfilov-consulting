@@ -198,7 +198,6 @@ export interface Page {
     | TargetAudienceBlock
     | SolutionApproachBlock
     | FeaturedCasesBlock
-    | ExpertiseHighlightBlock
     | ContactFormBlock
     | CallToActionBlock
     | ContentBlock
@@ -420,6 +419,10 @@ export interface User {
  * via the `definition` "HeroHomeBlock".
  */
 export interface HeroHomeBlock {
+  /**
+   * Маленькая метка над заголовком
+   */
+  badge?: string | null;
   heading: string;
   subheading: string;
   primaryCTA: {
@@ -455,13 +458,18 @@ export interface HeroHomeBlock {
  * via the `definition` "TargetAudienceBlock".
  */
 export interface TargetAudienceBlock {
+  /**
+   * Небольшой лейбл над заголовком (необязательно)
+   */
+  label?: string | null;
   heading: string;
+  subheading?: string | null;
   audiences?:
     | {
         title: string;
         description: string;
         /**
-         * Название иконки из react-icons (например: FaUserTie, FaBriefcase, FaCode, FaDatabase)
+         * Название иконки из lucide-react (например: UserRound, Briefcase, Code, Database)
          */
         icon: string;
         id?: string | null;
@@ -483,12 +491,20 @@ export interface SolutionApproachBlock {
         title: string;
         description: string;
         /**
-         * Название иконки из react-icons (например: FaChartLine, FaCogs, FaGraduationCap)
+         * Название иконки из lucide-react (например: Lightbulb, Settings, GraduationCap)
          */
         icon: string;
         id?: string | null;
       }[]
     | null;
+  /**
+   * Текст кнопки CTA (по умолчанию: "Узнать больше")
+   */
+  buttonText?: string | null;
+  /**
+   * Если указать, покажется кнопка CTA в конце секции
+   */
+  buttonUrl?: string | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'solutionApproach';
@@ -508,8 +524,6 @@ export interface FeaturedCasesBlock {
    * Выберите конкретные кейсы для отображения
    */
   manualCases?: (number | Case)[] | null;
-  ctaText?: string | null;
-  ctaLink?: string | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'featuredCases';
@@ -534,39 +548,11 @@ export interface Case {
   /**
    * Подробное описание предложенного решения
    */
-  solution: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
+  solution: string;
   /**
    * Достигнутые результаты с конкретными метриками
    */
-  results: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
+  results: string;
   /**
    * Технологии и инструменты, использованные в проекте
    */
@@ -597,24 +583,6 @@ export interface Case {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ExpertiseHighlightBlock".
- */
-export interface ExpertiseHighlightBlock {
-  heading: string;
-  subheading?: string | null;
-  /**
-   * Оставьте пустым для показа всех постов, или выберите категорию (например, "Экспертиза")
-   */
-  category?: (number | null) | Category;
-  postsToShow?: number | null;
-  ctaText?: string | null;
-  ctaLink?: string | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'expertiseHighlight';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -941,14 +909,20 @@ export interface ArchiveBlock {
     [k: string]: unknown;
   } | null;
   populateBy?: ('collection' | 'selection') | null;
-  relationTo?: 'posts' | null;
+  relationTo?: ('posts' | 'cases') | null;
   categories?: (number | Category)[] | null;
   limit?: number | null;
   selectedDocs?:
-    | {
-        relationTo: 'posts';
-        value: number | Post;
-      }[]
+    | (
+        | {
+            relationTo: 'posts';
+            value: number | Post;
+          }
+        | {
+            relationTo: 'cases';
+            value: number | Case;
+          }
+      )[]
     | null;
   id?: string | null;
   blockName?: string | null;
@@ -1274,7 +1248,6 @@ export interface PagesSelect<T extends boolean = true> {
         targetAudience?: T | TargetAudienceBlockSelect<T>;
         solutionApproach?: T | SolutionApproachBlockSelect<T>;
         featuredCases?: T | FeaturedCasesBlockSelect<T>;
-        expertiseHighlight?: T | ExpertiseHighlightBlockSelect<T>;
         contactForm?: T | ContactFormBlockSelect<T>;
         cta?: T | CallToActionBlockSelect<T>;
         content?: T | ContentBlockSelect<T>;
@@ -1301,6 +1274,7 @@ export interface PagesSelect<T extends boolean = true> {
  * via the `definition` "HeroHomeBlock_select".
  */
 export interface HeroHomeBlockSelect<T extends boolean = true> {
+  badge?: T;
   heading?: T;
   subheading?: T;
   primaryCTA?:
@@ -1327,7 +1301,9 @@ export interface HeroHomeBlockSelect<T extends boolean = true> {
  * via the `definition` "TargetAudienceBlock_select".
  */
 export interface TargetAudienceBlockSelect<T extends boolean = true> {
+  label?: T;
   heading?: T;
+  subheading?: T;
   audiences?:
     | T
     | {
@@ -1354,6 +1330,8 @@ export interface SolutionApproachBlockSelect<T extends boolean = true> {
         icon?: T;
         id?: T;
       };
+  buttonText?: T;
+  buttonUrl?: T;
   id?: T;
   blockName?: T;
 }
@@ -1366,22 +1344,6 @@ export interface FeaturedCasesBlockSelect<T extends boolean = true> {
   casesToShow?: T;
   autoSelect?: T;
   manualCases?: T;
-  ctaText?: T;
-  ctaLink?: T;
-  id?: T;
-  blockName?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ExpertiseHighlightBlock_select".
- */
-export interface ExpertiseHighlightBlockSelect<T extends boolean = true> {
-  heading?: T;
-  subheading?: T;
-  category?: T;
-  postsToShow?: T;
-  ctaText?: T;
-  ctaLink?: T;
   id?: T;
   blockName?: T;
 }
@@ -1971,23 +1933,30 @@ export interface Header {
  */
 export interface Footer {
   id: number;
-  navItems?:
+  logo: {
+    src: string;
+    alt: string;
+    title: string;
+  };
+  tagline: string;
+  menuItems?:
     | {
-        link: {
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
-          reference?:
-            | ({
-                relationTo: 'pages';
-                value: number | Page;
-              } | null)
-            | ({
-                relationTo: 'posts';
-                value: number | Post;
-              } | null);
-          url?: string | null;
-          label: string;
-        };
+        title: string;
+        links?:
+          | {
+              text: string;
+              url: string;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  copyright: string;
+  bottomLinks?:
+    | {
+        text: string;
+        url: string;
         id?: string | null;
       }[]
     | null;
@@ -2022,18 +1991,33 @@ export interface HeaderSelect<T extends boolean = true> {
  * via the `definition` "footer_select".
  */
 export interface FooterSelect<T extends boolean = true> {
-  navItems?:
+  logo?:
     | T
     | {
-        link?:
+        src?: T;
+        alt?: T;
+        title?: T;
+      };
+  tagline?: T;
+  menuItems?:
+    | T
+    | {
+        title?: T;
+        links?:
           | T
           | {
-              type?: T;
-              newTab?: T;
-              reference?: T;
+              text?: T;
               url?: T;
-              label?: T;
+              id?: T;
             };
+        id?: T;
+      };
+  copyright?: T;
+  bottomLinks?:
+    | T
+    | {
+        text?: T;
+        url?: T;
         id?: T;
       };
   updatedAt?: T;

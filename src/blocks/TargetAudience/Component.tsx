@@ -1,56 +1,84 @@
+'use client'
+
 import React from 'react'
 import type { TargetAudienceBlock as TargetAudienceBlockType } from '@/payload-types'
-import * as FaIcons from 'react-icons/fa'
-import { IconType } from 'react-icons'
+import {
+  CircleHelp,
+  TrendingUp,
+  Zap,
+  Code,
+  Database,
+} from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
 
-export const TargetAudienceBlock: React.FC<TargetAudienceBlockType> = ({ heading, audiences }) => {
-  // Функция для динамической загрузки иконки по имени
-  const getIcon = (iconName: string): IconType => {
-    // @ts-ignore - динамический доступ к иконкам
-    const Icon = FaIcons[iconName as keyof typeof FaIcons]
-    // Fallback на FaQuestion если иконка не найдена
-    return Icon || FaIcons.FaQuestion
+// Маппинг иконок
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  TrendingUp,
+  Zap,
+  Code,
+  Database,
+  CircleHelp,
+}
+
+export const TargetAudienceBlock: React.FC<TargetAudienceBlockType> = ({
+  label,
+  heading,
+  subheading,
+  audiences,
+}) => {
+  // Функция для получения иконки
+  const getIcon = (iconName?: string | null) => {
+    if (!iconName) {
+      return <CircleHelp className="size-4 md:size-6" />
+    }
+
+    const Icon = iconMap[iconName]
+    if (Icon) {
+      return <Icon className="size-4 md:size-6" />
+    }
+
+    // Fallback на CircleHelp если иконка не найдена
+    console.warn(`Icon "${iconName}" not found in iconMap`)
+    return <CircleHelp className="size-4 md:size-6" />
   }
 
   return (
-    <div className="py-16 md:py-24">
+    <section className="py-32">
       <div className="container">
         {/* Заголовок секции */}
-        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-12 md:mb-16">
-          {heading}
-        </h2>
+        {(label || heading) && (
+          <div className="mb-12 flex max-w-3xl flex-col gap-4">
+            {label && <Badge variant="secondary">{label}</Badge>}
+            {heading && (
+              <h2 className="text-3xl font-medium md:text-4xl lg:text-5xl">{heading}</h2>
+            )}
+            {subheading && <p className="text-muted-foreground text-lg">{subheading}</p>}
+          </div>
+        )}
 
-        {/* Сетка с карточками аудиторий */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-          {audiences?.map((audience, index) => {
+        {/* Grid с карточками аудиторий */}
+        <div className="grid gap-12 md:grid-cols-2">
+          {audiences?.map((audience, idx) => {
             if (!audience || typeof audience !== 'object') return null
 
-            const Icon = getIcon(audience.icon)
-
             return (
-              <div
-                key={index}
-                className="group bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400"
-              >
+              <div className="flex gap-6 space-y-4 rounded-lg md:block" key={idx}>
                 {/* Иконка */}
-                <div className="mb-4 inline-flex p-4 bg-blue-100 dark:bg-blue-900 rounded-xl group-hover:bg-blue-500 group-hover:scale-110 transition-all duration-300">
-                  <Icon className="w-8 h-8 text-blue-600 dark:text-blue-300 group-hover:text-white" />
+                <span className="bg-accent flex size-10 shrink-0 items-center justify-center rounded-full md:size-12">
+                  {getIcon(audience.icon)}
+                </span>
+                {/* Контент */}
+                <div>
+                  <h3 className="font-medium md:mb-2 md:text-xl">{audience.title}</h3>
+                  <p className="text-muted-foreground text-sm md:text-base">
+                    {audience.description}
+                  </p>
                 </div>
-
-                {/* Заголовок карточки */}
-                <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">
-                  {audience.title}
-                </h3>
-
-                {/* Описание */}
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                  {audience.description}
-                </p>
               </div>
             )
           })}
         </div>
       </div>
-    </div>
+    </section>
   )
 }

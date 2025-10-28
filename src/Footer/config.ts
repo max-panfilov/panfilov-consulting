@@ -10,20 +10,97 @@ export const Footer: GlobalConfig = {
   },
   fields: [
     {
-      name: 'navItems',
-      type: 'array',
+      name: 'logo',
+      type: 'group',
+      label: 'Логотип',
       fields: [
-        link({
-          appearances: false,
-        }),
+        {
+          name: 'src',
+          type: 'text',
+          label: 'URL изображения логотипа',
+          required: true,
+        },
+        {
+          name: 'alt',
+          type: 'text',
+          label: 'Alt текст',
+          required: true,
+        },
+        {
+          name: 'title',
+          type: 'text',
+          label: 'Название компании',
+          required: true,
+        },
       ],
-      maxRows: 6,
+    },
+    {
+      name: 'tagline',
+      type: 'text',
+      label: 'Слоган',
+      required: true,
+    },
+    {
+      name: 'menuItems',
+      type: 'array',
+      label: 'Меню секций',
+      fields: [
+        {
+          name: 'title',
+          type: 'text',
+          label: 'Название секции',
+          required: true,
+        },
+        {
+          name: 'links',
+          type: 'array',
+          label: 'Ссылки',
+          fields: [
+            {
+              name: 'text',
+              type: 'text',
+              label: 'Текст ссылки',
+              required: true,
+            },
+            {
+              name: 'url',
+              type: 'text',
+              label: 'URL',
+              required: true,
+            },
+          ],
+        },
+      ],
+      maxRows: 4,
       admin: {
         initCollapsed: true,
-        components: {
-          RowLabel: '@/Footer/RowLabel#RowLabel',
-        },
       },
+    },
+    {
+      name: 'copyright',
+      type: 'text',
+      label: 'Копирайт текст',
+      required: true,
+    },
+    {
+      name: 'bottomLinks',
+      type: 'array',
+      label: 'Нижние ссылки',
+      fields: [
+        {
+          name: 'text',
+          type: 'text',
+          label: 'Текст',
+          required: true,
+        },
+        {
+          name: 'url',
+          type: 'text',
+          label: 'URL',
+          required: true,
+        },
+      ],
+      maxRows: 3,
     },
   ],
   hooks: {

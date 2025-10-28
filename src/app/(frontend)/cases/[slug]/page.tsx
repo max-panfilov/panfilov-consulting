@@ -5,7 +5,7 @@ import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
-import RichText from '@/components/RichText'
+import { Badge } from '@/components/ui/badge'
 
 import type { Case } from '@/payload-types'
 
@@ -49,8 +49,14 @@ export default async function CasePage({ params: paramsPromise }: Args) {
 
   if (!caseItem) return <PayloadRedirects url={url} />
 
+  // Извлекаем данные для шаблона Blogpost1
+  const coverImageUrl =
+    typeof caseItem.coverImage === 'object' && caseItem.coverImage?.url
+      ? caseItem.coverImage.url
+      : null
+
   return (
-    <article className="pb-16">
+    <article>
       <PageClient />
 
       {/* Разрешает редиректы для валидных страниц */}
@@ -58,113 +64,76 @@ export default async function CasePage({ params: paramsPromise }: Args) {
 
       {draft && <LivePreviewListener />}
 
-      {/* Hero секция кейса */}
-      <div className="relative">
+      {/* Hero секция в стиле Blogpost1 */}
+      <section className="py-32">
         <div className="container">
-          <div className="pt-16 pb-8">
+          <div className="mx-auto flex max-w-5xl flex-col items-center gap-4 text-center">
             {/* Индустрия */}
             {caseItem.industry && (
-              <div className="mb-4">
-                <span className="inline-block px-3 py-1 text-sm font-medium bg-gray-100 dark:bg-gray-800 rounded-full">
-                  {getIndustryLabel(caseItem.industry)}
-                </span>
-              </div>
+              <Badge variant="outline">{getIndustryLabel(caseItem.industry)}</Badge>
             )}
-            
+
             {/* Заголовок */}
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+            <h1 className="max-w-3xl text-pretty text-5xl font-semibold md:text-6xl">
               {caseItem.title}
             </h1>
 
             {/* Краткое описание */}
             {caseItem.shortDescription && (
-              <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl">
+              <h3 className="text-muted-foreground max-w-3xl text-lg md:text-xl">
                 {caseItem.shortDescription}
-              </p>
+              </h3>
             )}
 
             {/* Технологии */}
             {caseItem.technologies && caseItem.technologies.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-8">
+              <div className="flex flex-wrap justify-center gap-2">
                 {caseItem.technologies.map((tech, index) => (
-                  <span
-                    key={index}
-                    className="inline-block px-3 py-1 text-sm bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-100 rounded-full"
-                  >
+                  <Badge key={index} variant="secondary">
                     {typeof tech === 'object' && tech.technology}
-                  </span>
+                  </Badge>
                 ))}
               </div>
             )}
+
+            {/* Изображение обложки */}
+            {coverImageUrl && (
+              <img
+                src={coverImageUrl}
+                alt={caseItem.coverImage && typeof caseItem.coverImage === 'object' ? caseItem.coverImage.alt || caseItem.title : caseItem.title}
+                className="mb-8 mt-4 aspect-video w-full rounded-lg border object-cover"
+              />
+            )}
           </div>
         </div>
-
-        {/* Изображение обложки */}
-        {caseItem.coverImage && typeof caseItem.coverImage === 'object' && (
-          <div className="w-full h-[400px] md:h-[500px] relative mb-12">
-            <img
-              src={caseItem.coverImage.url || ''}
-              alt={caseItem.coverImage.alt || caseItem.title}
-              className="w-full h-full object-cover"
-            />
-          </div>
-        )}
-      </div>
+      </section>
 
       {/* Контент кейса */}
-      <div className="flex flex-col items-center gap-12">
-        <div className="container max-w-4xl">
+      <div className="container">
+        <div className="prose dark:prose-invert mx-auto max-w-3xl">
           {/* Задача */}
           {caseItem.challenge && (
-            <div className="mb-12">
-              <h2 className="text-3xl font-bold mb-4">Задача</h2>
-              <p className="text-lg text-gray-700 dark:text-gray-300 whitespace-pre-line">
-                {caseItem.challenge}
-              </p>
+            <div>
+              <h2>Задача</h2>
+              <p className="whitespace-pre-line">{caseItem.challenge}</p>
             </div>
           )}
 
           {/* Решение */}
           {caseItem.solution && (
-            <div className="mb-12">
-              <h2 className="text-3xl font-bold mb-4">Решение</h2>
-              <RichText
-                className="prose dark:prose-invert max-w-none"
-                data={caseItem.solution}
-                enableGutter={false}
-              />
+            <div>
+              <h2>Решение</h2>
+              <p className="whitespace-pre-wrap">{caseItem.solution}</p>
             </div>
           )}
 
           {/* Результаты */}
           {caseItem.results && (
-            <div className="mb-12">
-              <h2 className="text-3xl font-bold mb-4">Результаты</h2>
-              <RichText
-                className="prose dark:prose-invert max-w-none"
-                data={caseItem.results}
-                enableGutter={false}
-              />
+            <div>
+              <h2>Результаты</h2>
+              <p className="whitespace-pre-wrap">{caseItem.results}</p>
             </div>
           )}
-        </div>
-      </div>
-
-      {/* CTA секция */}
-      <div className="container max-w-4xl mt-16">
-        <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl p-8 text-white text-center">
-          <h3 className="text-2xl md:text-3xl font-bold mb-4">
-            Хотите похожий результат?
-          </h3>
-          <p className="text-lg mb-6 opacity-90">
-            Давайте обсудим, как AI может помочь вашему бизнесу
-          </p>
-          <a
-            href="/#form"
-            className="inline-block px-8 py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors"
-          >
-            Получить консультацию
-          </a>
         </div>
       </div>
     </article>

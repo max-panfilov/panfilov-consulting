@@ -190,6 +190,33 @@ Core features:
 
 Although Next.js includes a robust set of caching strategies out of the box, Payload Cloud proxies and caches all files through Cloudflare using the [Official Cloud Plugin](https://www.npmjs.com/package/@payloadcms/payload-cloud). This means that Next.js caching is not needed and is disabled by default. If you are hosting your app outside of Payload Cloud, you can easily reenable the Next.js caching mechanisms by removing the `no-store` directive from all fetch requests in `./src/app/_api` and then removing all instances of `export const dynamic = 'force-dynamic'` from pages files, such as `./src/app/(pages)/[slug]/page.tsx`. For more details, see the official [Next.js Caching Docs](https://nextjs.org/docs/app/building-your-application/caching).
 
+## Content Manager (Payload Local API)
+
+This project includes a powerful Content Manager built on Payload Local API for programmatic content management without using the admin panel.
+
+### Quick Usage
+
+```bash
+# Recreate homepage with all blocks
+pnpm recreate:homepage:local
+
+# Or via HTTP API (requires dev server running)
+pnpm recreate:homepage
+```
+
+### Available Functions
+
+- `findDocuments(collection, where)` - Search documents
+- `findDocumentById(collection, id)` - Find by ID
+- `createDocument(collection, data)` - Create new document
+- `updateDocument(collection, id, data)` - Update document
+- `deleteDocument(collection, id)` - Delete document
+- `recreateHomePage()` - Recreate homepage
+
+### Full Documentation
+
+See [Content Manager Guide](./docs/content-manager-guide.md) for complete documentation, examples, and best practices.
+
 ## Development
 
 To spin up this example locally, follow the [Quick Start](#quick-start). Then [Seed](#seed) the database with a few pages, posts, and projects.

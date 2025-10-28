@@ -14,7 +14,7 @@ export const FeaturedCases: Block = {
       name: 'casesToShow',
       type: 'number',
       label: 'Количество кейсов',
-      defaultValue: 3,
+      defaultValue: 4,
       min: 1,
       max: 6,
     },
@@ -37,18 +37,6 @@ export const FeaturedCases: Block = {
         condition: (data, siblingData) => !siblingData?.autoSelect,
         description: 'Выберите конкретные кейсы для отображения',
       },
-    },
-    {
-      name: 'ctaText',
-      type: 'text',
-      label: 'Текст кнопки CTA',
-      defaultValue: 'Посмотреть все кейсы',
-    },
-    {
-      name: 'ctaLink',
-      type: 'text',
-      label: 'Ссылка кнопки CTA',
-      defaultValue: '/cases',
     },
   ],
   labels: {

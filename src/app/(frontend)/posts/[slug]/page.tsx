@@ -1,19 +1,20 @@
 import type { Metadata } from 'next'
 
-import { RelatedPosts } from '@/blocks/RelatedPosts/Component'
 import { PayloadRedirects } from '@/components/PayloadRedirects'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
 import RichText from '@/components/RichText'
+import { format } from 'date-fns'
+import { ru } from 'date-fns/locale'
 
 import type { Post } from '@/payload-types'
 
-import { PostHero } from '@/heros/PostHero'
 import { generateMeta } from '@/utilities/generateMeta'
 import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -51,8 +52,21 @@ export default async function Post({ params: paramsPromise }: Args) {
 
   if (!post) return <PayloadRedirects url={url} />
 
+  // Извлекаем данные для шаблона Blogpost1
+  const heroImageUrl =
+    typeof post.meta?.image === 'object' && post.meta.image?.url ? post.meta.image.url : null
+
+  const authorName =
+    post.populatedAuthors && post.populatedAuthors.length > 0
+      ? typeof post.populatedAuthors[0] === 'object'
+        ? post.populatedAuthors[0].name
+        : 'Автор'
+      : 'Автор'
+
+  const publishDate = post.publishedAt ? new Date(post.publishedAt) : new Date()
+
   return (
-    <article className="pt-16 pb-16">
+    <article>
       <PageClient />
 
       {/* Allows redirects for valid pages too */}
@@ -60,17 +74,42 @@ export default async function Post({ params: paramsPromise }: Args) {
 
       {draft && <LivePreviewListener />}
 
-      <PostHero post={post} />
-
-      <div className="flex flex-col items-center gap-4 pt-8">
+      {/* Hero секция в стиле Blogpost1 */}
+      <section className="py-32">
         <div className="container">
-          <RichText className="max-w-[48rem] mx-auto" data={post.content} enableGutter={false} />
-          {post.relatedPosts && post.relatedPosts.length > 0 && (
-            <RelatedPosts
-              className="mt-12 max-w-[52rem] lg:grid lg:grid-cols-subgrid col-start-1 col-span-3 grid-rows-[2fr]"
-              docs={post.relatedPosts.filter((post) => typeof post === 'object')}
-            />
-          )}
+          <div className="mx-auto flex max-w-5xl flex-col items-center gap-4 text-center">
+            <h1 className="max-w-3xl text-pretty text-5xl font-semibold md:text-6xl">
+              {post.title}
+            </h1>
+            {post.meta?.description && (
+              <h3 className="text-muted-foreground max-w-3xl text-lg md:text-xl">
+                {post.meta.description}
+              </h3>
+            )}
+            <div className="flex items-center gap-3 text-sm md:text-base">
+              <Avatar className="h-8 w-8 border">
+                <AvatarFallback>{authorName.charAt(0)}</AvatarFallback>
+              </Avatar>
+              <span>
+                <span className="font-semibold">{authorName}</span>
+                <span className="ml-1">• {format(publishDate, 'd MMMM yyyy', { locale: ru })}</span>
+              </span>
+            </div>
+            {heroImageUrl && (
+              <img
+                src={heroImageUrl}
+                alt={post.meta?.title || post.title}
+                className="mb-8 mt-4 aspect-video w-full rounded-lg border object-cover"
+              />
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Контент поста */}
+      <div className="container">
+        <div className="prose dark:prose-invert mx-auto max-w-3xl">
+          <RichText data={post.content} enableGutter={false} />
         </div>
       </div>
     </article>

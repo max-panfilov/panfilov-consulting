@@ -1,3 +1,5 @@
+'use client'
+
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import {
   DefaultNodeTypes,
@@ -63,6 +65,12 @@ type Props = {
 
 export default function RichText(props: Props) {
   const { className, enableProse = true, enableGutter = true, ...rest } = props
+  
+  if (!ConvertRichText) {
+    console.error('ConvertRichText is undefined!')
+    return <div>Error: RichText component not loaded</div>
+  }
+  
   return (
     <ConvertRichText
       converters={jsxConverters}

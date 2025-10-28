@@ -1,7 +1,14 @@
+'use client'
+
 import React from 'react'
 import type { HeroHomeBlock as HeroHomeBlockType } from '@/payload-types'
+import { ArrowRight, ArrowUpRight } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { NeuralNetworkScene } from '@/components/NeuralNetworkScene'
 
 export const HeroHomeBlock: React.FC<HeroHomeBlockType> = ({
+  badge,
   heading,
   subheading,
   primaryCTA,
@@ -11,6 +18,23 @@ export const HeroHomeBlock: React.FC<HeroHomeBlockType> = ({
   backgroundVideo,
   backgroundOverlay,
 }) => {
+  // Функция для плавной прокрутки к элементу
+  const scrollToElement = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    // Проверяем, является ли это якорной ссылкой (начинается с #)
+    if (href.startsWith('#')) {
+      e.preventDefault()
+      const targetId = href.substring(1)
+      const targetElement = document.getElementById(targetId)
+      
+      if (targetElement) {
+        targetElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        })
+      }
+    }
+  }
+
   // Функция для определения типа медиа объекта
   const getMediaUrl = (media: any): string | null => {
     if (!media) return null
@@ -22,84 +46,71 @@ export const HeroHomeBlock: React.FC<HeroHomeBlockType> = ({
   const bgVideoUrl = getMediaUrl(backgroundVideo)
 
   return (
-    <div className="relative min-h-[600px] md:min-h-[700px] lg:min-h-[800px] flex items-center overflow-hidden">
-      {/* Фоновое медиа */}
-      {mediaType === 'video' && bgVideoUrl ? (
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-        >
-          <source src={bgVideoUrl} type="video/mp4" />
-        </video>
-      ) : mediaType === 'image' && bgImageUrl ? (
-        <div
-          className="absolute inset-0 w-full h-full bg-cover bg-center"
-          style={{ backgroundImage: `url(${bgImageUrl})` }}
-        />
-      ) : (
-        // Градиентный фон по умолчанию если медиа не указано
-        <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800" />
-      )}
+    <section className="pt-0 pb-32">
+      <div className="container">
+        <div className="grid items-center gap-8 lg:grid-cols-2">
+          <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
+            {/* Заголовок */}
+            <h1 className="my-6 text-pretty text-4xl font-bold lg:text-6xl">
+              {heading}
+            </h1>
 
-      {/* Оверлей для затемнения */}
-      {backgroundOverlay && (
-        <div className="absolute inset-0 bg-black/50" />
-      )}
+            {/* Подзаголовок */}
+            <p className="text-muted-foreground mb-8 max-w-xl lg:text-xl">
+              {subheading}
+            </p>
 
-      {/* Контент */}
-      <div className="container relative z-10">
-        <div className="max-w-4xl">
-          {/* Заголовок */}
-          <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-6 leading-tight">
-            {heading}
-          </h1>
-
-          {/* Подзаголовок */}
-          <p className="text-lg md:text-xl lg:text-2xl text-gray-100 mb-8 max-w-3xl leading-relaxed">
-            {subheading}
-          </p>
-
-          {/* Кнопки CTA */}
-          <div className="flex flex-col sm:flex-row gap-4">
-            {primaryCTA?.text && primaryCTA?.link && (
-              <a
-                href={primaryCTA.link}
-                className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors shadow-lg hover:shadow-xl"
-              >
-                {primaryCTA.text}
-              </a>
-            )}
-
-            {secondaryCTA?.text && secondaryCTA?.link && (
-              <a
-                href={secondaryCTA.link}
-                className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white border-2 border-white hover:bg-white hover:text-blue-600 rounded-lg transition-colors"
-              >
-                {secondaryCTA.text}
-              </a>
-            )}
+            {/* Кнопки CTA */}
+            <div className="flex w-full flex-col justify-center gap-2 sm:flex-row lg:justify-start">
+              {primaryCTA?.text && primaryCTA?.link && (
+                <Button asChild className="w-full sm:w-auto">
+                  <a 
+                    href={primaryCTA.link}
+                    onClick={(e) => scrollToElement(e, primaryCTA.link)}
+                  >
+                    {primaryCTA.text}
+                  </a>
+                </Button>
+              )}
+              {secondaryCTA?.text && secondaryCTA?.link && (
+                <Button asChild variant="outline" className="w-full sm:w-auto">
+                  <a 
+                    href={secondaryCTA.link}
+                    onClick={(e) => scrollToElement(e, secondaryCTA.link)}
+                  >
+                    {secondaryCTA.text}
+                    <ArrowRight className="ml-2 size-4" />
+                  </a>
+                </Button>
+              )}
+            </div>
           </div>
+
+          {/* 3D Neural Network Animation или видео/изображение */}
+          {mediaType === 'video' && bgVideoUrl ? (
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="max-h-96 w-full rounded-md object-cover"
+            >
+              <source src={bgVideoUrl} type="video/mp4" />
+            </video>
+          ) : bgImageUrl ? (
+            <img
+              src={bgImageUrl}
+              alt={heading || 'Hero image'}
+              className="max-h-96 w-full rounded-md object-cover"
+            />
+          ) : (
+            // 3D анимация нейронной сети вместо placeholder изображения
+            <div className="relative h-96 w-full rounded-md overflow-hidden">
+              <NeuralNetworkScene />
+            </div>
+          )}
         </div>
       </div>
-
-      {/* Декоративный элемент внизу (волна) */}
-      <div className="absolute bottom-0 left-0 right-0">
-        <svg
-          className="w-full h-16 md:h-24"
-          viewBox="0 0 1440 120"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          preserveAspectRatio="none"
-        >
-          <path
-            d="M0 0L60 10C120 20 240 40 360 46.7C480 53 600 47 720 43.3C840 40 960 40 1080 46.7C1200 53 1320 67 1380 73.3L1440 80V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0V0Z"
-            className="fill-white dark:fill-gray-950"
-          />
-        </svg>
-      </div>
-    </div>
+    </section>
   )
 }

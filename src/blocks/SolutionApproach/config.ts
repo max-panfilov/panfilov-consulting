@@ -41,10 +41,26 @@ export const SolutionApproach: Block = {
           label: 'Иконка',
           admin: {
             description:
-              'Название иконки из react-icons (например: FaChartLine, FaCogs, FaGraduationCap)',
+              'Название иконки из lucide-react (например: Lightbulb, Settings, GraduationCap)',
           },
         },
       ],
+    },
+    {
+      name: 'buttonText',
+      type: 'text',
+      label: 'Текст кнопки',
+      admin: {
+        description: 'Текст кнопки CTA (по умолчанию: "Узнать больше")',
+      },
+    },
+    {
+      name: 'buttonUrl',
+      type: 'text',
+      label: 'Ссылка кнопки',
+      admin: {
+        description: 'Если указать, покажется кнопка CTA в конце секции',
+      },
     },
   ],
   labels: {

@@ -1,19 +1,8 @@
 import type { CollectionConfig } from 'payload'
 
-import {
-  BlocksFeature,
-  FixedToolbarFeature,
-  HeadingFeature,
-  HorizontalRuleFeature,
-  InlineToolbarFeature,
-  lexicalEditor,
-} from '@payloadcms/richtext-lexical'
-
+import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { authenticated } from '../access/authenticated'
 import { authenticatedOrPublished } from '../access/authenticatedOrPublished'
-import { Banner } from '../blocks/Banner/config'
-import { Code } from '../blocks/Code/config'
-import { MediaBlock } from '../blocks/MediaBlock/config'
 import { generatePreviewPath } from '../utilities/generatePreviewPath'
 
 import {
@@ -141,19 +130,7 @@ export const Cases: CollectionConfig<'cases'> = {
             },
             {
               name: 'solution',
-              type: 'richText',
-              editor: lexicalEditor({
-                features: ({ rootFeatures }) => {
-                  return [
-                    ...rootFeatures,
-                    HeadingFeature({ enabledHeadingSizes: ['h2', 'h3', 'h4'] }),
-                    BlocksFeature({ blocks: [Banner, Code, MediaBlock] }),
-                    FixedToolbarFeature(),
-                    InlineToolbarFeature(),
-                    HorizontalRuleFeature(),
-                  ]
-                },
-              }),
+              type: 'textarea',
               label: 'Решение',
               admin: {
                 description: 'Подробное описание предложенного решения',
@@ -162,19 +139,7 @@ export const Cases: CollectionConfig<'cases'> = {
             },
             {
               name: 'results',
-              type: 'richText',
-              editor: lexicalEditor({
-                features: ({ rootFeatures }) => {
-                  return [
-                    ...rootFeatures,
-                    HeadingFeature({ enabledHeadingSizes: ['h2', 'h3', 'h4'] }),
-                    BlocksFeature({ blocks: [Banner, Code, MediaBlock] }),
-                    FixedToolbarFeature(),
-                    InlineToolbarFeature(),
-                    HorizontalRuleFeature(),
-                  ]
-                },
-              }),
+              type: 'textarea',
               label: 'Результаты',
               admin: {
                 description: 'Достигнутые результаты с конкретными метриками',

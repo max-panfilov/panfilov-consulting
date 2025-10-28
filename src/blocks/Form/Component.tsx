@@ -92,13 +92,12 @@ export const FormBlock: React.FC<
           setIsLoading(false)
           setHasSubmitted(true)
 
-          if (confirmationType === 'redirect' && redirect) {
-            const { url } = redirect
-
-            const redirectUrl = url
-
-            if (redirectUrl) router.push(redirectUrl)
-          }
+          // Редирект отключен - всегда показываем сообщение об успехе
+          // if (confirmationType === 'redirect' && redirect) {
+          //   const { url } = redirect
+          //   const redirectUrl = url
+          //   if (redirectUrl) router.push(redirectUrl)
+          // }
         } catch (err) {
           console.warn(err)
           setIsLoading(false)
@@ -114,44 +113,79 @@ export const FormBlock: React.FC<
   )
 
   return (
-    <div className="container lg:max-w-[48rem]">
+    <div className="w-full">
       {enableIntro && introContent && !hasSubmitted && (
         <RichText className="mb-8 lg:mb-12" data={introContent} enableGutter={false} />
       )}
-      <div className="p-4 lg:p-6 border border-border rounded-[0.8rem]">
+      <div className="w-full">
         <FormProvider {...formMethods}>
-          {!isLoading && hasSubmitted && confirmationType === 'message' && (
-            <RichText data={confirmationMessage} />
-          )}
-          {isLoading && !hasSubmitted && <p>Loading, please wait...</p>}
-          {error && <div>{`${error.status || '500'}: ${error.message || ''}`}</div>}
-          {!hasSubmitted && (
-            <form id={formID} onSubmit={handleSubmit(onSubmit)}>
-              <div className="mb-4 last:mb-0">
-                {formFromProps &&
-                  formFromProps.fields &&
-                  formFromProps.fields?.map((field, index) => {
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    const Field: React.FC<any> = fields?.[field.blockType as keyof typeof fields]
-                    if (Field) {
-                      return (
-                        <div className="mb-6 last:mb-0" key={index}>
-                          <Field
-                            form={formFromProps}
-                            {...field}
-                            {...formMethods}
-                            control={control}
-                            errors={errors}
-                            register={register}
-                          />
-                        </div>
-                      )
-                    }
-                    return null
-                  })}
+          {/* Сообщение об успешной отправке */}
+          {!isLoading && hasSubmitted && (
+            <div className="text-center py-12 px-6">
+              <div className="mx-auto w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-6">
+                <svg className="w-8 h-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
               </div>
+              <div className="prose prose-lg dark:prose-invert mx-auto">
+                <RichText data={confirmationMessage} />
+              </div>
+            </div>
+          )}
+          
+          {/* Индикатор загрузки */}
+          {isLoading && !hasSubmitted && (
+            <div className="text-center py-12">
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+              <p className="text-muted-foreground">Отправка сообщения...</p>
+            </div>
+          )}
+          
+          {/* Сообщение об ошибке */}
+          {error && (
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
+              <div className="flex items-start">
+                <svg className="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div className="text-sm text-red-800 dark:text-red-200">
+                  <strong>Ошибка {error.status || '500'}:</strong> {error.message || 'Произошла ошибка при отправке'}
+                </div>
+              </div>
+            </div>
+          )}
+          {/* Форма */}
+          {!hasSubmitted && (
+            <form id={formID} onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              {formFromProps &&
+                formFromProps.fields &&
+                formFromProps.fields?.map((field, index) => {
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  const Field: React.FC<any> = fields?.[field.blockType as keyof typeof fields]
+                  if (Field) {
+                    return (
+                      <div key={index}>
+                        <Field
+                          form={formFromProps}
+                          {...field}
+                          {...formMethods}
+                          control={control}
+                          errors={errors}
+                          register={register}
+                        />
+                      </div>
+                    )
+                  }
+                  return null
+                })}
 
-              <Button form={formID} type="submit" variant="default">
+              <Button 
+                form={formID} 
+                type="submit" 
+                variant="default"
+                size="lg"
+                className="w-full"
+              >
                 {submitButtonLabel}
               </Button>
             </form>

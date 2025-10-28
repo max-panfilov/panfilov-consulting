@@ -1,102 +1,76 @@
+'use client'
+
 import React from 'react'
 import type { SolutionApproachBlock as SolutionApproachBlockType } from '@/payload-types'
-import * as FaIcons from 'react-icons/fa'
-import { IconType } from 'react-icons'
+import * as LucideIcons from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 export const SolutionApproachBlock: React.FC<SolutionApproachBlockType> = ({
   heading,
   subheading,
   steps,
+  buttonText,
+  buttonUrl,
 }) => {
-  // Функция для динамической загрузки иконки по имени
-  const getIcon = (iconName: string): IconType => {
-    // @ts-ignore - динамический доступ к иконкам
-    const Icon = FaIcons[iconName as keyof typeof FaIcons]
-    // Fallback на FaQuestion если иконка не найдена
-    return Icon || FaIcons.FaQuestion
+  // Функция для динамической загрузки иконки Lucide по имени
+  const getIcon = (iconName?: string | null) => {
+    if (!iconName) {
+      const CircleHelp = LucideIcons.CircleHelp
+      return <CircleHelp className="size-6" />
+    }
+
+    // Динамический доступ к иконкам Lucide
+    const Icon = (LucideIcons as any)[iconName]
+    if (Icon && typeof Icon === 'function') {
+      return <Icon className="size-6" />
+    }
+
+    // Fallback на CircleHelp если иконка не найдена
+    const CircleHelp = LucideIcons.CircleHelp
+    return <CircleHelp className="size-6" />
   }
 
   return (
-    <div className="py-16 md:py-24 bg-gray-50 dark:bg-gray-900">
+    <section className="py-16">
       <div className="container">
         {/* Заголовок секции */}
-        <div className="text-center mb-12 md:mb-16">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">{heading}</h2>
-          {subheading && (
-            <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              {subheading}
-            </p>
-          )}
-        </div>
-
-        {/* Timeline для desktop, карточки для mobile */}
-        <div className="relative">
-          {/* Вертикальная линия timeline (скрыта на mobile) */}
-          <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-blue-200 dark:bg-blue-800" />
-
-          {/* Этапы */}
-          <div className="space-y-8 md:space-y-12">
-            {steps?.map((step, index) => {
-              if (!step || typeof step !== 'object') return null
-
-              const Icon = getIcon(step.icon)
-              const isEven = index % 2 === 0
-
-              return (
-                <div
-                  key={index}
-                  className={`relative flex flex-col md:flex-row items-center ${
-                    isEven ? 'md:flex-row' : 'md:flex-row-reverse'
-                  }`}
-                >
-                  {/* Контент этапа */}
-                  <div
-                    className={`w-full md:w-5/12 ${
-                      isEven ? 'md:text-right md:pr-12' : 'md:text-left md:pl-12'
-                    }`}
-                  >
-                    <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-shadow">
-                      {/* Номер этапа */}
-                      <div
-                        className={`inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 font-bold text-sm mb-3 ${
-                          isEven ? 'md:ml-auto' : ''
-                        }`}
-                      >
-                        {index + 1}
-                      </div>
-
-                      {/* Заголовок этапа */}
-                      <h3 className="text-xl md:text-2xl font-bold mb-3 text-gray-900 dark:text-white">
-                        {step.title}
-                      </h3>
-
-                      {/* Описание */}
-                      <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                        {step.description}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Центральная иконка (только на desktop) */}
-                  <div className="hidden md:flex w-2/12 justify-center relative z-10">
-                    <div className="flex items-center justify-center w-16 h-16 rounded-full bg-blue-500 shadow-lg">
-                      <Icon className="w-8 h-8 text-white" />
-                    </div>
-                  </div>
-
-                  {/* Пустое пространство для выравнивания */}
-                  <div className="hidden md:block w-5/12" />
-
-                  {/* Иконка для mobile */}
-                  <div className="md:hidden flex items-center justify-center w-12 h-12 rounded-full bg-blue-500 shadow-lg mb-4 mt-2">
-                    <Icon className="w-6 h-6 text-white" />
-                  </div>
-                </div>
-              )
-            })}
+        {heading && (
+          <div className="mx-auto mb-16 max-w-3xl text-center">
+            <h2 className="text-pretty text-4xl font-medium lg:text-5xl">{heading}</h2>
+            {subheading && (
+              <p className="text-muted-foreground mt-4 text-lg">{subheading}</p>
+            )}
           </div>
+        )}
+
+        {/* Grid с этапами/фичами */}
+        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
+          {steps?.map((step, idx) => {
+            if (!step || typeof step !== 'object') return null
+
+            return (
+              <div className="flex flex-col" key={idx}>
+                {/* Иконка */}
+                <div className="bg-accent mb-5 flex size-16 items-center justify-center rounded-full">
+                  {getIcon(step.icon)}
+                </div>
+                {/* Контент */}
+                <h3 className="mb-2 text-xl font-semibold">{step.title}</h3>
+                <p className="text-muted-foreground">{step.description}</p>
+              </div>
+            )
+          })}
         </div>
+
+        {/* CTA кнопка */}
+        {buttonUrl && (
+          <div className="mt-16 flex justify-center">
+            <Button size="lg" asChild>
+              <a href={buttonUrl}>{buttonText || 'Узнать больше'}</a>
+            </Button>
+          </div>
+        )}
       </div>
-    </div>
+    </section>
   )
 }

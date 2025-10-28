@@ -15,15 +15,29 @@ export const Logo = (props: Props) => {
 
   return (
     /* eslint-disable @next/next/no-img-element */
-    <img
-      alt="Payload Logo"
-      width={193}
-      height={34}
-      loading={loading}
-      fetchPriority={priority}
-      decoding="async"
-      className={clsx('max-w-[9.375rem] w-full h-[34px]', className)}
-      src="https://raw.githubusercontent.com/payloadcms/payload/main/packages/ui/src/assets/payload-logo-light.svg"
-    />
+    <>
+      {/* Логотип для светлой темы */}
+      <img
+        alt="Panfilov Consulting"
+        width={200}
+        height={40}
+        loading={loading}
+        fetchPriority={priority}
+        decoding="async"
+        className={clsx('w-auto h-7 md:h-10 block dark:hidden', className)}
+        src="/logo.svg"
+      />
+      {/* Логотип для тёмной темы */}
+      <img
+        alt="Panfilov Consulting"
+        width={200}
+        height={40}
+        loading={loading}
+        fetchPriority={priority}
+        decoding="async"
+        className={clsx('w-auto h-7 md:h-10 hidden dark:block', className)}
+        src="/logo-dark.svg"
+      />
+    </>
   )
 }

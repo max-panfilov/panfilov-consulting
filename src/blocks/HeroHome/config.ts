@@ -5,6 +5,15 @@ export const HeroHome: Block = {
   interfaceName: 'HeroHomeBlock',
   fields: [
     {
+      name: 'badge',
+      type: 'text',
+      label: 'Бейдж (необязательно)',
+      defaultValue: '✨ Добро пожаловать',
+      admin: {
+        description: 'Маленькая метка над заголовком',
+      },
+    },
+    {
       name: 'heading',
       type: 'text',
       required: true,
