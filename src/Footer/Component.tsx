@@ -14,10 +14,18 @@ export async function Footer() {
   
   const copyright = footerData?.copyright || `© ${new Date().getFullYear()} Panfilov Consulting. Все права защищены.`
 
+  // Данные формы обратной связи
+  const contactFormHeading = footerData?.contactFormHeading
+  const contactFormDescription = footerData?.contactFormDescription
+  const contactForm = footerData?.contactForm
+
   return (
     <FooterClient
       logo={logo}
       copyright={copyright}
+      contactFormHeading={contactFormHeading}
+      contactFormDescription={contactFormDescription}
+      contactForm={contactForm}
     />
   )
 }
