@@ -76,6 +76,26 @@ export const Footer: GlobalConfig = {
       },
     },
     {
+      name: 'contactFormHeading',
+      type: 'text',
+      label: 'Заголовок формы обратной связи',
+      defaultValue: 'Свяжитесь с нами',
+    },
+    {
+      name: 'contactFormDescription',
+      type: 'textarea',
+      label: 'Описание формы',
+    },
+    {
+      name: 'contactForm',
+      type: 'relationship',
+      relationTo: 'forms',
+      label: 'Форма обратной связи',
+      admin: {
+        description: 'Выберите форму, которая будет отображаться в футере на всех страницах',
+      },
+    },
+    {
       name: 'copyright',
       type: 'text',
       label: 'Копирайт текст',

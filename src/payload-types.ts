@@ -1986,6 +1986,12 @@ export interface Footer {
         id?: string | null;
       }[]
     | null;
+  contactFormHeading?: string | null;
+  contactFormDescription?: string | null;
+  /**
+   * Выберите форму, которая будет отображаться в футере на всех страницах
+   */
+  contactForm?: (number | null) | Form;
   copyright: string;
   bottomLinks?:
     | {
@@ -2046,6 +2052,9 @@ export interface FooterSelect<T extends boolean = true> {
             };
         id?: T;
       };
+  contactFormHeading?: T;
+  contactFormDescription?: T;
+  contactForm?: T;
   copyright?: T;
   bottomLinks?:
     | T

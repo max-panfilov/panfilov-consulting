@@ -21,7 +21,7 @@ export const SolutionApproachBlock: React.FC<SolutionApproachBlockType> = ({
 
     // Динамический доступ к иконкам Lucide
     const Icon = (LucideIcons as any)[iconName]
-    if (Icon && typeof Icon === 'function') {
+    if (Icon) {
       return <Icon className="size-6" />
     }
 
