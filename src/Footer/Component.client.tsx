@@ -24,7 +24,7 @@ type FooterClientProps = {
   copyright: string
   contactFormHeading?: string | null
   contactFormDescription?: string | null
-  contactForm?: string | Form | null
+  contactForm?: string | number | Form | null
 }
 
 export const FooterClient: React.FC<FooterClientProps> = ({ 
@@ -64,7 +64,7 @@ export const FooterClient: React.FC<FooterClientProps> = ({
 
               {/* Карточка с формой */}
               <div className="bg-card rounded-lg shadow-md p-6 md:p-8">
-                <FormBlock form={contactForm as Form} enableIntro={false} />
+                <FormBlock form={contactForm as any} enableIntro={false} />
               </div>
             </motion.div>
           )}
