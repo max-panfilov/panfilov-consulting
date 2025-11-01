@@ -75,7 +75,7 @@ export default async function CasePage({ params: paramsPromise }: Args) {
             )}
 
             {/* Заголовок */}
-            <h1 className="max-w-3xl text-pretty text-5xl font-semibold md:text-6xl">
+            <h1 className="max-w-3xl text-pretty text-3xl font-semibold md:text-4xl">
               {caseItem.title}
             </h1>
 

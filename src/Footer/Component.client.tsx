@@ -6,6 +6,7 @@ import { Logo, LogoImage } from '@/components/shadcnblocks/logo'
 import { FormBlock } from '@/blocks/Form/Component'
 import { motion } from 'framer-motion'
 import type { Form } from '@/payload-types'
+import { Send, Mail } from 'lucide-react'
 
 interface MenuItem {
   title: string
@@ -83,9 +84,9 @@ export const FooterClient: React.FC<FooterClientProps> = ({
             </Logo>
           </div>
 
-          {/* Три ссылки по центру */}
+          {/* Навигационные ссылки по центру */}
           <div className="flex justify-center mb-6">
-            <ul className="flex gap-8 text-sm font-medium">
+            <ul className="flex flex-wrap justify-center gap-6 md:gap-8 text-sm font-medium">
               <li className="hover:text-primary">
                 <Link href="/">Главная</Link>
               </li>
@@ -94,6 +95,28 @@ export const FooterClient: React.FC<FooterClientProps> = ({
               </li>
               <li className="hover:text-primary">
                 <Link href="/posts">Блог</Link>
+              </li>
+              <li className="hover:text-primary">
+                <Link 
+                  href="http://t.me/mpanfilov"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1"
+                  aria-label="Telegram"
+                >
+                  <Send className="w-4 h-4" />
+                  <span className="hidden md:inline">Telegram</span>
+                </Link>
+              </li>
+              <li className="hover:text-primary">
+                <Link 
+                  href="mailto:contact@panfilov.consulting"
+                  className="flex items-center gap-1"
+                  aria-label="Email"
+                >
+                  <Mail className="w-4 h-4" />
+                  <span className="hidden md:inline">E-mail</span>
+                </Link>
               </li>
             </ul>
           </div>

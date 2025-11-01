@@ -47,7 +47,7 @@ export const HeroHomeBlock: React.FC<HeroHomeBlockType> = ({
   const bgVideoUrl = getMediaUrl(backgroundVideo)
 
   return (
-    <section className="pt-0 pb-32">
+    <section className="pt-0 pb-32 -mt-8">
       <div className="container">
         <div className="grid items-center gap-8 lg:grid-cols-2">
           <div className="flex flex-col items-center text-center lg:items-start lg:text-left">

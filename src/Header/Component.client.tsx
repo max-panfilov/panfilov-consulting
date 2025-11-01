@@ -5,6 +5,7 @@ import React from 'react'
 import type { Header } from '@/payload-types'
 import { Logo } from '@/components/Logo/Logo'
 import { Button } from '@/components/ui/button'
+import { Send, Mail } from 'lucide-react'
 
 interface HeaderClientProps {
   data: Header
@@ -39,10 +40,29 @@ export const HeaderClient: React.FC<HeaderClientProps> = () => {
             </Link>
             <Link
               href="/posts"
-              className="text-sm font-medium hover:text-primary transition-colors"
+              className="hidden md:block text-sm font-medium hover:text-primary transition-colors"
             >
               Блог
             </Link>
+            
+            {/* Telegram и Email ссылки */}
+            <Link
+              href="http://t.me/mpanfilov"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-1"
+              aria-label="Telegram"
+            >
+              <Send className="w-4 h-4" />
+            </Link>
+            <Link
+              href="mailto:contact@panfilov.consulting"
+              className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-1"
+              aria-label="Email"
+            >
+              <Mail className="w-4 h-4" />
+            </Link>
+            
             {/* CTA кнопка скрыта на мобильных устройствах - она есть в hero блоке */}
             <Link href="/#form" onClick={handleScrollToForm}>
               <Button size="sm" className="hidden md:inline-flex">
