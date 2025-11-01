@@ -945,6 +945,7 @@ export interface ContentBlock {
  */
 export interface MediaBlock {
   media: number | Media;
+  caption?: string | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'mediaBlock';

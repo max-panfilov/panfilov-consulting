@@ -14,6 +14,7 @@ import {
   ChecklistFeature,
   HorizontalRuleFeature,
   InlineCodeFeature,
+  BlocksFeature,
 } from '@payloadcms/richtext-lexical'
 import { authenticated } from '../access/authenticated'
 import { authenticatedOrPublished } from '../access/authenticatedOrPublished'
@@ -162,6 +163,28 @@ export const Cases: CollectionConfig<'cases'> = {
                   }),
                   BlockquoteFeature(),
                   HorizontalRuleFeature(),
+                  BlocksFeature({
+                    blocks: [
+                      {
+                        slug: 'mediaBlock',
+                        interfaceName: 'MediaBlock',
+                        fields: [
+                          {
+                            name: 'media',
+                            type: 'upload',
+                            relationTo: 'media',
+                            required: true,
+                            label: 'Изображение',
+                          },
+                          {
+                            name: 'caption',
+                            type: 'text',
+                            label: 'Подпись',
+                          },
+                        ],
+                      },
+                    ],
+                  }),
                 ],
               }),
             },
@@ -189,6 +212,28 @@ export const Cases: CollectionConfig<'cases'> = {
                   }),
                   BlockquoteFeature(),
                   HorizontalRuleFeature(),
+                  BlocksFeature({
+                    blocks: [
+                      {
+                        slug: 'mediaBlock',
+                        interfaceName: 'MediaBlock',
+                        fields: [
+                          {
+                            name: 'media',
+                            type: 'upload',
+                            relationTo: 'media',
+                            required: true,
+                            label: 'Изображение',
+                          },
+                          {
+                            name: 'caption',
+                            type: 'text',
+                            label: 'Подпись',
+                          },
+                        ],
+                      },
+                    ],
+                  }),
                 ],
               }),
             },
@@ -216,6 +261,28 @@ export const Cases: CollectionConfig<'cases'> = {
                   }),
                   BlockquoteFeature(),
                   HorizontalRuleFeature(),
+                  BlocksFeature({
+                    blocks: [
+                      {
+                        slug: 'mediaBlock',
+                        interfaceName: 'MediaBlock',
+                        fields: [
+                          {
+                            name: 'media',
+                            type: 'upload',
+                            relationTo: 'media',
+                            required: true,
+                            label: 'Изображение',
+                          },
+                          {
+                            name: 'caption',
+                            type: 'text',
+                            label: 'Подпись',
+                          },
+                        ],
+                      },
+                    ],
+                  }),
                 ],
               }),
             },
