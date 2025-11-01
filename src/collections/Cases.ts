@@ -4,6 +4,7 @@ import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { authenticated } from '../access/authenticated'
 import { authenticatedOrPublished } from '../access/authenticatedOrPublished'
 import { generatePreviewPath } from '../utilities/generatePreviewPath'
+import { revalidateCase, revalidateDelete } from './Cases/hooks/revalidateCase'
 
 import {
   MetaDescriptionField,
@@ -21,6 +22,10 @@ export const Cases: CollectionConfig<'cases'> = {
     delete: authenticated,
     read: authenticatedOrPublished,
     update: authenticated,
+  },
+  hooks: {
+    afterChange: [revalidateCase],
+    afterDelete: [revalidateDelete],
   },
   // Определяем что будет подтягиваться при связях с Cases
   defaultPopulate: {
