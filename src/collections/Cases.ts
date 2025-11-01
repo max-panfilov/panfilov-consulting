@@ -1,6 +1,20 @@
 import type { CollectionConfig } from 'payload'
 
-import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { 
+  lexicalEditor,
+  HeadingFeature,
+  OrderedListFeature,
+  UnorderedListFeature,
+  BlockquoteFeature,
+  BoldFeature,
+  ItalicFeature,
+  UnderlineFeature,
+  StrikethroughFeature,
+  LinkFeature,
+  ChecklistFeature,
+  HorizontalRuleFeature,
+  InlineCodeFeature,
+} from '@payloadcms/richtext-lexical'
 import { authenticated } from '../access/authenticated'
 import { authenticatedOrPublished } from '../access/authenticatedOrPublished'
 import { generatePreviewPath } from '../utilities/generatePreviewPath'
@@ -133,7 +147,22 @@ export const Cases: CollectionConfig<'cases'> = {
                 description: 'Описание проблемы или задачи, которую нужно было решить',
               },
               editor: lexicalEditor({
-                features: ({ defaultFeatures }) => defaultFeatures,
+                features: () => [
+                  HeadingFeature({ enabledHeadingSizes: ['h2', 'h3', 'h4'] }),
+                  BoldFeature(),
+                  ItalicFeature(),
+                  UnderlineFeature(),
+                  StrikethroughFeature(),
+                  InlineCodeFeature(),
+                  OrderedListFeature(),
+                  UnorderedListFeature(),
+                  ChecklistFeature(),
+                  LinkFeature({
+                    enabledCollections: ['pages', 'posts'],
+                  }),
+                  BlockquoteFeature(),
+                  HorizontalRuleFeature(),
+                ],
               }),
             },
             {
@@ -145,7 +174,22 @@ export const Cases: CollectionConfig<'cases'> = {
               },
               required: true,
               editor: lexicalEditor({
-                features: ({ defaultFeatures }) => defaultFeatures,
+                features: () => [
+                  HeadingFeature({ enabledHeadingSizes: ['h2', 'h3', 'h4'] }),
+                  BoldFeature(),
+                  ItalicFeature(),
+                  UnderlineFeature(),
+                  StrikethroughFeature(),
+                  InlineCodeFeature(),
+                  OrderedListFeature(),
+                  UnorderedListFeature(),
+                  ChecklistFeature(),
+                  LinkFeature({
+                    enabledCollections: ['pages', 'posts'],
+                  }),
+                  BlockquoteFeature(),
+                  HorizontalRuleFeature(),
+                ],
               }),
             },
             {
@@ -157,7 +201,22 @@ export const Cases: CollectionConfig<'cases'> = {
               },
               required: true,
               editor: lexicalEditor({
-                features: ({ defaultFeatures }) => defaultFeatures,
+                features: () => [
+                  HeadingFeature({ enabledHeadingSizes: ['h2', 'h3', 'h4'] }),
+                  BoldFeature(),
+                  ItalicFeature(),
+                  UnderlineFeature(),
+                  StrikethroughFeature(),
+                  InlineCodeFeature(),
+                  OrderedListFeature(),
+                  UnorderedListFeature(),
+                  ChecklistFeature(),
+                  LinkFeature({
+                    enabledCollections: ['pages', 'posts'],
+                  }),
+                  BlockquoteFeature(),
+                  HorizontalRuleFeature(),
+                ],
               }),
             },
             {
