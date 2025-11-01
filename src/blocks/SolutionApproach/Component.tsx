@@ -36,7 +36,7 @@ export const SolutionApproachBlock: React.FC<SolutionApproachBlockType> = ({
         {/* Заголовок секции */}
         {heading && (
           <div className="mx-auto mb-16 max-w-3xl text-center">
-            <h2 className="text-pretty text-4xl font-medium lg:text-5xl">{heading}</h2>
+            <h2 className="text-pretty text-3xl font-semibold md:text-4xl lg:text-5xl">{heading}</h2>
             {subheading && (
               <p className="text-muted-foreground mt-4 text-lg">{subheading}</p>
             )}

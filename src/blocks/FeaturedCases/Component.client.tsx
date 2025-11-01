@@ -39,12 +39,12 @@ export const FeaturedCasesClient: React.FC<FeaturedCasesClientProps> = ({
   cases,
 }) => {
   return (
-    <section className="py-32" id="cases">
+    <section className="py-16 md:py-32" id="cases">
       <div className="container">
         {/* Заголовок секции */}
         {heading && (
           <div className="mx-auto mb-16 max-w-3xl text-center">
-            <h2 className="text-pretty text-4xl font-medium lg:text-5xl">{heading}</h2>
+            <h2 className="text-pretty text-3xl font-semibold md:text-4xl lg:text-5xl">{heading}</h2>
           </div>
         )}
 
