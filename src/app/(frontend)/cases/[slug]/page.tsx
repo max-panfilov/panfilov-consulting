@@ -12,6 +12,7 @@ import type { Case } from '@/payload-types'
 import { generateMeta } from '@/utilities/generateMeta'
 import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
+import RichText from '@/components/RichText'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -115,7 +116,7 @@ export default async function CasePage({ params: paramsPromise }: Args) {
           {caseItem.challenge && (
             <div>
               <h2>Задача</h2>
-              <p className="whitespace-pre-line">{caseItem.challenge}</p>
+              <RichText data={caseItem.challenge} enableGutter={false} enableProse={false} />
             </div>
           )}
 
@@ -123,7 +124,7 @@ export default async function CasePage({ params: paramsPromise }: Args) {
           {caseItem.solution && (
             <div>
               <h2>Решение</h2>
-              <p className="whitespace-pre-wrap">{caseItem.solution}</p>
+              <RichText data={caseItem.solution} enableGutter={false} enableProse={false} />
             </div>
           )}
 
@@ -131,7 +132,7 @@ export default async function CasePage({ params: paramsPromise }: Args) {
           {caseItem.results && (
             <div>
               <h2>Результаты</h2>
-              <p className="whitespace-pre-wrap">{caseItem.results}</p>
+              <RichText data={caseItem.results} enableGutter={false} enableProse={false} />
             </div>
           )}
         </div>
