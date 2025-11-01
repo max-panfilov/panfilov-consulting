@@ -66,7 +66,7 @@ export default async function CasePage({ params: paramsPromise }: Args) {
       {draft && <LivePreviewListener />}
 
       {/* Hero секция в стиле Blogpost1 */}
-      <section className="py-32">
+      <section className="py-12 md:py-16">
         <div className="container">
           <div className="mx-auto flex max-w-5xl flex-col items-center gap-4 text-center">
             {/* Индустрия */}
@@ -96,21 +96,12 @@ export default async function CasePage({ params: paramsPromise }: Args) {
                 ))}
               </div>
             )}
-
-            {/* Изображение обложки */}
-            {coverImageUrl && (
-              <img
-                src={coverImageUrl}
-                alt={caseItem.coverImage && typeof caseItem.coverImage === 'object' ? caseItem.coverImage.alt || caseItem.title : caseItem.title}
-                className="mb-8 mt-4 aspect-video w-full rounded-lg border object-cover"
-              />
-            )}
           </div>
         </div>
       </section>
 
       {/* Контент кейса */}
-      <div className="container">
+      <div className="container pb-16">
         <div className="prose dark:prose-invert mx-auto max-w-3xl">
           {/* Задача */}
           {caseItem.challenge && (
