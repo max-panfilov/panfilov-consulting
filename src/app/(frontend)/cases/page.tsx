@@ -30,14 +30,14 @@ export default async function CasesPage() {
   const cases = casesResult.docs
 
   return (
-    <section className="py-32">
+    <section className="py-12 md:py-16">
       <div className="container mx-auto flex flex-col items-center gap-16 lg:px-16">
         {/* Заголовок секции */}
         <div className="text-center">
           <Badge variant="secondary" className="mb-6">
             Наши проекты
           </Badge>
-          <h1 className="mb-3 text-pretty text-3xl font-semibold md:mb-4 md:text-4xl lg:mb-6 lg:max-w-3xl lg:text-5xl">
+          <h1 className="mb-3 text-pretty text-3xl font-semibold md:mb-4 md:text-4xl lg:mb-6 lg:max-w-3xl">
             Кейсы
           </h1>
           <p className="text-muted-foreground mb-8 md:text-base lg:max-w-2xl lg:text-lg">
