@@ -50,16 +50,16 @@ export const ExpertiseHighlightBlock: React.FC<ExpertiseHighlightBlockType> = as
   const categoryName = category && typeof category === 'object' ? category.title : null
 
   return (
-    <section className="py-32">
+    <section className="py-16 md:py-32">
       <div className="container">
         {/* Заголовок секции */}
-        <div className="mb-14">
+        <div className="mb-14 mx-auto max-w-3xl text-center">
           {categoryName && (
-            <Badge className="mb-4" variant="outline">
+            <Badge className="mb-4 mx-auto" variant="outline">
               {categoryName}
             </Badge>
           )}
-          <h2 className="mb-3 text-4xl font-semibold md:mb-4 md:text-5xl lg:mb-6">
+          <h2 className="mb-3 text-pretty text-3xl font-semibold md:mb-4 md:text-4xl lg:text-5xl lg:mb-6">
             {heading}
           </h2>
           {subheading && (

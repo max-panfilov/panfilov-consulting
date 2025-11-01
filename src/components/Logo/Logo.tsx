@@ -24,7 +24,7 @@ export const Logo = (props: Props) => {
         loading={loading}
         fetchPriority={priority}
         decoding="async"
-        className={clsx('w-auto h-6 md:h-10 block dark:hidden', className)}
+        className={clsx('w-auto h-5 md:h-10 block dark:hidden', className)}
         src="/logo.svg"
       />
       {/* Логотип для тёмной темы */}
@@ -35,7 +35,7 @@ export const Logo = (props: Props) => {
         loading={loading}
         fetchPriority={priority}
         decoding="async"
-        className={clsx('w-auto h-6 md:h-10 hidden dark:block', className)}
+        className={clsx('w-auto h-5 md:h-10 hidden dark:block', className)}
         src="/logo-dark.svg"
       />
     </>

@@ -43,14 +43,14 @@ export const TargetAudienceBlock: React.FC<TargetAudienceBlockType> = ({
   }
 
   return (
-    <section className="py-32">
+    <section className="py-16 md:py-32">
       <div className="container">
         {/* Заголовок секции */}
         {(label || heading) && (
-          <div className="mb-12 flex max-w-3xl flex-col gap-4">
-            {label && <Badge variant="secondary">{label}</Badge>}
+          <div className="mb-12 mx-auto flex max-w-3xl flex-col gap-4 text-center">
+            {label && <Badge variant="secondary" className="mx-auto">{label}</Badge>}
             {heading && (
-              <h2 className="text-3xl font-medium md:text-4xl lg:text-5xl">{heading}</h2>
+              <h2 className="text-pretty text-3xl font-semibold md:text-4xl lg:text-5xl">{heading}</h2>
             )}
             {subheading && <p className="text-muted-foreground text-lg">{subheading}</p>}
           </div>

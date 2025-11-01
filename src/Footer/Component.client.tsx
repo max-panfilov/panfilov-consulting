@@ -36,7 +36,7 @@ export const FooterClient: React.FC<FooterClientProps> = ({
   contactForm,
 }) => {
   return (
-    <section className="py-8">
+    <section className="pt-0 pb-8 md:pt-8">
       <div className="container">
         <footer>
           {/* Форма обратной связи */}
