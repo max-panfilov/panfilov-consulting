@@ -12,6 +12,8 @@ node_modules
 public/robots.txt
 public/sitemap*.xml
 
+# Database backups
+backups/
 
 # Playwright
 node_modules/

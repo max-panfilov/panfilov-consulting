@@ -126,30 +126,39 @@ export const Cases: CollectionConfig<'cases'> = {
             },
             {
               name: 'challenge',
-              type: 'textarea',
+              type: 'richText',
               required: true,
               label: 'Задача клиента',
               admin: {
                 description: 'Описание проблемы или задачи, которую нужно было решить',
               },
+              editor: lexicalEditor({
+                features: ({ defaultFeatures }) => defaultFeatures,
+              }),
             },
             {
               name: 'solution',
-              type: 'textarea',
+              type: 'richText',
               label: 'Решение',
               admin: {
                 description: 'Подробное описание предложенного решения',
               },
               required: true,
+              editor: lexicalEditor({
+                features: ({ defaultFeatures }) => defaultFeatures,
+              }),
             },
             {
               name: 'results',
-              type: 'textarea',
+              type: 'richText',
               label: 'Результаты',
               admin: {
                 description: 'Достигнутые результаты с конкретными метриками',
               },
               required: true,
+              editor: lexicalEditor({
+                features: ({ defaultFeatures }) => defaultFeatures,
+              }),
             },
             {
               name: 'technologies',
