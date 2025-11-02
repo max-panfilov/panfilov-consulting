@@ -96,7 +96,7 @@ export default async function CasesPage() {
                   {/* Описание */}
                   <CardContent>
                     {caseItem.shortDescription && (
-                      <p className="text-muted-foreground line-clamp-3">
+                      <p className="text-muted-foreground">
                         {caseItem.shortDescription}
                       </p>
                     )}

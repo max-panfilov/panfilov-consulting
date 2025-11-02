@@ -1,6 +1,9 @@
 'use client'
 
 import React from 'react'
+import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 // Тип для сериализованного кейса
 type SerializedCase = {
@@ -15,23 +18,6 @@ type SerializedCase = {
 type FeaturedCasesClientProps = {
   heading?: string | null
   cases: SerializedCase[]
-  ctaText?: string | null
-  ctaLink?: string | null
-}
-
-// Вспомогательная функция для получения русского названия индустрии
-function getIndustryLabel(industry: string): string {
-  const labels: Record<string, string> = {
-    electronics: 'Электротехника',
-    metallurgy: 'Металлопрокат',
-    legal: 'Юридические услуги',
-    finance: 'Финансы',
-    retail: 'Ритейл',
-    logistics: 'Логистика',
-    manufacturing: 'Производство',
-    other: 'Другое',
-  }
-  return labels[industry] || industry
 }
 
 export const FeaturedCasesClient: React.FC<FeaturedCasesClientProps> = ({
@@ -41,53 +27,56 @@ export const FeaturedCasesClient: React.FC<FeaturedCasesClientProps> = ({
   return (
     <section className="py-16 md:py-32" id="cases">
       <div className="container">
-        {/* Заголовок секции */}
-        {heading && (
-          <div className="mx-auto mb-16 max-w-3xl text-center">
-            <h2 className="text-pretty text-3xl font-semibold md:text-4xl lg:text-5xl">{heading}</h2>
-          </div>
-        )}
+        {/* Заголовок и кнопка в стиле Feature72 */}
+        <div className="mb-8 lg:max-w-sm">
+          {heading && (
+            <h2 className="text-pretty text-3xl font-semibold md:text-4xl lg:text-5xl mb-3 md:mb-4 lg:mb-6">
+              {heading}
+            </h2>
+          )}
+          {/* Кнопка "Все кейсы" */}
+          <Button variant="link" asChild>
+            <Link
+              href="/cases"
+              className="group flex items-center font-medium md:text-base lg:text-lg"
+            >
+              Все кейсы
+              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </Button>
+        </div>
 
-        {/* Grid с кейсами */}
-        <div className="grid gap-8 lg:grid-cols-2">
+        {/* Grid с кейсами в стиле Feature72 */}
+        <div className="grid gap-6 md:grid-cols-2 lg:gap-8">
           {cases.map((caseItem) => {
             const url = `/cases/${caseItem.slug}`
             return (
               <div
                 key={caseItem.id}
-                className="bg-muted flex flex-col justify-between rounded-lg"
+                className="border-border flex flex-col overflow-clip rounded-xl border"
               >
-                <div className="flex justify-between gap-10 border-b">
-                  <div className="flex flex-col justify-start justify-between gap-8 py-6 pl-4 md:gap-14 md:py-10 md:pl-8 lg:justify-normal">
-                    {/* Индустрия */}
-                    <span className="text-muted-foreground font-mono text-xs uppercase">
-                      {caseItem.industry ? getIndustryLabel(caseItem.industry) : 'Кейс'}
-                    </span>
-                    {/* Заголовок */}
-                    <a href={url}>
-                      <h3 className="hover:text-primary text-2xl transition-all hover:opacity-80 sm:text-3xl lg:text-4xl">
-                        {caseItem.title}
-                      </h3>
-                    </a>
-                  </div>
-                  {/* Изображение */}
-                  <div className="md:1/3 w-2/5 shrink-0 rounded-r-lg border-l">
-                    <a href={url}>
-                      <img
-                        src={
-                          caseItem.coverImage ||
-                          'https://deifkwefumgah.cloudfront.net/shadcnblocks/block/placeholder-dark-1.svg'
-                        }
-                        alt={caseItem.title || 'Case image'}
-                        className="h-full w-full rounded-t-lg object-cover transition-opacity hover:opacity-80"
-                      />
-                    </a>
-                  </div>
+                {/* Изображение */}
+                <Link href={url}>
+                  <img
+                    src={
+                      caseItem.coverImage ||
+                      'https://deifkwefumgah.cloudfront.net/shadcnblocks/block/placeholder-1.svg'
+                    }
+                    alt={caseItem.title || 'Case image'}
+                    className="aspect-16/9 h-full w-full object-cover object-center transition-opacity hover:opacity-80"
+                  />
+                </Link>
+                {/* Контент карточки */}
+                <div className="px-6 py-8 md:px-8 md:py-10 lg:px-10 lg:py-12">
+                  <h3 className="mb-3 text-lg font-semibold md:mb-4 md:text-2xl lg:mb-6">
+                    <Link href={url} className="hover:text-primary transition-colors">
+                      {caseItem.title}
+                    </Link>
+                  </h3>
+                  <p className="text-muted-foreground lg:text-lg">
+                    {caseItem.shortDescription || 'Описание кейса'}
+                  </p>
                 </div>
-                {/* Описание */}
-                <p className="text-muted-foreground p-4 md:p-8">
-                  {caseItem.shortDescription || 'Описание кейса'}
-                </p>
               </div>
             )
           })}
