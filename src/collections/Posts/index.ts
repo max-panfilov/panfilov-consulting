@@ -7,6 +7,26 @@ import {
   HorizontalRuleFeature,
   InlineToolbarFeature,
   lexicalEditor,
+  // Форматирование текста
+  BoldFeature,
+  ItalicFeature,
+  UnderlineFeature,
+  StrikethroughFeature,
+  SubscriptFeature,
+  SuperscriptFeature,
+  InlineCodeFeature,
+  // Списки
+  UnorderedListFeature,
+  OrderedListFeature,
+  ChecklistFeature,
+  // Выравнивание
+  AlignFeature,
+  IndentFeature,
+  // Ссылки и медиа
+  LinkFeature,
+  // Дополнительные функции
+  ParagraphFeature,
+  BlockquoteFeature,
 } from '@payloadcms/richtext-lexical'
 
 import { authenticated } from '../../access/authenticated'
@@ -88,11 +108,37 @@ export const Posts: CollectionConfig<'posts'> = {
                 features: ({ rootFeatures }) => {
                   return [
                     ...rootFeatures,
+                    // Заголовки
                     HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),
+                    // Блоки контента
                     BlocksFeature({ blocks: [Banner, Code, MediaBlock] }),
+                    // Форматирование текста
+                    BoldFeature(),
+                    ItalicFeature(),
+                    UnderlineFeature(),
+                    StrikethroughFeature(),
+                    SubscriptFeature(),
+                    SuperscriptFeature(),
+                    InlineCodeFeature(),
+                    // Списки
+                    UnorderedListFeature(),
+                    OrderedListFeature(),
+                    ChecklistFeature(),
+                    // Выравнивание и отступы
+                    AlignFeature(),
+                    IndentFeature(),
+                    // Ссылки
+                    LinkFeature({
+                      enabledCollections: ['pages', 'posts'],
+                    }),
+                    // Параграфы и цитаты
+                    ParagraphFeature(),
+                    BlockquoteFeature(),
+                    // Горизонтальная линия
+                    HorizontalRuleFeature(),
+                    // Панели инструментов
                     FixedToolbarFeature(),
                     InlineToolbarFeature(),
-                    HorizontalRuleFeature(),
                   ]
                 },
               }),

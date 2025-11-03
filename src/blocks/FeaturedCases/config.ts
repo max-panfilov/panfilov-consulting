@@ -11,6 +11,14 @@ export const FeaturedCases: Block = {
       label: 'Заголовок секции',
     },
     {
+      name: 'subheading',
+      type: 'text',
+      label: 'Подзаголовок секции',
+      admin: {
+        description: 'Дополнительное описание под заголовком',
+      },
+    },
+    {
       name: 'casesToShow',
       type: 'number',
       label: 'Количество кейсов',

@@ -44,12 +44,6 @@ export default async function Page() {
         {posts.docs.length > 0 ? (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
             {posts.docs.map((post) => {
-              // Извлекаем изображение
-              const metaImageUrl =
-                typeof post.meta?.image === 'object' && post.meta.image?.url
-                  ? post.meta.image.url
-                  : null
-
               // Извлекаем категории
               const postCategories =
                 Array.isArray(post.categories) && post.categories.length > 0
@@ -68,27 +62,7 @@ export default async function Page() {
                 : null
 
               return (
-                <Card key={post.id} className="grid grid-rows-[auto_auto_1fr_auto] pt-0">
-                  {/* Изображение */}
-                  <div className="aspect-16/9 w-full">
-                    <a
-                      href={`/posts/${post.slug}`}
-                      className="fade-in transition-opacity duration-200 hover:opacity-70"
-                    >
-                      {metaImageUrl ? (
-                        <img
-                          src={metaImageUrl}
-                          alt={post.title}
-                          className="h-full w-full object-cover object-center"
-                        />
-                      ) : (
-                        <div className="h-full w-full bg-muted flex items-center justify-center">
-                          <span className="text-muted-foreground">Нет изображения</span>
-                        </div>
-                      )}
-                    </a>
-                  </div>
-
+                <Card key={post.id} className="grid grid-rows-[auto_1fr_auto]">
                   {/* Заголовок */}
                   <CardHeader>
                     <div className="flex items-center gap-2 mb-2">
@@ -107,7 +81,7 @@ export default async function Page() {
                   {/* Описание */}
                   <CardContent>
                     {post.meta?.description && (
-                      <p className="text-muted-foreground line-clamp-3">
+                      <p className="text-muted-foreground">
                         {post.meta.description}
                       </p>
                     )}

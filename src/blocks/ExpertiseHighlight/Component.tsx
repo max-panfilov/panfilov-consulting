@@ -127,7 +127,7 @@ export const ExpertiseHighlightBlock: React.FC<ExpertiseHighlightBlockType> = as
                     <h3 className="mb-2 text-xl font-semibold">{post.title}</h3>
                     {/* Описание */}
                     {post.meta?.description && (
-                      <p className="text-muted-foreground line-clamp-3">
+                      <p className="text-muted-foreground">
                         {post.meta.description}
                       </p>
                     )}

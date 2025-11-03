@@ -4,6 +4,7 @@ import React from 'react'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 
 // Тип для сериализованного кейса
 type SerializedCase = {
@@ -17,36 +18,32 @@ type SerializedCase = {
 
 type FeaturedCasesClientProps = {
   heading?: string | null
+  subheading?: string | null
   cases: SerializedCase[]
 }
 
 export const FeaturedCasesClient: React.FC<FeaturedCasesClientProps> = ({
   heading,
+  subheading,
   cases,
 }) => {
   return (
     <section className="py-16 md:py-32" id="cases">
       <div className="container">
-        {/* Заголовок и кнопка в стиле Feature72 */}
-        <div className="mb-8 lg:max-w-sm">
-          {heading && (
-            <h2 className="text-pretty text-3xl font-semibold md:text-4xl lg:text-5xl mb-3 md:mb-4 lg:mb-6">
-              {heading}
-            </h2>
-          )}
-          {/* Кнопка "Все кейсы" */}
-          <Button variant="link" asChild>
-            <Link
-              href="/cases"
-              className="group flex items-center font-medium md:text-base lg:text-lg"
-            >
-              Все кейсы
-              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Link>
-          </Button>
-        </div>
+        {/* Заголовок секции по центру */}
+        {heading && (
+          <div className="mx-auto mb-16 max-w-3xl text-center">
+            <Badge variant="outline" className="mb-4">
+              Кейсы
+            </Badge>
+            <h2 className="text-pretty text-3xl font-semibold md:text-4xl lg:text-5xl">{heading}</h2>
+            {subheading && (
+              <p className="text-muted-foreground mt-4 text-lg">{subheading}</p>
+            )}
+          </div>
+        )}
 
-        {/* Grid с кейсами в стиле Feature72 */}
+        {/* Grid с кейсами */}
         <div className="grid gap-6 md:grid-cols-2 lg:gap-8">
           {cases.map((caseItem) => {
             const url = `/cases/${caseItem.slug}`
@@ -80,6 +77,16 @@ export const FeaturedCasesClient: React.FC<FeaturedCasesClientProps> = ({
               </div>
             )
           })}
+        </div>
+
+        {/* Кнопка "Все кейсы" после списка кейсов */}
+        <div className="mt-14 flex justify-center">
+          <Button asChild>
+            <Link href="/cases">
+              Все кейсы
+              <ArrowRight className="ml-2 size-4" />
+            </Link>
+          </Button>
         </div>
       </div>
     </section>

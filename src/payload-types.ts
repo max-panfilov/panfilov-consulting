@@ -516,6 +516,10 @@ export interface SolutionApproachBlock {
  */
 export interface FeaturedCasesBlock {
   heading: string;
+  /**
+   * Дополнительное описание под заголовком
+   */
+  subheading?: string | null;
   casesToShow?: number | null;
   /**
    * Если включено, автоматически отбираются кейсы с отметкой "featured"
@@ -1404,6 +1408,7 @@ export interface SolutionApproachBlockSelect<T extends boolean = true> {
  */
 export interface FeaturedCasesBlockSelect<T extends boolean = true> {
   heading?: T;
+  subheading?: T;
   casesToShow?: T;
   autoSelect?: T;
   manualCases?: T;
