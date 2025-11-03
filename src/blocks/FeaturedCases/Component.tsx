@@ -6,6 +6,7 @@ import { FeaturedCasesClient } from './Component.client'
 
 export const FeaturedCasesBlock: React.FC<FeaturedCasesBlockType> = async ({
   heading,
+  subheading,
   casesToShow = 4,
   autoSelect = true,
   manualCases,
@@ -60,6 +61,7 @@ export const FeaturedCasesBlock: React.FC<FeaturedCasesBlockType> = async ({
   return (
     <FeaturedCasesClient 
       heading={heading}
+      subheading={subheading}
       cases={serializedCases}
     />
   )

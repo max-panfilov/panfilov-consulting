@@ -1,5 +1,6 @@
 import * as migration_20251030_add_footer_contact_form from './20251030_add_footer_contact_form';
 import * as migration_20251101_113607 from './20251101_113607';
+import * as migration_20251102_150042 from './20251102_150042';
 
 export const migrations = [
   {
@@ -10,6 +11,11 @@ export const migrations = [
   {
     up: migration_20251101_113607.up,
     down: migration_20251101_113607.down,
-    name: '20251101_113607'
+    name: '20251101_113607',
+  },
+  {
+    up: migration_20251102_150042.up,
+    down: migration_20251102_150042.down,
+    name: '20251102_150042'
   },
 ];

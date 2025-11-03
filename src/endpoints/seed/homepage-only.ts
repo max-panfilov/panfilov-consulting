@@ -133,6 +133,7 @@ export const seedHomePageOnly = async (payload: Payload): Promise<void> => {
           {
             blockType: 'featuredCases',
             heading: 'Доказанная эффективность на практике',
+            subheading: 'Реальные проекты с измеримыми результатами для вашего бизнеса.',
             casesToShow: 3,
             autoSelect: true,
           },
