@@ -1,10 +1,10 @@
 import { getPayload } from 'payload'
 import config from '@payload-config'
-import type { Page, Post } from '@/payload-types'
+import type { Page, Post, Case } from '@/payload-types'
 
 /**
  * Генерация динамического sitemap.xml
- * Собирает все опубликованные страницы и посты
+ * Собирает все опубликованные страницы, посты и кейсы
  */
 export async function GET() {
   const payload = await getPayload({ config })
@@ -26,6 +26,18 @@ export async function GET() {
     // Получаем все опубликованные посты
     const postsResult = await payload.find({
       collection: 'posts',
+      where: {
+        _status: {
+          equals: 'published',
+        },
+      },
+      limit: 1000,
+      depth: 0,
+    })
+
+    // Получаем все опубликованные кейсы
+    const casesResult = await payload.find({
+      collection: 'cases',
       where: {
         _status: {
           equals: 'published',
@@ -66,6 +78,21 @@ export async function GET() {
       })
       .join('')
 
+    // Генерируем XML для кейсов
+    const casesXml = casesResult.docs
+      .map((caseItem: Case) => {
+        const lastmod = caseItem.updatedAt ? new Date(caseItem.updatedAt).toISOString() : new Date().toISOString()
+        
+        return `
+  <url>
+    <loc>${baseUrl}/cases/${caseItem.slug}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>`
+      })
+      .join('')
+
     // Собираем полный sitemap
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
@@ -76,6 +103,7 @@ export async function GET() {
         xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
 ${pagesXml}
 ${postsXml}
+${casesXml}
 </urlset>`
 
     return new Response(sitemap, {
