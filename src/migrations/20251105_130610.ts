@@ -15,8 +15,8 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   DROP TYPE "public"."enum__cases_v_version_industry";
   
   -- Создаем новые enum типы с обновленным списком
-  CREATE TYPE "public"."enum_cases_industry" AS ENUM('electronics', 'legal', 'finance', 'retail', 'logistics', 'industry', 'other');
-  CREATE TYPE "public"."enum__cases_v_version_industry" AS ENUM('electronics', 'legal', 'finance', 'retail', 'logistics', 'industry', 'other');
+  CREATE TYPE "public"."enum_cases_industry" AS ENUM('electronics', 'legal', 'finance', 'retail', 'logistics', 'industry', 'healthcare', 'other');
+  CREATE TYPE "public"."enum__cases_v_version_industry" AS ENUM('electronics', 'legal', 'finance', 'retail', 'logistics', 'industry', 'healthcare', 'other');
   
   -- Применяем новые enum типы к колонкам
   ALTER TABLE "cases" ALTER COLUMN "industry" SET DATA TYPE "public"."enum_cases_industry" USING "industry"::"public"."enum_cases_industry";

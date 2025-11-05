@@ -116,6 +116,10 @@ export const Cases: CollectionConfig<'cases'> = {
                   value: 'industry',
                 },
                 {
+                  label: 'Медицина',
+                  value: 'healthcare',
+                },
+                {
                   label: 'Другое',
                   value: 'other',
                 },
