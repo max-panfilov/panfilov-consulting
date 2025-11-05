@@ -15,6 +15,8 @@ import {
   HorizontalRuleFeature,
   InlineCodeFeature,
   BlocksFeature,
+  FixedToolbarFeature,
+  InlineToolbarFeature,
 } from '@payloadcms/richtext-lexical'
 import { authenticated } from '../access/authenticated'
 import { authenticatedOrPublished } from '../access/authenticatedOrPublished'
@@ -186,6 +188,9 @@ export const Cases: CollectionConfig<'cases'> = {
                       },
                     ],
                   }),
+                  // Панели форматирования
+                  FixedToolbarFeature(),
+                  InlineToolbarFeature(),
                 ],
               }),
             },
@@ -235,6 +240,9 @@ export const Cases: CollectionConfig<'cases'> = {
                       },
                     ],
                   }),
+                  // Панели форматирования
+                  FixedToolbarFeature(),
+                  InlineToolbarFeature(),
                 ],
               }),
             },
@@ -284,6 +292,9 @@ export const Cases: CollectionConfig<'cases'> = {
                       },
                     ],
                   }),
+                  // Панели форматирования
+                  FixedToolbarFeature(),
+                  InlineToolbarFeature(),
                 ],
               }),
             },
