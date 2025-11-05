@@ -613,6 +613,10 @@ export interface Case {
    * Отметьте, чтобы кейс отображался в блоке Featured Cases
    */
   featured?: boolean | null;
+  /**
+   * Меньшее число — выше в списке. По умолчанию 9999.
+   */
+  sortOrder?: number | null;
   publishedAt?: string | null;
   meta?: {
     title?: string | null;
@@ -1575,6 +1579,7 @@ export interface CasesSelect<T extends boolean = true> {
         id?: T;
       };
   featured?: T;
+  sortOrder?: T;
   publishedAt?: T;
   meta?:
     | T

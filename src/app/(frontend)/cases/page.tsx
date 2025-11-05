@@ -24,7 +24,8 @@ export default async function CasesPage() {
       },
     },
     limit: 100,
-    sort: '-createdAt',
+    // Общий порядок: по sortOrder, затем по дате публикации
+    sort: ['sortOrder', '-publishedAt'],
   })
 
   const cases = casesResult.docs

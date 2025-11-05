@@ -52,7 +52,8 @@ export const Cases: CollectionConfig<'cases'> = {
     featured: true,
   },
   admin: {
-    defaultColumns: ['title', 'industry', 'featured', 'updatedAt'],
+    // Добавляем колонку sortOrder для удобного редактирования порядка в админке
+    defaultColumns: ['sortOrder', 'title', 'industry', 'featured', 'updatedAt'],
     livePreview: {
       url: ({ data, req }) =>
         generatePreviewPath({
@@ -315,6 +316,18 @@ export const Cases: CollectionConfig<'cases'> = {
                 position: 'sidebar',
                 description: 'Отметьте, чтобы кейс отображался в блоке Featured Cases',
               },
+            },
+            {
+              // Поле порядка сортировки: меньшее число — выше в списках (главная и /cases)
+              name: 'sortOrder',
+              type: 'number',
+              label: 'Порядок отображения',
+              admin: {
+                position: 'sidebar',
+                description: 'Меньшее число — выше в списке. По умолчанию 9999.',
+              },
+              min: 0,
+              defaultValue: 9999,
             },
             {
               name: 'publishedAt',

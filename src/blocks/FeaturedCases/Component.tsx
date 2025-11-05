@@ -30,7 +30,8 @@ export const FeaturedCasesBlock: React.FC<FeaturedCasesBlockType> = async ({
         },
       },
       limit: casesToShow || undefined,
-      sort: '-publishedAt',
+      // Сортируем по настраиваемому порядку, затем по дате публикации (новые выше)
+      sort: ['sortOrder', '-publishedAt'],
     })
     cases = result.docs
   } else if (manualCases && Array.isArray(manualCases)) {
