@@ -540,7 +540,7 @@ export interface FeaturedCasesBlock {
 export interface Case {
   id: number;
   title: string;
-  industry: 'electronics' | 'metallurgy' | 'legal' | 'finance' | 'retail' | 'logistics' | 'manufacturing' | 'other';
+  industry: 'electronics' | 'legal' | 'finance' | 'retail' | 'logistics' | 'industry' | 'other';
   coverImage: number | Media;
   /**
    * Для карточки кейса на главной странице (до 150 символов)

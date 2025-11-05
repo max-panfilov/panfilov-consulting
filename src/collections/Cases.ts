@@ -96,10 +96,6 @@ export const Cases: CollectionConfig<'cases'> = {
                   value: 'electronics',
                 },
                 {
-                  label: 'Металлопрокат',
-                  value: 'metallurgy',
-                },
-                {
                   label: 'Юридические услуги',
                   value: 'legal',
                 },
@@ -116,8 +112,8 @@ export const Cases: CollectionConfig<'cases'> = {
                   value: 'logistics',
                 },
                 {
-                  label: 'Производство',
-                  value: 'manufacturing',
+                  label: 'Промышленность',
+                  value: 'industry',
                 },
                 {
                   label: 'Другое',
