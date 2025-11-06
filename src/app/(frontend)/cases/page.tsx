@@ -52,11 +52,12 @@ export default async function CasesPage() {
         {cases.length > 0 ? (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
             {cases.map((caseItem) => {
-              // Извлекаем изображение обложки
-              const coverImageUrl =
-                typeof caseItem.coverImage === 'object' && caseItem.coverImage?.url
-                  ? caseItem.coverImage.url
-                  : null
+              // Извлекаем изображение обложки (используем сжатую версию)
+              const coverImage =
+                typeof caseItem.coverImage === 'object' ? caseItem.coverImage : null
+              
+              // Используем medium размер (900px) для карточек, fallback на оригинал
+              const coverImageUrl = coverImage?.sizes?.medium?.url || coverImage?.url || null
 
               // Получаем метку индустрии
               const industryLabel = getIndustryLabel(caseItem.industry || '')

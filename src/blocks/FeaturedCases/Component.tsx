@@ -48,16 +48,21 @@ export const FeaturedCasesBlock: React.FC<FeaturedCasesBlockType> = async ({
   }
 
   // Преобразуем кейсы в сериализуемый формат для передачи клиенту
-  const serializedCases = cases.map(caseItem => ({
-    id: caseItem.id,
-    title: caseItem.title,
-    slug: caseItem.slug,
-    industry: caseItem.industry,
-    shortDescription: caseItem.shortDescription,
-    coverImage: typeof caseItem.coverImage === 'object' && caseItem.coverImage?.url
-      ? caseItem.coverImage.url
-      : null,
-  }))
+  // Используем сжатую версию изображения (medium) для ускорения загрузки
+  const serializedCases = cases.map(caseItem => {
+    const coverImage = typeof caseItem.coverImage === 'object' ? caseItem.coverImage : null
+    // Используем medium размер (900px) для карточек, fallback на оригинал
+    const coverImageUrl = coverImage?.sizes?.medium?.url || coverImage?.url || null
+    
+    return {
+      id: caseItem.id,
+      title: caseItem.title,
+      slug: caseItem.slug,
+      industry: caseItem.industry,
+      shortDescription: caseItem.shortDescription,
+      coverImage: coverImageUrl,
+    }
+  })
 
   return (
     <FeaturedCasesClient 
