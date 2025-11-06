@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge'
 import type { Case } from '@/payload-types'
 
 import { generateMeta } from '@/utilities/generateMeta'
+import { getIndustryLabel } from '@/utilities/getIndustryLabel'
 import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 import RichText from '@/components/RichText'
@@ -162,17 +163,3 @@ const queryCaseBySlug = cache(async ({ slug }: { slug: string }) => {
   return result.docs?.[0] || null
 })
 
-// Вспомогательная функция для получения русского названия индустрии
-function getIndustryLabel(industry: string): string {
-  const labels: Record<string, string> = {
-    electronics: 'Электротехника',
-    metallurgy: 'Металлопрокат',
-    legal: 'Юридические услуги',
-    finance: 'Финансы',
-    retail: 'Ритейл',
-    logistics: 'Логистика',
-    manufacturing: 'Производство',
-    other: 'Другое',
-  }
-  return labels[industry] || industry
-}

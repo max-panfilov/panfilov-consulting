@@ -6,6 +6,7 @@ import { ArrowRight } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
+import { getIndustryLabel } from '@/utilities/getIndustryLabel'
 
 export const metadata: Metadata = {
   title: 'Кейсы | Panfilov Consulting',
@@ -127,17 +128,3 @@ export default async function CasesPage() {
   )
 }
 
-// Вспомогательная функция для получения русского названия индустрии
-function getIndustryLabel(industry: string): string {
-  const labels: Record<string, string> = {
-    electronics: 'Электротехника',
-    metallurgy: 'Металлопрокат',
-    legal: 'Юридические услуги',
-    finance: 'Финансы',
-    retail: 'Ритейл',
-    logistics: 'Логистика',
-    manufacturing: 'Производство',
-    other: 'Другое',
-  }
-  return labels[industry] || ''
-}
