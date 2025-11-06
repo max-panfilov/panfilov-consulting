@@ -3,10 +3,10 @@ import { getServerSideURL } from './getURL'
 
 const defaultOpenGraph: Metadata['openGraph'] = {
   type: 'website',
-  description: 'Московская консалтинговая фирма со специализацией на внедрение технологий генеративного искусственного интеллекта.',
+  description: 'Консалтинг и разработка AI-решений для среднего и крупного бизнеса. Находим точки роста, автоматизируем процессы и создаем интеллектуальные решения.',
   images: [
     {
-      url: `${getServerSideURL()}/website-template-OG.webp`,
+      url: `${getServerSideURL()}/panfilov-consulting-meta.png`,
     },
   ],
   siteName: 'panfilov.consulting',
