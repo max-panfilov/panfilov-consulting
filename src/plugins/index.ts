@@ -6,7 +6,7 @@ import { seoPlugin } from '@payloadcms/plugin-seo'
 import { searchPlugin } from '@payloadcms/plugin-search'
 import { Plugin } from 'payload'
 import { revalidateRedirects } from '@/hooks/revalidateRedirects'
-import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
+import { GenerateTitle, GenerateURL, GenerateImage } from '@payloadcms/plugin-seo/types'
 import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 import { searchFields } from '@/search/fieldOverrides'
 import { beforeSyncWithSearch } from '@/search/beforeSync'
@@ -22,6 +22,19 @@ const generateURL: GenerateURL<Post | Page> = ({ doc }) => {
   const url = getServerSideURL()
 
   return doc?.slug ? `${url}/${doc.slug}` : url
+}
+
+// Генерация изображения для meta тегов (Open Graph, Twitter)
+const generateImage: GenerateImage<Post | Page> = ({ doc }) => {
+  const url = getServerSideURL()
+  
+  // Если у документа есть своё meta изображение - использовать его
+  if (doc?.meta?.image && typeof doc.meta.image === 'object' && 'url' in doc.meta.image) {
+    return doc.meta.image.url as string
+  }
+  
+  // Иначе возвращаем дефолтное изображение
+  return `${url}/panfilov-consulting-meta.png`
 }
 
 export const plugins: Plugin[] = [
@@ -54,6 +67,8 @@ export const plugins: Plugin[] = [
   seoPlugin({
     generateTitle,
     generateURL,
+    generateImage,
+    uploadsCollection: 'media',
   }),
   formBuilderPlugin({
     fields: {
