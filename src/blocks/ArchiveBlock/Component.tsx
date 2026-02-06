@@ -79,30 +79,29 @@ export const ArchiveBlock: React.FC<
   const collectionSlug = relationTo === 'cases' ? 'cases' : 'posts'
 
   return (
-    <section className="py-32" id={`block-${id}`}>
-      <div className="container mx-auto flex flex-col items-center gap-16 lg:px-16">
+    <section className="py-16 md:py-24" id={`block-${id}`}>
+      <div className="container">
         {introContent && (
-          <div className="text-center">
-            <RichText className="mb-3 text-pretty text-3xl font-semibold md:mb-4 md:text-4xl lg:mb-6 lg:max-w-3xl lg:text-5xl" data={introContent} enableGutter={false} />
+          <div className="mb-10 md:mb-14 max-w-2xl">
+            <RichText className="text-pretty text-3xl font-semibold tracking-tight md:text-4xl" data={introContent} enableGutter={false} />
           </div>
         )}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
           {items.map((item) => {
             const href = `/${collectionSlug}/${item.slug}`
-            // Получаем изображение для поста или кейса
-            const image = relationTo === 'cases' 
-              ? (item as Case).coverImage 
+            const image = relationTo === 'cases'
+              ? (item as Case).coverImage
               : (item as Post).meta?.image
-            
+
             return (
               <Card
                 key={item.id}
-                className="grid grid-rows-[auto_auto_1fr_auto] overflow-hidden pt-0"
+                className="group grid grid-rows-[auto_auto_1fr_auto] overflow-hidden pt-0 transition-colors hover:bg-card"
               >
-                <div className="aspect-16/9 w-full">
+                <div className="aspect-16/9 w-full overflow-hidden">
                   <Link
                     href={href}
-                    className="fade-in transition-opacity duration-200 hover:opacity-70"
+                    className="block h-full transition-transform duration-300 group-hover:scale-[1.02]"
                   >
                     {image && typeof image === 'object' ? (
                       <Media
@@ -110,26 +109,26 @@ export const ArchiveBlock: React.FC<
                         className="h-full w-full object-cover object-center"
                       />
                     ) : (
-                      <div className="h-full w-full bg-gradient-to-br from-blue-500 to-purple-600" />
+                      <div className="h-full w-full bg-muted" />
                     )}
                   </Link>
                 </div>
                 <CardHeader>
-                  <h3 className="text-lg font-semibold hover:underline md:text-xl">
+                  <h3 className="text-lg font-semibold md:text-xl">
                     <Link href={href}>
                       {item.title}
                     </Link>
                   </h3>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-muted-foreground">
+                  <p className="text-muted-foreground text-sm leading-relaxed">
                     {item.meta?.description || ''}
                   </p>
                 </CardContent>
                 <CardFooter>
                   <Link
                     href={href}
-                    className="text-foreground flex items-center hover:underline"
+                    className="text-foreground flex items-center text-sm font-medium hover:text-muted-foreground transition-colors"
                   >
                     Читать далее
                     <ArrowRight className="ml-2 size-4" />

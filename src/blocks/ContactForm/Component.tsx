@@ -23,11 +23,11 @@ export const ContactFormBlock: React.FC<ContactFormBlockType> = ({
         {/* Заголовок и описание */}
         <div className="mb-8 text-center">
           {heading && (
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            <h2 className="text-3xl md:text-4xl font-semibold tracking-tight mb-4">
               {heading}
             </h2>
           )}
-          
+
           {description && (
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
               {description}
@@ -36,7 +36,7 @@ export const ContactFormBlock: React.FC<ContactFormBlockType> = ({
         </div>
 
         {/* Карточка с формой */}
-        <div className="bg-card rounded-lg shadow-md p-6 md:p-8">
+        <div className="bg-card border border-border rounded-lg p-6 md:p-8">
           {typeof form === 'object' && <FormBlock form={form as any} enableIntro={false} />}
         </div>
       </motion.div>

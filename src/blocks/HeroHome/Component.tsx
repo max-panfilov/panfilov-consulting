@@ -49,25 +49,25 @@ export const HeroHomeBlock: React.FC<HeroHomeBlockType> = ({
   const bgVideoUrl = getMediaUrl(backgroundVideo)
 
   return (
-    <section className="pt-0 pb-16 md:pb-32 -mt-12 md:-mt-8">
+    <section className="pt-0 pb-16 md:pb-24 -mt-12 md:-mt-8">
       <div className="container">
-        <div className="grid items-center gap-8 lg:grid-cols-2">
+        <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
           <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
             {/* Заголовок */}
-            <h1 className="my-6 text-pretty text-4xl font-bold lg:text-6xl">
+            <h1 className="my-6 text-pretty text-4xl font-semibold tracking-tight lg:text-5xl xl:text-6xl">
               {heading}
             </h1>
 
             {/* Подзаголовок */}
-            <p className="text-muted-foreground mb-8 max-w-xl lg:text-xl">
+            <p className="text-muted-foreground mb-8 max-w-xl lg:text-lg">
               {subheading}
             </p>
 
             {/* Кнопки CTA */}
-            <div className="flex w-full flex-col justify-center gap-2 sm:flex-row lg:justify-start">
+            <div className="flex w-full flex-col justify-center gap-3 sm:flex-row lg:justify-start">
               {primaryCTA?.text && primaryCTA?.link && (
-                <Button asChild className="w-full sm:w-auto">
-                  <a 
+                <Button asChild size="lg" className="w-full sm:w-auto">
+                  <a
                     href={primaryCTA.link}
                     onClick={(e) => scrollToElement(e, primaryCTA.link)}
                   >
@@ -76,8 +76,8 @@ export const HeroHomeBlock: React.FC<HeroHomeBlockType> = ({
                 </Button>
               )}
               {secondaryCTA?.text && secondaryCTA?.link && (
-                <Button asChild variant="outline" className="w-full sm:w-auto">
-                  <a 
+                <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
+                  <a
                     href={secondaryCTA.link}
                     onClick={(e) => scrollToElement(e, secondaryCTA.link)}
                   >

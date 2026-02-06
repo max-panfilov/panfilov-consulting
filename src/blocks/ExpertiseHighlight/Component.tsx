@@ -51,25 +51,25 @@ export const ExpertiseHighlightBlock: React.FC<ExpertiseHighlightBlockType> = as
   const categoryName = category && typeof category === 'object' ? category.title : null
 
   return (
-    <section className="py-16 md:py-32">
+    <section className="py-16 md:py-24">
       <div className="container">
         {/* Заголовок секции */}
-        <div className="mb-14 mx-auto max-w-3xl text-center">
+        <div className="mb-10 md:mb-14 max-w-2xl">
           {categoryName && (
-            <Badge className="mb-4 mx-auto" variant="outline">
+            <Badge className="mb-3" variant="outline">
               {categoryName}
             </Badge>
           )}
-          <h2 className="mb-3 text-pretty text-3xl font-semibold md:mb-4 md:text-4xl lg:text-5xl lg:mb-6">
+          <h2 className="mb-3 text-pretty text-3xl font-semibold tracking-tight md:text-4xl">
             {heading}
           </h2>
           {subheading && (
-            <p className="text-lg text-muted-foreground md:text-xl">{subheading}</p>
+            <p className="text-lg text-muted-foreground">{subheading}</p>
           )}
         </div>
 
         {/* Grid с постами */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
           {posts.map((post) => {
             // Извлекаем мета-изображение
             const metaImageUrl =
@@ -98,7 +98,7 @@ export const ExpertiseHighlightBlock: React.FC<ExpertiseHighlightBlockType> = as
               <Link
                 key={post.id}
                 href={`/posts/${post.slug}`}
-                className="flex flex-col overflow-clip rounded-xl border border-border bg-background"
+                className="group flex flex-col overflow-clip rounded-lg border border-border bg-background transition-colors hover:bg-card"
               >
                 {metaImageUrl && (
                   <div className="relative aspect-video w-full">
@@ -138,8 +138,8 @@ export const ExpertiseHighlightBlock: React.FC<ExpertiseHighlightBlockType> = as
 
         {/* CTA кнопка */}
         {ctaText && ctaLink && (
-          <div className="mt-14 flex justify-center">
-            <Button asChild>
+          <div className="mt-10 md:mt-14">
+            <Button asChild variant="outline">
               <Link href={ctaLink}>
                 {ctaText}
                 <ArrowRightIcon className="ml-2 size-4" />

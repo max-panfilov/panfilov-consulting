@@ -43,34 +43,34 @@ export const TargetAudienceBlock: React.FC<TargetAudienceBlockType> = ({
   }
 
   return (
-    <section className="py-16 md:py-32">
+    <section className="py-16 md:py-24">
       <div className="container">
         {/* Заголовок секции */}
         {(label || heading) && (
-          <div className="mb-12 mx-auto flex max-w-3xl flex-col gap-4 text-center">
-            {label && <Badge variant="secondary" className="mx-auto">{label}</Badge>}
+          <div className="mb-10 md:mb-14 max-w-2xl">
+            {label && <Badge variant="secondary" className="mb-3">{label}</Badge>}
             {heading && (
-              <h2 className="text-pretty text-3xl font-semibold md:text-4xl lg:text-5xl">{heading}</h2>
+              <h2 className="text-pretty text-3xl font-semibold tracking-tight md:text-4xl">{heading}</h2>
             )}
-            {subheading && <p className="text-muted-foreground text-lg">{subheading}</p>}
+            {subheading && <p className="text-muted-foreground mt-3 text-lg">{subheading}</p>}
           </div>
         )}
 
         {/* Grid с карточками аудиторий */}
-        <div className="grid gap-12 md:grid-cols-2">
+        <div className="grid gap-8 md:grid-cols-2 lg:gap-12">
           {audiences?.map((audience, idx) => {
             if (!audience || typeof audience !== 'object') return null
 
             return (
-              <div className="flex gap-6 space-y-4 rounded-lg md:block" key={idx}>
+              <div className="flex gap-5" key={idx}>
                 {/* Иконка */}
-                <span className="bg-accent flex size-10 shrink-0 items-center justify-center rounded-full md:size-12">
+                <span className="bg-accent flex size-10 shrink-0 items-center justify-center rounded-lg md:size-11">
                   {getIcon(audience.icon)}
                 </span>
                 {/* Контент */}
                 <div>
-                  <h3 className="font-medium md:mb-2 md:text-xl">{audience.title}</h3>
-                  <p className="text-muted-foreground text-sm md:text-base">
+                  <h3 className="font-medium mb-1.5 md:text-lg">{audience.title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed md:text-base">
                     {audience.description}
                   </p>
                 </div>
