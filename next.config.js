@@ -20,6 +20,10 @@ const nextConfig = {
           protocol: url.protocol.replace(':', ''),
         }
       }),
+      {
+        hostname: 'panfilov.consulting',
+        protocol: 'https',
+      },
     ],
   },
   webpack: (webpackConfig) => {

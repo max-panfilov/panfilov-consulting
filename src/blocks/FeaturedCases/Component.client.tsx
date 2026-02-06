@@ -55,7 +55,7 @@ export const FeaturedCasesClient: React.FC<FeaturedCasesClientProps> = ({
                 className="group flex flex-col overflow-clip rounded-lg border border-border transition-colors hover:bg-card"
               >
                 {/* Изображение */}
-                <div className="relative block aspect-16/9 w-full overflow-hidden">
+                <div className="relative block aspect-video w-full overflow-hidden">
                   <Image
                     src={
                       caseItem.coverImage ||

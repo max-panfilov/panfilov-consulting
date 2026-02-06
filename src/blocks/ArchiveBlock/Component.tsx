@@ -98,7 +98,7 @@ export const ArchiveBlock: React.FC<
                 key={item.id}
                 className="group grid grid-rows-[auto_auto_1fr_auto] overflow-hidden pt-0 transition-colors hover:bg-card"
               >
-                <div className="aspect-16/9 w-full overflow-hidden">
+                <div className="aspect-video w-full overflow-hidden">
                   <Link
                     href={href}
                     className="block h-full transition-transform duration-300 group-hover:scale-[1.02]"
