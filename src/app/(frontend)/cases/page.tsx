@@ -56,7 +56,7 @@ export default async function CasesPage() {
 
               return (
                 <Card key={caseItem.id} className="grid grid-rows-[auto_auto_1fr_auto] pt-0">
-                  <div className="aspect-16/9 w-full">
+                  <div className="aspect-video w-full">
                     <Link
                       href={`/cases/${caseItem.slug}`}
                       className="fade-in transition-opacity duration-200 hover:opacity-70"
