@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useRef, useMemo, useState } from 'react'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import React, { useRef, useMemo, useCallback } from 'react'
+import { Canvas, useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { useTheme } from '@/providers/Theme'
 
@@ -11,6 +11,15 @@ interface Node {
   basePosition: THREE.Vector3
   connections: number[]
   velocity: THREE.Vector3
+}
+
+// Общий объект для передачи позиции указателя в Three.js сцену
+interface PointerState {
+  // Нормализованные координаты указателя (-1 до 1)
+  x: number
+  y: number
+  // Активен ли указатель (мышь над канвасом или тач)
+  active: boolean
 }
 
 // Компонент отдельного узла
@@ -87,8 +96,11 @@ const Connection: React.FC<{
 // Основная сцена нейросети
 const NeuralNetwork: React.FC<{
   theme?: 'dark' | 'light' | null
-}> = ({ theme }) => {
+  pointer: PointerState
+}> = ({ theme, pointer }) => {
   const groupRef = useRef<THREE.Group>(null)
+  // Целевые значения вращения для плавной интерполяции
+  const targetRotation = useRef({ x: 0, y: 0 })
 
   // Генерируем узлы сети
   const nodes = useMemo(() => {
@@ -147,10 +159,26 @@ const NeuralNetwork: React.FC<{
   useFrame((state) => {
     const time = state.clock.getElapsedTime()
 
-    // Плавное вращение всей сцены
+    // Вращение сцены: комбинация автовращения и реакции на указатель
     if (groupRef.current) {
-      groupRef.current.rotation.y += 0.001
-      groupRef.current.rotation.x = Math.sin(time * 0.2) * 0.1
+      // Базовое автовращение
+      targetRotation.current.y += 0.001
+
+      if (pointer.active) {
+        // Указатель активен — добавляем смещение вращения на основе позиции мыши/тача
+        // pointer.x: -1 (лево) до 1 (право), pointer.y: -1 (верх) до 1 (низ)
+        const pointerInfluenceX = pointer.y * 0.3 // вертикальное движение → вращение по X
+        const pointerInfluenceY = pointer.x * 0.4 // горизонтальное движение → вращение по Y
+        targetRotation.current.x = pointerInfluenceX
+        targetRotation.current.y += pointerInfluenceY * 0.002
+      } else {
+        // Без указателя — плавная осцилляция
+        targetRotation.current.x = Math.sin(time * 0.2) * 0.1
+      }
+
+      // Плавная интерполяция к целевому вращению (lerp)
+      groupRef.current.rotation.x += (targetRotation.current.x - groupRef.current.rotation.x) * 0.05
+      groupRef.current.rotation.y += (targetRotation.current.y - groupRef.current.rotation.y) * 0.05
     }
 
     // Обновляем позиции узлов с волновым движением
@@ -166,6 +194,32 @@ const NeuralNetwork: React.FC<{
 
       // Обновляем позицию с учетом базовой позиции и волнового смещения
       node.position.copy(node.basePosition).add(waveOffset)
+
+      // Эффект притяжения/отталкивания узлов к указателю
+      if (pointer.active) {
+        // Проецируем позицию указателя в пространство сцены (приблизительно)
+        const pointerWorld = new THREE.Vector3(
+          pointer.x * 4, // масштабируем к размеру сцены
+          -pointer.y * 4,
+          0,
+        )
+
+        // Расстояние от узла до позиции указателя (в плоскости XY)
+        const nodeXY = new THREE.Vector2(node.position.x, node.position.y)
+        const pointerXY = new THREE.Vector2(pointerWorld.x, pointerWorld.y)
+        const dist = nodeXY.distanceTo(pointerXY)
+
+        // Узлы в радиусе 3 единиц притягиваются к указателю
+        if (dist < 3) {
+          const strength = (1 - dist / 3) * 0.15 // сила затухает с расстоянием
+          const direction = new THREE.Vector3(
+            pointerWorld.x - node.position.x,
+            pointerWorld.y - node.position.y,
+            0,
+          ).normalize()
+          node.position.add(direction.multiplyScalar(strength))
+        }
+      }
     })
 
     // Динамическое обновление связей каждые 3 секунды
@@ -234,18 +288,70 @@ const NeuralNetwork: React.FC<{
 // Главный экспортируемый компонент
 export const NeuralNetworkScene: React.FC = () => {
   const { theme } = useTheme()
+  const containerRef = useRef<HTMLDivElement>(null)
+  const pointerRef = useRef<PointerState>({ x: 0, y: 0, active: false })
+
+  // Вычисляем нормализованные координаты указателя (-1 до 1) относительно контейнера
+  const updatePointer = useCallback((clientX: number, clientY: number) => {
+    if (!containerRef.current) return
+    const rect = containerRef.current.getBoundingClientRect()
+    pointerRef.current.x = ((clientX - rect.left) / rect.width) * 2 - 1
+    pointerRef.current.y = ((clientY - rect.top) / rect.height) * 2 - 1
+    pointerRef.current.active = true
+  }, [])
+
+  const handlePointerMove = useCallback(
+    (e: React.PointerEvent) => {
+      updatePointer(e.clientX, e.clientY)
+    },
+    [updatePointer],
+  )
+
+  const handlePointerLeave = useCallback(() => {
+    pointerRef.current.active = false
+  }, [])
+
+  const handleTouchMove = useCallback(
+    (e: React.TouchEvent) => {
+      if (e.touches.length > 0) {
+        const touch = e.touches[0]
+        updatePointer(touch.clientX, touch.clientY)
+      }
+    },
+    [updatePointer],
+  )
+
+  const handleTouchStart = useCallback(
+    (e: React.TouchEvent) => {
+      if (e.touches.length > 0) {
+        const touch = e.touches[0]
+        updatePointer(touch.clientX, touch.clientY)
+      }
+    },
+    [updatePointer],
+  )
+
+  const handleTouchEnd = useCallback(() => {
+    pointerRef.current.active = false
+  }, [])
 
   return (
     <div
+      ref={containerRef}
       className="h-full w-full flex items-center justify-center overflow-hidden"
       style={{ minHeight: '384px', maxWidth: '100%' }}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
+      onTouchMove={handleTouchMove}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       <Canvas
         camera={{ position: [0, 0, 11], fov: 45 }}
         style={{ background: 'transparent', width: '100%', height: '100%', maxWidth: '100%' }}
         gl={{ alpha: true, antialias: true }}
       >
-        <NeuralNetwork theme={theme} />
+        <NeuralNetwork theme={theme} pointer={pointerRef.current} />
       </Canvas>
     </div>
   )
