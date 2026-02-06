@@ -56,42 +56,44 @@ const NetworkNode: React.FC<{
   )
 }
 
-// Компонент связи между узлами
-const Connection: React.FC<{
-  start: THREE.Vector3
-  end: THREE.Vector3
-  color: string
-}> = ({ start, end, color }) => {
-  const lineRef = useRef<THREE.Line>(null)
+/**
+ * Пересчитывает связи для всех узлов на основе текущих позиций.
+ * Гарантирует минимум MIN_CONNECTIONS связей для каждого узла.
+ */
+const MIN_CONNECTIONS = 2
 
-  const points = useMemo(() => [start.clone(), end.clone()], [])
+function rebuildConnections(nodes: Node[], baseCount: number = 3, randomExtra: number = 3) {
+  // Сначала назначаем связи каждому узлу по ближайшим соседям
+  nodes.forEach((node, i) => {
+    const distances = nodes
+      .map((other, j) => ({ index: j, distance: node.position.distanceTo(other.position) }))
+      .filter((d) => d.index !== i)
+      .sort((a, b) => a.distance - b.distance)
 
-  useFrame((state) => {
-    if (lineRef.current && lineRef.current.geometry) {
-      // Обновляем позиции концов линии
-      const positions = lineRef.current.geometry.attributes.position
-      positions.setXYZ(0, start.x, start.y, start.z)
-      positions.setXYZ(1, end.x, end.y, end.z)
-      positions.needsUpdate = true
-
-      // Анимация прозрачности
-      const material = lineRef.current.material as THREE.LineBasicMaterial
-      material.opacity = 0.3 + Math.sin(state.clock.getElapsedTime() * 3) * 0.2
-    }
+    const count = baseCount + Math.floor(Math.random() * randomExtra)
+    node.connections = distances.slice(0, count).map((d) => d.index)
   })
 
-  const geometry = useMemo(() => {
-    const geom = new THREE.BufferGeometry().setFromPoints(points)
-    return geom
-  }, [points])
+  // Гарантируем, что каждый узел имеет минимум MIN_CONNECTIONS связей.
+  // Если узел A подключён к B, но B не подключён к A — добавляем обратную связь.
+  nodes.forEach((node, i) => {
+    if (node.connections.length >= MIN_CONNECTIONS) return
 
-  return (
-    // @ts-ignore - Three.js primitive type compatibility
-    <line ref={lineRef} geometry={geometry}>
-      <lineBasicMaterial color={color} transparent opacity={0.4} />
-    </line>
-  )
+    // Находим ближайшие узлы, которых ещё нет в connections
+    const distances = nodes
+      .map((other, j) => ({ index: j, distance: node.position.distanceTo(other.position) }))
+      .filter((d) => d.index !== i && !node.connections.includes(d.index))
+      .sort((a, b) => a.distance - b.distance)
+
+    const needed = MIN_CONNECTIONS - node.connections.length
+    for (let k = 0; k < needed && k < distances.length; k++) {
+      node.connections.push(distances[k].index)
+    }
+  })
 }
+
+/** Максимальное количество отрезков (line segments) для BufferGeometry */
+const MAX_SEGMENTS = 400
 
 // Основная сцена нейросети
 const NeuralNetwork: React.FC<{
@@ -99,8 +101,17 @@ const NeuralNetwork: React.FC<{
   pointer: PointerState
 }> = ({ theme, pointer }) => {
   const groupRef = useRef<THREE.Group>(null)
+  const linesRef = useRef<THREE.LineSegments>(null)
   // Целевые значения вращения для плавной интерполяции
   const targetRotation = useRef({ x: 0, y: 0 })
+
+  // Предаллоцированная геометрия для связей (lineSegments: каждый сегмент = 2 вершины)
+  const linesGeometry = useMemo(() => {
+    const geom = new THREE.BufferGeometry()
+    const positions = new Float32Array(MAX_SEGMENTS * 2 * 3) // 2 вершины * 3 координаты на сегмент
+    geom.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+    return geom
+  }, [])
 
   // Генерируем узлы сети
   const nodes = useMemo(() => {
@@ -126,19 +137,8 @@ const NeuralNetwork: React.FC<{
       })
     }
 
-    // Создаем связи между ближайшими узлами
-    generatedNodes.forEach((node, i) => {
-      const distances = generatedNodes
-        .map((otherNode, j) => ({
-          index: j,
-          distance: node.basePosition.distanceTo(otherNode.basePosition),
-        }))
-        .filter((d) => d.index !== i)
-        .sort((a, b) => a.distance - b.distance)
-
-      const connectionCount = 3 + Math.floor(Math.random() * 3)
-      node.connections = distances.slice(0, connectionCount).map((d) => d.index)
-    })
+    // Создаем начальные связи между ближайшими узлами
+    rebuildConnections(generatedNodes)
 
     return generatedNodes
   }, [])
@@ -222,50 +222,52 @@ const NeuralNetwork: React.FC<{
       }
     })
 
-    // Динамическое обновление связей каждые 3 секунды
-    const connectionUpdateInterval = 3
-    const currentCycle = Math.floor(time / connectionUpdateInterval)
+    // Перестройка связей: при наведении — каждые 0.3с, без наведения — каждые 3с
+    const interval = pointer.active ? 0.3 : 3
+    const currentCycle = Math.floor(time / interval)
 
     if (
       groupRef.current &&
       groupRef.current.userData.lastConnectionUpdate !== currentCycle
     ) {
       groupRef.current.userData.lastConnectionUpdate = currentCycle
+      rebuildConnections(nodes)
+    }
 
-      // Обновляем 30% узлов
-      const nodesToUpdate = Math.floor(nodes.length * 0.3)
-      for (let i = 0; i < nodesToUpdate; i++) {
-        const randomIndex = Math.floor(Math.random() * nodes.length)
-        const node = nodes[randomIndex]
-
-        // Пересчитываем ближайших соседей
-        const distances = nodes
-          .map((otherNode, j) => ({
-            index: j,
-            distance: node.position.distanceTo(otherNode.position),
-          }))
-          .filter((d) => d.index !== randomIndex)
-          .sort((a, b) => a.distance - b.distance)
-
-        const connectionCount = 3 + Math.floor(Math.random() * 3)
-        node.connections = distances.slice(0, connectionCount).map((d) => d.index)
+    // Обновляем геометрию связей (lineSegments)
+    if (linesRef.current) {
+      const posArr = linesRef.current.geometry.attributes.position as THREE.BufferAttribute
+      let seg = 0
+      for (let i = 0; i < nodes.length && seg < MAX_SEGMENTS; i++) {
+        const node = nodes[i]
+        for (let c = 0; c < node.connections.length && seg < MAX_SEGMENTS; c++) {
+          const other = nodes[node.connections[c]]
+          posArr.setXYZ(seg * 2, node.position.x, node.position.y, node.position.z)
+          posArr.setXYZ(seg * 2 + 1, other.position.x, other.position.y, other.position.z)
+          seg++
+        }
       }
+      // Обнуляем неиспользованные сегменты
+      for (let i = seg; i < MAX_SEGMENTS; i++) {
+        posArr.setXYZ(i * 2, 0, 0, 0)
+        posArr.setXYZ(i * 2 + 1, 0, 0, 0)
+      }
+      posArr.needsUpdate = true
+
+      // Анимация прозрачности
+      const mat = linesRef.current.material as THREE.LineBasicMaterial
+      mat.opacity = 0.3 + Math.sin(time * 3) * 0.2
     }
   })
 
+  const lineColor = theme === 'dark' || !theme ? '#c0c0c0' : '#3a3a3a'
+
   return (
     <group ref={groupRef}>
-      {/* Рендерим все связи */}
-      {nodes.map((node, i) =>
-        node.connections.map((connIndex) => (
-          <Connection
-            key={`${i}-${connIndex}`}
-            start={node.position}
-            end={nodes[connIndex].position}
-            color={getNodeColor(i)}
-          />
-        ))
-      )}
+      {/* Все связи — единый lineSegments с императивным обновлением */}
+      <lineSegments ref={linesRef} geometry={linesGeometry}>
+        <lineBasicMaterial color={lineColor} transparent opacity={0.4} />
+      </lineSegments>
 
       {/* Рендерим все узлы */}
       {nodes.map((node, i) => (
