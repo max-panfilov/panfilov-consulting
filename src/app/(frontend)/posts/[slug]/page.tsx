@@ -5,35 +5,35 @@ import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
+import Image from 'next/image'
 import RichText from '@/components/RichText'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 
-import type { Post } from '@/payload-types'
-
 import { generateMeta } from '@/utilities/generateMeta'
 import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 
 export async function generateStaticParams() {
-  const payload = await getPayload({ config: configPromise })
-  const posts = await payload.find({
-    collection: 'posts',
-    draft: false,
-    limit: 1000,
-    overrideAccess: false,
-    pagination: false,
-    select: {
-      slug: true,
-    },
-  })
+  try {
+    const payload = await getPayload({ config: configPromise })
+    const posts = await payload.find({
+      collection: 'posts',
+      draft: false,
+      limit: 1000,
+      overrideAccess: false,
+      pagination: false,
+      select: {
+        slug: true,
+      },
+    })
 
-  const params = posts.docs.map(({ slug }) => {
-    return { slug }
-  })
-
-  return params
+    return posts.docs.map(({ slug }) => ({ slug }))
+  } catch (error) {
+    console.warn('Unable to generate static params for posts:', error)
+    return []
+  }
 }
 
 type Args = {
@@ -45,14 +45,12 @@ type Args = {
 export default async function Post({ params: paramsPromise }: Args) {
   const { isEnabled: draft } = await draftMode()
   const { slug = '' } = await paramsPromise
-  // Decode to support slugs with special characters
   const decodedSlug = decodeURIComponent(slug)
   const url = '/posts/' + decodedSlug
   const post = await queryPostBySlug({ slug: decodedSlug })
 
   if (!post) return <PayloadRedirects url={url} />
 
-  // Извлекаем данные для шаблона Blogpost1
   const heroImageUrl =
     typeof post.meta?.image === 'object' && post.meta.image?.url ? post.meta.image.url : null
 
@@ -69,12 +67,10 @@ export default async function Post({ params: paramsPromise }: Args) {
     <article>
       <PageClient />
 
-      {/* Allows redirects for valid pages too */}
       <PayloadRedirects disableNotFound url={url} />
 
       {draft && <LivePreviewListener />}
 
-      {/* Hero секция в стиле Blogpost1 */}
       <section className="py-12 md:py-16">
         <div className="container">
           <div className="mx-auto flex max-w-5xl flex-col items-center gap-4 text-center">
@@ -96,17 +92,21 @@ export default async function Post({ params: paramsPromise }: Args) {
               </span>
             </div>
             {heroImageUrl && (
-              <img
-                src={heroImageUrl}
-                alt={post.meta?.title || post.title}
-                className="mb-8 mt-4 aspect-video w-full rounded-lg border object-cover"
-              />
+              <div className="relative mb-8 mt-4 aspect-video w-full">
+                <Image
+                  src={heroImageUrl}
+                  alt={post.meta?.title || post.title}
+                  fill
+                  className="rounded-lg border object-cover"
+                  sizes="(max-width: 1200px) 100vw, 1200px"
+                  priority
+                />
+              </div>
             )}
           </div>
         </div>
       </section>
 
-      {/* Контент поста */}
       <div className="container">
         <div className="prose dark:prose-invert mx-auto max-w-3xl">
           <RichText data={post.content} enableGutter={false} />
@@ -118,7 +118,6 @@ export default async function Post({ params: paramsPromise }: Args) {
 
 export async function generateMetadata({ params: paramsPromise }: Args): Promise<Metadata> {
   const { slug = '' } = await paramsPromise
-  // Decode to support slugs with special characters
   const decodedSlug = decodeURIComponent(slug)
   const post = await queryPostBySlug({ slug: decodedSlug })
 
@@ -128,20 +127,25 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
 const queryPostBySlug = cache(async ({ slug }: { slug: string }) => {
   const { isEnabled: draft } = await draftMode()
 
-  const payload = await getPayload({ config: configPromise })
+  try {
+    const payload = await getPayload({ config: configPromise })
 
-  const result = await payload.find({
-    collection: 'posts',
-    draft,
-    limit: 1,
-    overrideAccess: draft,
-    pagination: false,
-    where: {
-      slug: {
-        equals: slug,
+    const result = await payload.find({
+      collection: 'posts',
+      draft,
+      limit: 1,
+      overrideAccess: draft,
+      pagination: false,
+      where: {
+        slug: {
+          equals: slug,
+        },
       },
-    },
-  })
+    })
 
-  return result.docs?.[0] || null
+    return result.docs?.[0] || null
+  } catch (error) {
+    console.warn(`Unable to query post by slug "${slug}":`, error)
+    return null
+  }
 })

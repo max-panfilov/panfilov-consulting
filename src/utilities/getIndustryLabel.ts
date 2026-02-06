@@ -1,26 +1,22 @@
 /**
- * Справочник индустрий с русскими названиями
- * Соответствует опциям в коллекции Cases (src/collections/Cases.ts)
+ * Single source of truth for industry options.
+ * Used by both the Cases collection config and frontend label resolution.
  */
-export const INDUSTRY_LABELS: Record<string, string> = {
-  electronics: 'Электротехника',
-  legal: 'Юридические услуги',
-  finance: 'Финансы',
-  retail: 'Ритейл',
-  logistics: 'Логистика',
-  industry: 'Промышленность',
-  healthcare: 'Медицина',
-  other: 'Другое',
-  // Дополнительные варианты для совместимости
-  metallurgy: 'Металлопрокат',
-  manufacturing: 'Производство',
-}
+export const INDUSTRY_OPTIONS: { label: string; value: string }[] = [
+  { label: 'Электротехника', value: 'electronics' },
+  { label: 'Юридические услуги', value: 'legal' },
+  { label: 'Финансы', value: 'finance' },
+  { label: 'Ритейл', value: 'retail' },
+  { label: 'Логистика', value: 'logistics' },
+  { label: 'Промышленность', value: 'industry' },
+  { label: 'Медицина', value: 'healthcare' },
+  { label: 'Другое', value: 'other' },
+]
 
-/**
- * Получает русское название индустрии по её коду
- * @param industry - Код индустрии из коллекции Cases
- * @returns Русское название индустрии или исходный код, если перевод не найден
- */
+const INDUSTRY_LABELS: Record<string, string> = Object.fromEntries(
+  INDUSTRY_OPTIONS.map(({ value, label }) => [value, label]),
+)
+
 export function getIndustryLabel(industry: string): string {
   return INDUSTRY_LABELS[industry] || industry
 }

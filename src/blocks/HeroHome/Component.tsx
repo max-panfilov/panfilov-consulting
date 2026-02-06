@@ -2,13 +2,17 @@
 
 import React from 'react'
 import type { HeroHomeBlock as HeroHomeBlockType } from '@/payload-types'
-import { ArrowRight, ArrowUpRight } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
+import dynamic from 'next/dynamic'
+import Image from 'next/image'
+import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { NeuralNetworkScene } from '@/components/NeuralNetworkScene'
+
+const NeuralNetworkScene = dynamic(
+  () => import('@/components/NeuralNetworkScene').then((mod) => mod.NeuralNetworkScene),
+  { ssr: false, loading: () => <div className="h-full w-full animate-pulse bg-muted rounded-md" /> },
+)
 
 export const HeroHomeBlock: React.FC<HeroHomeBlockType> = ({
-  badge,
   heading,
   subheading,
   primaryCTA,
@@ -16,7 +20,6 @@ export const HeroHomeBlock: React.FC<HeroHomeBlockType> = ({
   mediaType,
   backgroundImage,
   backgroundVideo,
-  backgroundOverlay,
 }) => {
   // Функция для плавной прокрутки к элементу
   const scrollToElement = (e: React.MouseEvent<HTMLAnchorElement>, href?: string | null) => {
@@ -36,10 +39,9 @@ export const HeroHomeBlock: React.FC<HeroHomeBlockType> = ({
     }
   }
 
-  // Функция для определения типа медиа объекта
-  const getMediaUrl = (media: any): string | null => {
+  const getMediaUrl = (media: HeroHomeBlockType['backgroundImage']): string | null => {
     if (!media) return null
-    if (typeof media === 'string') return media
+    if (typeof media === 'number' || typeof media === 'string') return null
     return media.url || null
   }
 
@@ -99,11 +101,16 @@ export const HeroHomeBlock: React.FC<HeroHomeBlockType> = ({
               <source src={bgVideoUrl} type="video/mp4" />
             </video>
           ) : bgImageUrl ? (
-            <img
-              src={bgImageUrl}
-              alt={heading || 'Hero image'}
-              className="max-h-96 w-full rounded-md object-cover"
-            />
+            <div className="relative max-h-96 w-full aspect-video">
+              <Image
+                src={bgImageUrl}
+                alt={heading || 'Hero image'}
+                fill
+                className="rounded-md object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                priority
+              />
+            </div>
           ) : (
             // 3D анимация нейронной сети вместо placeholder изображения
             <div className="relative h-96 w-full rounded-md overflow-hidden">

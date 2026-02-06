@@ -2,6 +2,7 @@
 
 import React from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -53,14 +54,16 @@ export const FeaturedCasesClient: React.FC<FeaturedCasesClientProps> = ({
                 className="border-border flex flex-col overflow-clip rounded-xl border"
               >
                 {/* Изображение */}
-                <Link href={url}>
-                  <img
+                <Link href={url} className="relative block aspect-16/9 w-full">
+                  <Image
                     src={
                       caseItem.coverImage ||
                       'https://deifkwefumgah.cloudfront.net/shadcnblocks/block/placeholder-1.svg'
                     }
                     alt={caseItem.title || 'Case image'}
-                    className="aspect-16/9 h-full w-full object-cover object-center transition-opacity hover:opacity-80"
+                    fill
+                    className="object-cover object-center transition-opacity hover:opacity-80"
+                    sizes="(max-width: 768px) 100vw, 50vw"
                   />
                 </Link>
                 {/* Контент карточки */}

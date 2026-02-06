@@ -2,6 +2,7 @@ import type { Metadata } from 'next/types'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import React from 'react'
+import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
@@ -74,7 +75,7 @@ export default async function Page() {
                       )}
                     </div>
                     <h3 className="text-lg font-semibold hover:underline md:text-xl">
-                      <a href={`/posts/${post.slug}`}>{post.title}</a>
+                      <Link href={`/posts/${post.slug}`}>{post.title}</Link>
                     </h3>
                   </CardHeader>
 
@@ -89,13 +90,13 @@ export default async function Page() {
 
                   {/* Футер */}
                   <CardFooter>
-                    <a
+                    <Link
                       href={`/posts/${post.slug}`}
                       className="text-foreground flex items-center hover:underline"
                     >
                       Читать статью
                       <ArrowRight className="ml-2 size-4" />
-                    </a>
+                    </Link>
                   </CardFooter>
                 </Card>
               )

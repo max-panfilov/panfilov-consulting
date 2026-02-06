@@ -1,5 +1,8 @@
 import React from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
 import type { ExpertiseHighlightBlock as ExpertiseHighlightBlockType } from '@/payload-types'
+import type { Where } from 'payload'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { ArrowRightIcon } from 'lucide-react'
@@ -17,14 +20,12 @@ export const ExpertiseHighlightBlock: React.FC<ExpertiseHighlightBlockType> = as
   // Получаем Payload instance
   const payload = await getPayload({ config: configPromise })
 
-  // Формируем условия для запроса
-  const whereConditions: any = {
+  const whereConditions: Where = {
     _status: {
       equals: 'published',
     },
   }
 
-  // Если выбрана категория, добавляем фильтр
   if (category && typeof category === 'object' && category.id) {
     whereConditions.categories = {
       contains: category.id,
@@ -94,25 +95,24 @@ export const ExpertiseHighlightBlock: React.FC<ExpertiseHighlightBlockType> = as
                 : []
 
             return (
-              <a
+              <Link
                 key={post.id}
                 href={`/posts/${post.slug}`}
                 className="flex flex-col overflow-clip rounded-xl border border-border bg-background"
               >
-                {/* Изображение поста */}
                 {metaImageUrl && (
-                  <div>
-                    <img
+                  <div className="relative aspect-video w-full">
+                    <Image
                       src={metaImageUrl}
                       alt={post.meta?.title || post.title || 'Post image'}
-                      className="aspect-video size-full object-cover object-center"
+                      fill
+                      className="object-cover object-center"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   </div>
                 )}
 
-                {/* Контент карточки */}
                 <div className="flex flex-1 flex-col gap-4 p-6">
-                  {/* Категории и дата */}
                   <div className="flex items-center justify-between gap-4">
                     {postCategories.length > 0 && (
                       <Badge variant="outline">{postCategories[0]}</Badge>
@@ -122,10 +122,8 @@ export const ExpertiseHighlightBlock: React.FC<ExpertiseHighlightBlockType> = as
                     )}
                   </div>
 
-                  {/* Заголовок */}
                   <div className="flex-1">
                     <h3 className="mb-2 text-xl font-semibold">{post.title}</h3>
-                    {/* Описание */}
                     {post.meta?.description && (
                       <p className="text-muted-foreground">
                         {post.meta.description}
@@ -133,7 +131,7 @@ export const ExpertiseHighlightBlock: React.FC<ExpertiseHighlightBlockType> = as
                     )}
                   </div>
                 </div>
-              </a>
+              </Link>
             )
           })}
         </div>
@@ -142,10 +140,10 @@ export const ExpertiseHighlightBlock: React.FC<ExpertiseHighlightBlockType> = as
         {ctaText && ctaLink && (
           <div className="mt-14 flex justify-center">
             <Button asChild>
-              <a href={ctaLink}>
+              <Link href={ctaLink}>
                 {ctaText}
                 <ArrowRightIcon className="ml-2 size-4" />
-              </a>
+              </Link>
             </Button>
           </div>
         )}

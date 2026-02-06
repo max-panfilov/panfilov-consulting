@@ -8,14 +8,6 @@ import { motion } from 'framer-motion'
 import type { Form } from '@/payload-types'
 import { Send, Mail } from 'lucide-react'
 
-interface MenuItem {
-  title: string
-  links: {
-    text: string
-    url: string
-  }[]
-}
-
 type FooterClientProps = {
   logo: {
     src: string
@@ -98,7 +90,7 @@ export const FooterClient: React.FC<FooterClientProps> = ({
               </li>
               <li className="hover:text-primary">
                 <Link 
-                  href="http://t.me/mpanfilov"
+                  href="https://t.me/mpanfilov"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-1"
