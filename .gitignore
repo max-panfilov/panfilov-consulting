@@ -15,6 +15,14 @@ public/sitemap*.xml
 # Database backups
 backups/
 
+# Exported cases
+exported-cases/
+exported-homepage/
+
+# Generated presentations
+presentation.html
+presentation.pdf
+
 # Playwright
 node_modules/
 /test-results/

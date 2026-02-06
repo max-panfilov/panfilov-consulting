@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI в Travel-индустрии - Panfilov Consulting</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: hsl(0 0% 100%);
+      color: hsl(222.2 84% 4.9%);
+    }
+    
+    .slide {
+      width: 297mm;
+      height: 210mm;
+      padding: 50px 70px;
+      page-break-after: always;
+      page-break-inside: avoid;
+      background: hsl(0 0% 100%);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    
+    .slide:last-child {
+      page-break-after: auto;
+    }
+    
+    /* Титульный слайд */
+    .slide.title {
+      justify-content: space-between;
+      background: hsl(0 0% 100%);
+      position: relative;
+    }
+    
+    .title-image {
+      position: absolute;
+      bottom: 30px;
+      right: 50px;
+      width: 420px;
+      height: 420px;
+      pointer-events: none;
+    }
+    
+    .title-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    
+    .logo {
+      width: 380px;
+      margin-bottom: 35px;
+    }
+    
+    .logo svg {
+      width: 100%;
+      height: auto;
+    }
+    
+    h1 {
+      font-size: 52px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 22px;
+      color: hsl(222.2 84% 4.9%);
+    }
+    
+    .subtitle {
+      font-size: 26px;
+      color: hsl(215.4 16.3% 46.9%);
+      line-height: 1.4;
+      max-width: 900px;
+    }
+    
+    .contact {
+      font-size: 22px;
+      color: hsl(215.4 16.3% 46.9%);
+      margin-top: 35px;
+    }
+    
+    .contact a {
+      color: hsl(222.2 84% 4.9%);
+      text-decoration: none;
+      border-bottom: 1px solid hsl(240 6% 80%);
+      transition: border-color 0.3s;
+    }
+    
+    /* Обычные слайды */
+    h2 {
+      font-size: 42px;
+      font-weight: 700;
+      margin-bottom: 28px;
+      color: hsl(222.2 84% 4.9%);
+    }
+    
+    h3 {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: hsl(215.4 16.3% 46.9%);
+    }
+    
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .grid {
+      display: grid;
+      gap: 20px;
+    }
+    
+    .grid-2 {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .grid-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .card {
+      background: hsl(240 5% 96%);
+      border: 1px solid hsl(240 6% 80%);
+      border-radius: 8px;
+      padding: 28px;
+    }
+    
+    .card h3 {
+      font-size: 24px;
+      margin-bottom: 14px;
+      color: hsl(222.2 84% 4.9%);
+    }
+    
+    .card p {
+      font-size: 17px;
+      line-height: 1.6;
+      color: hsl(215.4 16.3% 46.9%);
+    }
+    
+    .card-small {
+      padding: 22px;
+    }
+    
+    .card-small h3 {
+      font-size: 21px;
+    }
+    
+    .card-small p {
+      font-size: 16px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .card-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: hsl(240 5% 92%);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lucide-icon {
+      width: 22px;
+      height: 22px;
+      color: hsl(222.2 84% 4.9%);
+    }
+
+    .card-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 16px;
+      color: hsl(215.4 16.3% 46.9%);
+      line-height: 1.5;
+    }
+
+    .card-list-bulleted {
+      list-style: disc;
+      padding-left: 20px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 20px;
+    }
+
+    .stat-card {
+      background: hsl(240 5% 96%);
+      border: 1px solid hsl(240 6% 80%);
+      border-radius: 8px;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 48px;
+      font-weight: 700;
+      color: hsl(222.2 84% 4.9%);
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-size: 16px;
+      color: hsl(215.4 16.3% 46.9%);
+      line-height: 1.4;
+    }
+
+    .source-link {
+      font-size: 12px;
+      color: hsl(215.4 16.3% 46.9%);
+      text-decoration: none;
+      border-bottom: 1px solid hsl(240 6% 80%);
+      margin-top: 8px;
+      display: inline-block;
+    }
+
+    .source-link:hover {
+      color: hsl(222.2 84% 4.9%);
+      border-bottom-color: hsl(222.2 84% 4.9%);
+    }
+
+    .list-item {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    
+    .list-number {
+      font-size: 28px;
+      font-weight: 700;
+      color: hsl(215.4 16.3% 46.9%);
+      min-width: 42px;
+    }
+    
+    .list-content h4 {
+      font-size: 21px;
+      font-weight: 600;
+      margin-bottom: 7px;
+      color: hsl(222.2 84% 4.9%);
+    }
+    
+    .list-content p {
+      font-size: 17px;
+      line-height: 1.5;
+      color: hsl(215.4 16.3% 46.9%);
+    }
+
+    .final-speaker {
+      display: flex;
+      align-items: flex-start;
+      gap: 26px;
+      margin-top: 32px;
+      max-width: 620px;
+    }
+
+    .final-speaker-photo {
+      width: 170px;
+      height: 170px;
+      border-radius: 26px;
+      overflow: hidden;
+      border: 1px solid hsl(240 6% 80%);
+      background: hsl(0 0% 96%);
+    }
+
+    .final-speaker-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .final-speaker-info {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .final-speaker-name {
+      font-size: 26px;
+      font-weight: 700;
+      color: hsl(222.2 84% 4.9%);
+    }
+
+    .final-speaker-title {
+      font-size: 18px;
+      color: hsl(215.4 16.3% 46.9%);
+    }
+
+    .final-contacts {
+      font-size: 19px;
+      color: hsl(215.4 16.3% 46.9%);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    
+    /* Печать */
+    @media print {
+      body {
+        background: hsl(0 0% 100%);
+      }
+      
+      .slide {
+        page-break-after: always;
+        page-break-inside: avoid;
+      }
+      
+      @page {
+        size: A4 landscape;
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Слайд 1: Титульный -->
+  <div class="slide title">
+    <div>
+      <div class="logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2432.66144 270">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #262934;
+      }
+
+      .cls-2 {
+        fill: #b7b8b9;
+      }
+    </style>
+  </defs>
+  <g id="Слой_2" data-name="Слой 2">
+    <g id="ЛОГО">
+      <g>
+        <path class="cls-1" d="M19.5,97.499H42.6l.9,31.5v178.5h-24Zm75,153q-16.50238,0-27-7.65039a51.87205,51.87205,0,0,1-16.35-19.7998,98.72083,98.72083,0,0,1-8.25-25.5,140.13912,140.13912,0,0,1-2.4-24.75A192.51349,192.51349,0,0,1,42.75,142.499a80.01046,80.01046,0,0,1,7.95-24.90039,41.667,41.667,0,0,1,16.35-16.94922Q77.69528,94.50294,94.5,94.499a56.09232,56.09232,0,0,1,32.7,10.2002q14.69532,10.20264,23.55,27.89941,8.84528,17.70556,8.85,40.2002,0,22.5-9,40.0498-9,17.5503-23.85,27.60059A56.37938,56.37938,0,0,1,94.5,250.499Zm-6-22.7998a43.27785,43.27785,0,0,0,24.45-7.04981,47.5609,47.5609,0,0,0,16.65-19.5q5.99771-12.4453,6-28.35058,0-23.99707-12.3-39.75-12.30469-15.75-34.8-15.75a40.16635,40.16635,0,0,0-23.4,7.0498,46.70258,46.70258,0,0,0-15.9,19.5q-5.70235,12.45264-5.7,28.9502A73.64909,73.64909,0,0,0,48.45,200.249a45.47183,45.47183,0,0,0,14.85,19.9502Q73.2,227.70069,88.5,227.69922Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-1" d="M246.89545,250.499a56.83557,56.83557,0,0,1-32.55-10.0498q-14.84985-10.04736-23.69995-27.60059-8.85224-17.54883-8.85-40.0498,0-22.5,9-40.2002a71.458,71.458,0,0,1,24.45007-27.89941A61.5236,61.5236,0,0,1,249.89545,94.499q20.99523,0,31.94995,10.65039,10.94787,10.65235,15,28.34961a176.4736,176.4736,0,0,1,4.05,39.29981,140.58869,140.58869,0,0,1-2.39991,24.75,98.91176,98.91176,0,0,1-8.25,25.5,51.915,51.915,0,0,1-16.35009,19.7998Q263.39068,250.49951,246.89545,250.499Zm6-22.7998q15.29992,0,25.35009-7.5A44.03275,44.03275,0,0,0,293.0954,200.249a75.75683,75.75683,0,0,0,4.8-27.45019q0-16.49561-4.95-28.9502a42.19022,42.19022,0,0,0-15-19.5q-10.05469-7.04444-25.05-7.0498-22.5,0-34.8,15.75-12.3047,15.75-12.3,39.75,0,15.90526,6.15015,28.35058a48.55679,48.55679,0,0,0,16.8,19.5A42.74532,42.74532,0,0,0,252.89545,227.69922Zm45-130.2002h24v150H299.99554q-.90014-10.80029-1.5-18-.605-7.1997-.60009-12Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-1" d="M360.89093,97.499h24v150h-24Zm75.6-3a61.199,61.199,0,0,1,21.6,3.59961,42.93593,42.93593,0,0,1,16.20007,10.5,47.69557,47.69557,0,0,1,10.2,16.65039,63.35675,63.35675,0,0,1,3.6,22.04981V247.499h-24V153.29883q0-17.395-8.1-26.09961-8.1-8.69824-24.29993-8.7002a43.50516,43.50516,0,0,0-22.8,6.29981,50.82428,50.82428,0,0,0-17.25,17.25,59.33542,59.33542,0,0,0-8.25,25.35058l-.3-17.40039a76.30744,76.30744,0,0,1,6.15-22.7998A62.59425,62.59425,0,0,1,400.941,109.64941,48.68785,48.68785,0,0,1,436.49091,94.499Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-1" d="M516.58661,103.499h88.2v22.5h-88.2Zm77.7-66h63v24h-63a33.57972,33.57972,0,0,0-13.6499,2.09961,19.59935,19.59935,0,0,0-9.75,8.25q-3.6,5.85059-3.6001,16.65039h-24q0-18,6.45007-29.25a38.86342,38.86342,0,0,1,18-16.5Q579.282,37.50342,594.28656,37.499Zm-51,210v-159h24v159Zm49.5-121.5v-22.5h60.9v22.5Zm40.5-22.5h24v144h-24Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-1" d="M697.78375,37.499h24v210h-24Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-1" d="M828.88239,250.499a73.149,73.149,0,0,1-36-9.2998,71.33153,71.33153,0,0,1-27.15-26.85059q-10.34985-17.54883-10.35-41.5498,0-23.99707,10.35-41.54981a73.65328,73.65328,0,0,1,27.15-27.15039,71.39365,71.39365,0,0,1,36-9.59961,70.59947,70.59947,0,0,1,35.85,9.59961,72.93216,72.93216,0,0,1,26.8501,27.15039q10.19531,17.5503,10.2,41.54981,0,24.00439-10.2,41.5498a70.629,70.629,0,0,1-26.8501,26.85059A72.33055,72.33055,0,0,1,828.88239,250.499Zm0-22.5a47.25756,47.25756,0,0,0,23.70007-6.2998,48.25059,48.25059,0,0,0,18.1499-18.75q7.04535-12.44532,7.05005-30.15039,0-17.69678-7.05005-30.14942a50.59483,50.59483,0,0,0-18.1499-19.05078,45.6441,45.6441,0,0,0-23.70007-6.59961,47.22511,47.22511,0,0,0-23.85,6.4502,50.09132,50.09132,0,0,0-18.45,18.89941q-7.20007,12.45264-7.20007,30.4502,0,17.70556,7.05,30.15039a47.51223,47.51223,0,0,0,18.45,18.75A48.9037,48.9037,0,0,0,828.88239,227.999Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-1" d="M985.78156,226.79883h-7.20008l45.9-129.29981h26.1l-57,150h-22.5l-56.7-150h26.1Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-1" d="M1083.28192,218.09863V247.499H1052.082V218.09863Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-2" d="M1252.48175,191.09863q-2.10241,18.605-11.84985,31.9502a64.306,64.306,0,0,1-24.4502,20.40039,74.75263,74.75263,0,0,1-67.80005-2.25,71.3315,71.3315,0,0,1-27.15-26.85059q-10.34985-17.54883-10.35-41.5498,0-23.99707,10.35-41.54981a73.65325,73.65325,0,0,1,27.15-27.15039,71.3937,71.3937,0,0,1,36-9.59961,70.38707,70.38707,0,0,1,31.65015,7.2002,66.52662,66.52662,0,0,1,24.30005,20.39941q9.74523,13.20557,12.1499,31.5h-21.8999q-5.10462-17.09912-17.7002-26.84961a45.37985,45.37985,0,0,0-28.5-9.75,47.74987,47.74987,0,0,0-24.29992,6.59961,48.70609,48.70609,0,0,0-18.30005,19.05078q-6.90473,12.45119-6.9,30.14942,0,17.40234,6.9,29.85058a47.5998,47.5998,0,0,0,42.6,25.34961q18.29535,0,29.8501-9.75,11.54553-9.74561,16.65015-27.15039Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-2" d="M1348.17877,250.499a73.14771,73.14771,0,0,1-36-9.2998,71.33263,71.33263,0,0,1-27.15014-26.85059q-10.34987-17.54883-10.34986-41.5498,0-23.99707,10.34986-41.54981a73.65444,73.65444,0,0,1,27.15014-27.15039,71.39236,71.39236,0,0,1,36-9.59961,70.59875,70.59875,0,0,1,35.84986,9.59961,72.93125,72.93125,0,0,1,26.85009,27.15039q10.19532,17.5503,10.2,41.54981,0,24.00439-10.2,41.5498a70.62811,70.62811,0,0,1-26.85009,26.85059A72.32982,72.32982,0,0,1,1348.17877,250.499Zm0-22.5a47.25744,47.25744,0,0,0,23.69995-6.2998,48.25062,48.25062,0,0,0,18.14991-18.75q7.04553-12.44532,7.05-30.15039,0-17.69678-7.05-30.14942a50.59486,50.59486,0,0,0-18.14991-19.05078,45.644,45.644,0,0,0-23.69995-6.59961,47.22525,47.22525,0,0,0-23.8501,6.4502,50.09219,50.09219,0,0,0-18.45,18.89941q-7.20007,12.45264-7.19995,30.4502,0,17.70556,7.04981,30.15039a47.51275,47.51275,0,0,0,18.45019,18.75A48.90306,48.90306,0,0,0,1348.17877,227.999Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-2" d="M1451.6778,97.499h24v150h-24Zm75.60009-3a61.19889,61.19889,0,0,1,21.59986,3.59961,42.93367,42.93367,0,0,1,16.19995,10.5,47.69605,47.69605,0,0,1,10.20019,16.65039,63.35936,63.35936,0,0,1,3.59986,22.04981V247.499h-24V153.29883q0-17.395-8.09986-26.09961-8.10021-8.69824-24.30005-8.7002a43.50545,43.50545,0,0,0-22.8,6.29981,50.82419,50.82419,0,0,0-17.25,17.25,59.33705,59.33705,0,0,0-8.25,25.35058l-.3-17.40039a76.30363,76.30363,0,0,1,6.15014-22.7998,62.59136,62.59136,0,0,1,11.69995-17.54981A48.6879,48.6879,0,0,1,1527.27789,94.499Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-2" d="M1610.67365,199.19922h22.19995q.90014,12.90234,9.75,21,8.84546,8.09912,25.6499,8.09961,10.1953,0,16.05005-2.7002a18.37316,18.37316,0,0,0,8.55-7.34961,20.22721,20.22721,0,0,0,2.7-10.34961q0-6.89794-3.45-10.95019a26.64257,26.64257,0,0,0-9.3-6.75,118.23592,118.23592,0,0,0-13.34986-5.10059q-8.70483-3.29736-17.85009-7.0498a98.71491,98.71491,0,0,1-17.1001-9,42.28333,42.28333,0,0,1-12.75-12.89942q-4.80213-7.65087-4.79981-18.45019a40.61953,40.61953,0,0,1,3.59986-16.9502,39.856,39.856,0,0,1,10.3501-13.7998,49.80584,49.80584,0,0,1,15.8999-9.15039,59.3546,59.3546,0,0,1,20.25-3.29981q14.99779,0,25.3501,6a40.1128,40.1128,0,0,1,15.8999,16.9502q5.54772,10.95409,5.8501,25.34961h-20.7q-2.10242-13.5-8.55-19.64942-6.45484-6.14647-18.45-6.15039-12.30468,0-18.90014,5.40039a17.65551,17.65551,0,0,0-6.59986,14.39942,14.13684,14.13684,0,0,0,4.79981,10.95019,47.33568,47.33568,0,0,0,12.45019,7.79981q7.64979,3.45264,16.34986,7.0498,8.69787,3.60058,16.8,7.2002a71.8347,71.8347,0,0,1,14.3999,8.40039,36.01079,36.01079,0,0,1,10.05005,11.84961q3.74779,7.05322,3.75,17.5498a42.58439,42.58439,0,0,1-5.84986,22.35059,38.99288,38.99288,0,0,1-17.10009,15.14941q-11.25,5.40088-27.44995,5.40039-14.70228,0-25.05005-3.75a52.35854,52.35854,0,0,1-17.25-9.90039,48.754,48.754,0,0,1-10.64991-13.0498,45.14012,45.14012,0,0,1-4.95019-13.5A36.39132,36.39132,0,0,1,1610.67365,199.19922Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-2" d="M1854.87164,177.59863l.3,8.40039q-.30249,3.60058-1.6499,11.09961a113.47474,113.47474,0,0,1-4.5,16.65039,71.078,71.078,0,0,1-9,17.54981,47.3085,47.3085,0,0,1-15,13.7998q-9.15491,5.40088-22.65015,5.40039a66.458,66.458,0,0,1-17.84985-2.5498,50.65524,50.65524,0,0,1-16.9502-8.40039,41.3424,41.3424,0,0,1-12.59985-16.34961q-4.80249-10.49853-4.80005-26.10059V97.499h24v93.59961q0,13.5,4.3501,21.15039a25.03827,25.03827,0,0,0,11.84985,10.9502,41.21906,41.21906,0,0,0,16.8,3.2998q15.29993,0,25.5-7.7998a51.77732,51.77732,0,0,0,15.6001-19.2002A69.87363,69.87363,0,0,0,1854.87164,177.59863Zm22.5,69.90039h-24v-150h24Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-2" d="M1919.36725,37.499h24v210h-24Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-2" d="M1968.8692,97.499h88.19995v22.5H1968.8692Zm32.1001-39h24v189h-24Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-2" d="M2115.26593,37.499V66.59863h-31.2V37.499Zm-27.59985,60h24v150h-24Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-2" d="M2152.76569,97.499h24v150h-24Zm75.60009-3a61.19889,61.19889,0,0,1,21.59986,3.59961,42.93367,42.93367,0,0,1,16.2,10.5,47.69605,47.69605,0,0,1,10.20019,16.65039,63.35936,63.35936,0,0,1,3.59986,22.04981V247.499h-24V153.29883q0-17.395-8.09986-26.09961-8.10021-8.69824-24.30005-8.7002a43.50545,43.50545,0,0,0-22.8,6.29981,50.82419,50.82419,0,0,0-17.25,17.25,59.33705,59.33705,0,0,0-8.25,25.35058l-.30005-17.40039a76.30363,76.30363,0,0,1,6.15014-22.7998,62.59136,62.59136,0,0,1,11.69995-17.54981A48.6879,48.6879,0,0,1,2228.36578,94.499Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-2" d="M2372.66144,223.79883a62.819,62.819,0,0,1-30.1499-7.64942,60.25186,60.25186,0,0,1-23.1001-22.05078q-8.85241-14.39942-8.84986-34.5,0-20.09472,8.7-34.64941a62.25064,62.25064,0,0,1,63.1499-29.7002,50.31153,50.31153,0,0,1,8.8501,2.25h60.8999v25.79981a72.28435,72.28435,0,0,1-25.6499-4.79981,154.94411,154.94411,0,0,1-21.75-9.90039l-1.2-1.19922a60.96959,60.96959,0,0,1,17.25,13.5,54.3188,54.3188,0,0,1,10.2,17.54981,63.063,63.063,0,0,1,3.45,21.14941q0,20.10352-8.55005,34.5a58.46693,58.46693,0,0,1-22.6499,22.05078A63.17044,63.17044,0,0,1,2372.66144,223.79883Zm44.1001,83.70019v-6.59961q0-15.90526-8.25-23.10058-8.25477-7.19972-24.75-7.2002h-30a79.70032,79.70032,0,0,1-17.25-1.64941,34.73836,34.73836,0,0,1-12.15015-4.9502,21.40867,21.40867,0,0,1-7.2-8.09961,23.78863,23.78863,0,0,1-2.3999-10.80078q0-11.39648,6.8999-17.25a33.32573,33.32573,0,0,1,17.1001-7.34961,63.84084,63.84084,0,0,1,19.5,0l14.3999,3.29981q-16.20007.90087-25.05,3.2998-8.85206,2.40528-8.84985,10.2002a9.09208,9.09208,0,0,0,3.45,7.35058q3.4453,2.85353,10.35009,2.84961h31.2a88.74625,88.74625,0,0,1,28.5,4.34961,42.07215,42.07215,0,0,1,20.7,14.7002q7.79772,10.35059,7.8,28.35058V307.499Zm-44.1001-106.20019a36.71026,36.71026,0,0,0,32.40014-18.89942q5.39979-9.29589,5.39991-22.80078,0-13.5-5.25-22.94922a36.53376,36.53376,0,0,0-13.95-14.40039,37.41913,37.41913,0,0,0-37.2,0,37.832,37.832,0,0,0-14.10009,14.25q-5.40015,9.30177-5.39991,23.09961,0,13.5,5.39991,22.80078a36.67112,36.67112,0,0,0,14.10009,14.09961A37.89171,37.89171,0,0,0,2372.66144,201.29883Z" transform="translate(-19.5 -37.49902)"/>
+      </g>
+    </g>
+  </g>
+</svg>
+</div>
+      <h1>Искусственный интеллект в Travel-индустрии</h1>
+      <p class="subtitle">Обзор AI-решений для бизнес-тревел агентств и компаний сферы гостеприимства</p>
+    </div>
+    <div class="contact">
+      Контакты: <a href="https://panfilov.consulting">panfilov.consulting</a> • <a href="mailto:contact@panfilov.consulting">contact@panfilov.consulting</a>
+    </div>
+    <div class="title-image">
+      <img src="./exported-homepage/neuronet.png" alt="Neural Network" />
+    </div>
+  </div>
+
+  <!-- Слайд 2: Рынок AI в Travel -->
+  <div class="slide">
+    <h2>Рынок AI в Travel-индустрии: ключевые цифры 2024-2025</h2>
+    <div class="content">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number">82%</div>
+          <div class="stat-label">US-компаний используют AI для управления корпоративными поездками (↑ от 69% в 2023)</div>
+          <a href="https://blog.traxo.com/corporate-travel-management-2024-trends-and-2025-predictions" target="_blank" class="source-link">Источник: Traxo</a>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">$15.5B</div>
+          <div class="stat-label">Рынок AI-чатботов в travel достигнет к 2028 году</div>
+          <a href="https://chatling.ai/blog/best-travel-chatbots" target="_blank" class="source-link">Источник: Chatling</a>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">77%</div>
+          <div class="stat-label">Путешественников открыты к использованию AI для планирования</div>
+          <a href="https://coaxsoft.com/blog/generative-ai-in-travel" target="_blank" class="source-link">Источник: Coaxsoft</a>
+        </div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number">+40%</div>
+          <div class="stat-label">Рост использования ChatGPT для планирования поездок год к году</div>
+          <a href="https://masterofcode.com/blog/generative-ai-in-travel" target="_blank" class="source-link">Источник: Master of Code</a>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">61%</div>
+          <div class="stat-label">Компаний используют AI для автоматизации бронирований</div>
+          <a href="https://blog.traxo.com/corporate-travel-management-2024-trends-and-2025-predictions" target="_blank" class="source-link">Источник: Traxo</a>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">78%</div>
+          <div class="stat-label">Путешественников считают, что AI улучшает процесс планирования</div>
+          <a href="https://www.phocuswright.com/Travel-Research/Research-Updates/2025/From-hype-to-habit-78-percent-of-travelers-say-GenAI-improves-trip-planning" target="_blank" class="source-link">Источник: Phocuswright</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Слайд 3: Вызовы индустрии -->
+  <div class="slide">
+    <h2>Текущие вызовы индустрии</h2>
+    <div class="content">
+      <div class="grid grid-2">
+        <div class="card">
+          <h3>Для Business Travel агентств</h3>
+          <ul class="card-list card-list-bulleted">
+            <li>Контроль нецелевых расходов (бронирования вне корпоративной политики)</li>
+            <li>Обработка изменений и отмен в режиме реального времени</li>
+            <li>Безопасность сотрудников и управление рисками во время поездок</li>
+            <li>Ручная обработка расходов и отчетности</li>
+            <li>Мониторинг мульти-канальных бронирований</li>
+          </ul>
+          <a href="https://blog.traxo.com/corporate-travel-management-2024-trends-and-2025-predictions" target="_blank" class="source-link">Источник: Traxo Corporate Travel Trends</a>
+        </div>
+        <div class="card">
+          <h3>Для туристических агентств</h3>
+          <ul class="card-list card-list-bulleted">
+            <li>Высокая нагрузка на службу поддержки (до 40,000 запросов/день)</li>
+            <li>Персонализация на масштабе для тысяч клиентов</li>
+            <li>Фрагментация данных между системами</li>
+            <li>Конкуренция с OTA-гигантами (Booking, Expedia)</li>
+            <li>Удержание клиентов и повышение вовлечённости</li>
+          </ul>
+          <a href="https://yellow.ai/blog/chatbot-for-travel/" target="_blank" class="source-link">Источник: Yellow.ai Travel Chatbot Report</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Слайд 4: AI-решения для Business Travel -->
+  <div class="slide">
+    <h2>Наиболее востребованные AI-решения для Business Travel</h2>
+    <div class="content">
+      <div class="grid grid-3">
+        <div class="card card-small">
+          <div class="card-header">
+            <div class="card-icon"><i data-lucide="shield-check" class="lucide-icon"></i></div>
+            <h3>Автоматизация бронирования и policy compliance</h3>
+          </div>
+          <ul class="card-list card-list-bulleted">
+            <li>Проверка соответствия корпоративной политике в режиме реального времени</li>
+            <li>Автоматические пересогласования при отменах и изменениях</li>
+            <li>Интеграция с expense-системами и ERP</li>
+            <li>Флагирование нарушений в момент бронирования</li>
+          </ul>
+        </div>
+        <div class="card card-small">
+          <div class="card-header">
+            <div class="card-icon"><i data-lucide="alert-triangle" class="lucide-icon"></i></div>
+            <h3>Управление рисками и безопасность сотрудников</h3>
+          </div>
+          <ul class="card-list card-list-bulleted">
+            <li>Мониторинг всех каналов бронирования (включая внешние)</li>
+            <li>Алерты по погоде, безопасности и здоровью</li>
+            <li>Консолидация данных для отчетности</li>
+            <li>Автоматическое уведомление о задержках и отменах</li>
+          </ul>
+        </div>
+        <div class="card card-small">
+          <div class="card-header">
+            <div class="card-icon"><i data-lucide="trending-up" class="lucide-icon"></i></div>
+            <h3>Аналитика и cost optimization</h3>
+          </div>
+          <ul class="card-list card-list-bulleted">
+            <li>Выявление паттернов расходов и оптимизация</li>
+            <li>Предиктивная аналитика цен на билеты и отели</li>
+            <li>Анализ окупаемости поездок и совмещение целей</li>
+            <li>Снижение частоты командировок за счёт поездок с несколькими целями</li>
+          </ul>
+        </div>
+      </div>
+      <div style="margin-top: 20px;">
+        <a href="https://blog.traxo.com/corporate-travel-management-2024-trends-and-2025-predictions" target="_blank" class="source-link">Источник: Traxo Corporate Travel Management 2024 Trends</a> • 
+        <a href="https://coaxsoft.com/blog/ai-agents-and-the-future-of-online-travel-agencies" target="_blank" class="source-link">Coaxsoft AI Agents Report</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Слайд 5: AI-решения для туристических агентств -->
+  <div class="slide">
+    <h2>Наиболее востребованные AI-решения для туристических агентств</h2>
+    <div class="content">
+      <div class="grid grid-3">
+        <div class="card card-small">
+          <div class="card-header">
+            <div class="card-icon"><i data-lucide="message-circle" class="lucide-icon"></i></div>
+            <h3>AI-ассистенты и чат-боты</h3>
+          </div>
+          <ul class="card-list card-list-bulleted">
+            <li>24/7 поддержка клиентов на всех этапах поездки</li>
+            <li>Автоматизация 70-80% рутинных запросов</li>
+            <li>Персонализированные рекомендации по предпочтениям</li>
+            <li>Интеграция в app, сайт, мессенджеры</li>
+          </ul>
+        </div>
+        <div class="card card-small">
+          <div class="card-header">
+            <div class="card-icon"><i data-lucide="route" class="lucide-icon"></i></div>
+            <h3>Персонализированное планирование</h3>
+          </div>
+          <ul class="card-list card-list-bulleted">
+            <li>Генерация маршрутов по бюджету и интересам</li>
+            <li>Совмещение нескольких целей поездки (бизнес + отдых)</li>
+            <li>Динамические пакеты услуг</li>
+            <li>Автоматическое создание итинерари с учетом ограничений</li>
+          </ul>
+        </div>
+        <div class="card card-small">
+          <div class="card-header">
+            <div class="card-icon"><i data-lucide="dollar-sign" class="lucide-icon"></i></div>
+            <h3>Revenue management</h3>
+          </div>
+          <ul class="card-list card-list-bulleted">
+            <li>Динамическое ценообразование на основе спроса</li>
+            <li>Рекомендации дополнительных услуг в момент бронирования</li>
+            <li>Оптимизация загрузки и управление доходностью</li>
+            <li>Персонализированные предложения по истории клиента</li>
+          </ul>
+        </div>
+      </div>
+      <div style="margin-top: 20px;">
+        <a href="https://yellow.ai/blog/chatbot-for-travel/" target="_blank" class="source-link">Источник: Yellow.ai Travel Chatbot Guide</a> • 
+        <a href="https://www.mckinsey.com/industries/travel/our-insights/remapping-travel-with-agentic-ai" target="_blank" class="source-link">McKinsey Agentic AI in Travel</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Слайд 6: Кейсы - часть 1 -->
+  <div class="slide">
+    <h2>Кейсы успешных внедрений AI в Travel</h2>
+    <div class="content">
+      <div class="grid grid-3">
+        <div class="card card-small">
+          <h3>Booking.com</h3>
+          <p><strong>Решение:</strong> AI-ассистент в app, Messenger и на сайте</p>
+          <p><strong>Результат:</strong> Решает 30% запросов по отелям за <5 минут (платежи, даты, pet policies)</p>
+          <a href="https://masterofcode.com/blog/top-travel-and-hospitality-generative-ai-chatbot-examples" target="_blank" class="source-link">Источник: Master of Code</a>
+        </div>
+        <div class="card card-small">
+          <h3>Pelago (Singapore Airlines)</h3>
+          <p><strong>Решение:</strong> GenAI-ассистент для управления бронированиями</p>
+          <p><strong>Результат:</strong> 50% снижение нагрузки на операторов, 5,000 пользователей за 6 недель, автоматизация бронирований и отмен</p>
+          <a href="https://yellow.ai/blog/chatbot-for-travel/" target="_blank" class="source-link">Источник: Yellow.ai</a>
+        </div>
+        <div class="card card-small">
+          <h3>Tiket.com (Travis AI)</h3>
+          <p><strong>Решение:</strong> Multilingual AI-бот для автоматизации поддержки</p>
+          <p><strong>Результат:</strong> 70-80% автоматизация 40,000 запросов/день, освобождение агентов для сложных задач</p>
+          <a href="https://yellow.ai/blog/chatbot-for-travel/" target="_blank" class="source-link">Источник: Yellow.ai</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Слайд 7: Кейсы - часть 2 -->
+  <div class="slide">
+    <h2>Кейсы успешных внедрений AI в Travel (продолжение)</h2>
+    <div class="content">
+      <div class="grid grid-3">
+        <div class="card card-small">
+          <h3>Emirates Vacations</h3>
+          <p><strong>Решение:</strong> AI-анализ намерений клиентов для персонализации пакетов</p>
+          <p><strong>Результат:</strong> +87% вовлечённость в 30-дневном пилоте по сравнению со стандартной рекламой</p>
+          <a href="https://masterofcode.com/blog/top-travel-and-hospitality-generative-ai-chatbot-examples" target="_blank" class="source-link">Источник: Master of Code</a>
+        </div>
+        <div class="card card-small">
+          <h3>Expedia</h3>
+          <p><strong>Решение:</strong> Интеграция ChatGPT для интуитивных рекомендаций</p>
+          <p><strong>Результат:</strong> Умный поиск (авто-сохранение отелей), планирование рейсов/машин/активностей</p>
+          <a href="https://masterofcode.com/blog/top-travel-and-hospitality-generative-ai-chatbot-examples" target="_blank" class="source-link">Источник: Master of Code</a>
+        </div>
+        <div class="card card-small">
+          <h3>Travelport</h3>
+          <p><strong>Решение:</strong> Умное управление маршрутами на базе AI</p>
+          <p><strong>Результат:</strong> Автоматические обновления статусов рейсов, погодные уведомления, изменения отелей в едином интерфейсе</p>
+          <a href="https://www.intouchcx.com/thought-leadership/ai-automation-and-customer-centric-travel-the-big-trends-for-the-transportation-industry/" target="_blank" class="source-link">Источник: InTouchCX</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Слайд 8: Метрики эффективности -->
+  <div class="slide">
+    <h2>Метрики эффективности внедрения AI</h2>
+    <div class="content">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number">40-80%</div>
+          <div class="stat-label">Сокращение времени обработки запросов и задач</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">3.5x</div>
+          <div class="stat-label">ROI на каждый вложенный доллар в AI-решения</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">90%+</div>
+          <div class="stat-label">Удовлетворенность клиентов после внедрения AI-ассистентов</div>
+        </div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number">50-70%</div>
+          <div class="stat-label">Снижение нагрузки на операторов благодаря автоматизации</div>
+          <a href="https://yellow.ai/blog/chatbot-for-travel/" target="_blank" class="source-link">Источник: Yellow.ai</a>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">87%</div>
+          <div class="stat-label">Рост вовлечённости при персонализации через AI</div>
+          <a href="https://masterofcode.com/blog/top-travel-and-hospitality-generative-ai-chatbot-examples" target="_blank" class="source-link">Источник: Master of Code (Emirates case)</a>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">24/7</div>
+          <div class="stat-label">Доступность поддержки без увеличения штата</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Слайд 9: Технологический стек -->
+  <div class="slide">
+    <h2>Технологический стек для AI в Travel</h2>
+    <div class="content">
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon"><i data-lucide="brain" class="lucide-icon"></i></div>
+            <h3>Искусственный интеллект и языковые модели</h3>
+          </div>
+          <ul class="card-list card-list-bulleted">
+            <li>Большие языковые модели (GPT-5, Claude, Gemini)</li>
+            <li>Локальные модели для конфиденциальных данных</li>
+            <li>Фреймворки автономных AI-агентов</li>
+            <li>Обработка языка и распознавание речи для голосовых ассистентов</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon"><i data-lucide="database" class="lucide-icon"></i></div>
+            <h3>Данные и интеграция</h3>
+          </div>
+          <ul class="card-list card-list-bulleted">
+            <li>Векторные базы данных (Qdrant, Pinecone) для поиска по знаниям</li>
+            <li>API интеграции: GDS, PMS, CRM, системы управления расходами</li>
+            <li>Конвейеры данных в режиме реального времени</li>
+            <li>Аналитические платформы и бизнес-аналитика</li>
+          </ul>
+        </div>
+      </div>
+      <div class="grid grid-2" style="margin-top: 20px;">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon"><i data-lucide="workflow" class="lucide-icon"></i></div>
+            <h3>Автоматизация и оркестрация</h3>
+          </div>
+          <ul class="card-list card-list-bulleted">
+            <li>Автоматизация рабочих процессов (n8n, Zapier)</li>
+            <li>Интеграция многоканальных коммуникаций</li>
+            <li>Движки динамического ценообразования</li>
+            <li>Движки правил соответствия политике</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon"><i data-lucide="shield" class="lucide-icon"></i></div>
+            <h3>Безопасность и соответствие</h3>
+          </div>
+          <ul class="card-list card-list-bulleted">
+            <li>Соответствие GDPR и защита персональных данных</li>
+            <li>Развертывание на собственных серверах для чувствительных данных</li>
+            <li>Журналы аудита и мониторинг</li>
+            <li>Контроль доступа и управление ролями</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Слайд 10: Дорожная карта внедрения -->
+  <div class="slide">
+    <h2>Дорожная карта внедрения AI-решений</h2>
+    <div class="content">
+      <div class="list-item">
+        <div class="list-number">1</div>
+        <div class="list-content">
+          <h4>Анализ и стратегия (2-4 недели)</h4>
+          <p>Аудит текущих процессов, выявление точек роста и болевых зон, приоритизация сценариев по окупаемости, формирование дорожной карты и бюджета</p>
+        </div>
+      </div>
+      <div class="list-item">
+        <div class="list-number">2</div>
+        <div class="list-content">
+          <h4>Минимальный продукт и пилот (4-8 недель)</h4>
+          <p>Разработка первого AI-решения (чат-бот, автоматизация или аналитика), тестирование на сегменте клиентов, сбор метрик и обратной связи</p>
+        </div>
+      </div>
+      <div class="list-item">
+        <div class="list-number">3</div>
+        <div class="list-content">
+          <h4>Масштабирование (ongoing)</h4>
+          <p>Интеграция с существующими системами (GDS, PMS, CRM), обучение команды, постоянное улучшение на основе данных, расширение на новые сценарии использования</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Слайд 11: Специфика Business Travel -->
+  <div class="slide">
+    <h2>Специфика AI-решений для Business Travel</h2>
+    <div class="content">
+      <div class="grid grid-2">
+        <div class="card card-small">
+          <div class="card-header">
+            <div class="card-icon"><i data-lucide="building-2" class="lucide-icon"></i></div>
+            <h3>Интеграция с корпоративными системами</h3>
+          </div>
+          <ul class="card-list card-list-bulleted">
+            <li>Глубокая интеграция с TMC-платформами (Sabre, Amadeus)</li>
+            <li>Синхронизация с ERP и expense management</li>
+            <li>Единая точка входа (SSO) и управление корпоративной идентификацией</li>
+            <li>Настраиваемые процессы согласования</li>
+          </ul>
+        </div>
+        <div class="card card-small">
+          <div class="card-header">
+            <div class="card-icon"><i data-lucide="file-check" class="lucide-icon"></i></div>
+            <h3>Corporate policy engine</h3>
+          </div>
+          <ul class="card-list card-list-bulleted">
+            <li>Автоматическая проверка соответствия политике</li>
+            <li>Гибкие правила для разных уровней сотрудников</li>
+            <li>Уведомления о нарушениях в режиме реального времени</li>
+            <li>Автоматические апрувы и эскалации</li>
+          </ul>
+        </div>
+      </div>
+      <div class="grid grid-2" style="margin-top: 20px;">
+        <div class="card card-small">
+          <div class="card-header">
+            <div class="card-icon"><i data-lucide="radar" class="lucide-icon"></i></div>
+            <h3>Multi-channel tracking</h3>
+          </div>
+          <ul class="card-list card-list-bulleted">
+            <li>Консолидация данных из всех каналов бронирования</li>
+            <li>Отслеживание внешних каналов и нецелевых бронирований</li>
+            <li>Единая панель управления для тревел-менеджеров</li>
+            <li>Безопасность сотрудников и отслеживание местоположения в реальном времени</li>
+          </ul>
+        </div>
+        <div class="card card-small">
+          <div class="card-header">
+            <div class="card-icon"><i data-lucide="bar-chart-3" class="lucide-icon"></i></div>
+            <h3>Углубленная аналитика</h3>
+          </div>
+          <ul class="card-list card-list-bulleted">
+            <li>Паттерны расходов по департаментам и проектам</li>
+            <li>Прогнозирование travel spend</li>
+            <li>Оптимизация работы с предпочтительными поставщиками</li>
+            <li>Отслеживание углеродного следа и ESG-отчётность</li>
+          </ul>
+        </div>
+      </div>
+      <div style="margin-top: 20px;">
+        <a href="https://blog.traxo.com/corporate-travel-management-2024-trends-and-2025-predictions" target="_blank" class="source-link">Источник: Traxo Corporate Travel Management Trends</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Слайд 12: Почему Panfilov Consulting -->
+  <div class="slide">
+    <h2>Почему panfilov.consulting?</h2>
+    <div class="content">
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon"><i data-lucide="award" class="lucide-icon"></i></div>
+            <h3>Глубокая экспертиза</h3>
+          </div>
+          <ul class="card-list card-list-bulleted">
+            <li>11 лет опыта в digital-разработке</li>
+            <li>Портфолио успешных AI-внедрений (ДКС, юридические компании, HealthTech)</li>
+            <li>Глубокая экспертиза в GenAI, LLM и agentic AI</li>
+            <li>Аккредитованная IT-компания Минцифры РФ</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon"><i data-lucide="rocket" class="lucide-icon"></i></div>
+            <h3>Комплексный подход</h3>
+          </div>
+          <ul class="card-list card-list-bulleted">
+            <li>От стратегии и аудита до запуска в продакшн и поддержки</li>
+            <li>Собственная команда инженеров по машинному обучению и разработчиков</li>
+            <li>Быстрые итерации: от идеи до минимального продукта за 4-8 недель</li>
+            <li>Обучение ваших команд работе с AI-инструментами</li>
+          </ul>
+        </div>
+      </div>
+      <div class="grid grid-2" style="margin-top: 20px;">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon"><i data-lucide="users" class="lucide-icon"></i></div>
+            <h3>Доверие крупных клиентов</h3>
+          </div>
+          <ul class="card-list card-list-bulleted">
+            <li>ДКС, Петрович, Московская Биржа, ВТБ</li>
+            <li>Лидирующие места в рейтингах Рунета</li>
+            <li>Опыт работы с крупными корпоративными клиентами</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon"><i data-lucide="shield-check" class="lucide-icon"></i></div>
+            <h3>Безопасность и compliance</h3>
+          </div>
+          <ul class="card-list card-list-bulleted">
+            <li>Решения на собственных серверах для конфиденциальных данных</li>
+            <li>Соответствие GDPR и локальным регуляторным требованиям</li>
+            <li>Опыт работы с закрытыми контурами (юр. компании, фарма)</li>
+            <li>Журналы аудита и полная прозрачность процессов</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Слайд 13: Финальный CTA -->
+  <div class="slide title">
+    <div>
+      <div class="logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2432.66144 270">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #262934;
+      }
+
+      .cls-2 {
+        fill: #b7b8b9;
+      }
+    </style>
+  </defs>
+  <g id="Слой_2" data-name="Слой 2">
+    <g id="ЛОГО">
+      <g>
+        <path class="cls-1" d="M19.5,97.499H42.6l.9,31.5v178.5h-24Zm75,153q-16.50238,0-27-7.65039a51.87205,51.87205,0,0,1-16.35-19.7998,98.72083,98.72083,0,0,1-8.25-25.5,140.13912,140.13912,0,0,1-2.4-24.75A192.51349,192.51349,0,0,1,42.75,142.499a80.01046,80.01046,0,0,1,7.95-24.90039,41.667,41.667,0,0,1,16.35-16.94922Q77.69528,94.50294,94.5,94.499a56.09232,56.09232,0,0,1,32.7,10.2002q14.69532,10.20264,23.55,27.89941,8.84528,17.70556,8.85,40.2002,0,22.5-9,40.0498-9,17.5503-23.85,27.60059A56.37938,56.37938,0,0,1,94.5,250.499Zm-6-22.7998a43.27785,43.27785,0,0,0,24.45-7.04981,47.5609,47.5609,0,0,0,16.65-19.5q5.99771-12.4453,6-28.35058,0-23.99707-12.3-39.75-12.30469-15.75-34.8-15.75a40.16635,40.16635,0,0,0-23.4,7.0498,46.70258,46.70258,0,0,0-15.9,19.5q-5.70235,12.45264-5.7,28.9502A73.64909,73.64909,0,0,0,48.45,200.249a45.47183,45.47183,0,0,0,14.85,19.9502Q73.2,227.70069,88.5,227.69922Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-1" d="M246.89545,250.499a56.83557,56.83557,0,0,1-32.55-10.0498q-14.84985-10.04736-23.69995-27.60059-8.85224-17.54883-8.85-40.0498,0-22.5,9-40.2002a71.458,71.458,0,0,1,24.45007-27.89941A61.5236,61.5236,0,0,1,249.89545,94.499q20.99523,0,31.94995,10.65039,10.94787,10.65235,15,28.34961a176.4736,176.4736,0,0,1,4.05,39.29981,140.58869,140.58869,0,0,1-2.39991,24.75,98.91176,98.91176,0,0,1-8.25,25.5,51.915,51.915,0,0,1-16.35009,19.7998Q263.39068,250.49951,246.89545,250.499Zm6-22.7998q15.29992,0,25.35009-7.5A44.03275,44.03275,0,0,0,293.0954,200.249a75.75683,75.75683,0,0,0,4.8-27.45019q0-16.49561-4.95-28.9502a42.19022,42.19022,0,0,0-15-19.5q-10.05469-7.04444-25.05-7.0498-22.5,0-34.8,15.75-12.3047,15.75-12.3,39.75,0,15.90526,6.15015,28.35058a48.55679,48.55679,0,0,0,16.8,19.5A42.74532,42.74532,0,0,0,252.89545,227.69922Zm45-130.2002h24v150H299.99554q-.90014-10.80029-1.5-18-.605-7.1997-.60009-12Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-1" d="M360.89093,97.499h24v150h-24Zm75.6-3a61.199,61.199,0,0,1,21.6,3.59961,42.93593,42.93593,0,0,1,16.20007,10.5,47.69557,47.69557,0,0,1,10.2,16.65039,63.35675,63.35675,0,0,1,3.6,22.04981V247.499h-24V153.29883q0-17.395-8.1-26.09961-8.1-8.69824-24.29993-8.7002a43.50516,43.50516,0,0,0-22.8,6.29981,50.82428,50.82428,0,0,0-17.25,17.25,59.33542,59.33542,0,0,0-8.25,25.35058l-.3-17.40039a76.30744,76.30744,0,0,1,6.15-22.7998A62.59425,62.59425,0,0,1,400.941,109.64941,48.68785,48.68785,0,0,1,436.49091,94.499Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-1" d="M516.58661,103.499h88.2v22.5h-88.2Zm77.7-66h63v24h-63a33.57972,33.57972,0,0,0-13.6499,2.09961,19.59935,19.59935,0,0,0-9.75,8.25q-3.6,5.85059-3.6001,16.65039h-24q0-18,6.45007-29.25a38.86342,38.86342,0,0,1,18-16.5Q579.282,37.50342,594.28656,37.499Zm-51,210v-159h24v159Zm49.5-121.5v-22.5h60.9v22.5Zm40.5-22.5h24v144h-24Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-1" d="M697.78375,37.499h24v210h-24Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-1" d="M828.88239,250.499a73.149,73.149,0,0,1-36-9.2998,71.33153,71.33153,0,0,1-27.15-26.85059q-10.34985-17.54883-10.35-41.5498,0-23.99707,10.35-41.54981a73.65328,73.65328,0,0,1,27.15-27.15039,71.39365,71.39365,0,0,1,36-9.59961,70.59947,70.59947,0,0,1,35.85,9.59961,72.93216,72.93216,0,0,1,26.8501,27.15039q10.19531,17.5503,10.2,41.54981,0,24.00439-10.2,41.5498a70.629,70.629,0,0,1-26.8501,26.85059A72.33055,72.33055,0,0,1,828.88239,250.499Zm0-22.5a47.25756,47.25756,0,0,0,23.70007-6.2998,48.25059,48.25059,0,0,0,18.1499-18.75q7.04535-12.44532,7.05005-30.15039,0-17.69678-7.05005-30.14942a50.59483,50.59483,0,0,0-18.1499-19.05078,45.6441,45.6441,0,0,0-23.70007-6.59961,47.22511,47.22511,0,0,0-23.85,6.4502,50.09132,50.09132,0,0,0-18.45,18.89941q-7.20007,12.45264-7.20007,30.4502,0,17.70556,7.05,30.15039a47.51223,47.51223,0,0,0,18.45,18.75A48.9037,48.9037,0,0,0,828.88239,227.999Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-1" d="M985.78156,226.79883h-7.20008l45.9-129.29981h26.1l-57,150h-22.5l-56.7-150h26.1Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-1" d="M1083.28192,218.09863V247.499H1052.082V218.09863Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-2" d="M1252.48175,191.09863q-2.10241,18.605-11.84985,31.9502a64.306,64.306,0,0,1-24.4502,20.40039,74.75263,74.75263,0,0,1-67.80005-2.25,71.3315,71.3315,0,0,1-27.15-26.85059q-10.34985-17.54883-10.35-41.5498,0-23.99707,10.35-41.54981a73.65325,73.65325,0,0,1,27.15-27.15039,71.3937,71.3937,0,0,1,36-9.59961,70.38707,70.38707,0,0,1,31.65015,7.2002,66.52662,66.52662,0,0,1,24.30005,20.39941q9.74523,13.20557,12.1499,31.5h-21.8999q-5.10462-17.09912-17.7002-26.84961a45.37985,45.37985,0,0,0-28.5-9.75,47.74987,47.74987,0,0,0-24.29992,6.59961,48.70609,48.70609,0,0,0-18.30005,19.05078q-6.90473,12.45119-6.9,30.14942,0,17.40234,6.9,29.85058a47.5998,47.5998,0,0,0,42.6,25.34961q18.29535,0,29.8501-9.75,11.54553-9.74561,16.65015-27.15039Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-2" d="M1348.17877,250.499a73.14771,73.14771,0,0,1-36-9.2998,71.33263,71.33263,0,0,1-27.15014-26.85059q-10.34987-17.54883-10.34986-41.5498,0-23.99707,10.34986-41.54981a73.65444,73.65444,0,0,1,27.15014-27.15039,71.39236,71.39236,0,0,1,36-9.59961,70.59875,70.59875,0,0,1,35.84986,9.59961,72.93125,72.93125,0,0,1,26.85009,27.15039q10.19532,17.5503,10.2,41.54981,0,24.00439-10.2,41.5498a70.62811,70.62811,0,0,1-26.85009,26.85059A72.32982,72.32982,0,0,1,1348.17877,250.499Zm0-22.5a47.25744,47.25744,0,0,0,23.69995-6.2998,48.25062,48.25062,0,0,0,18.14991-18.75q7.04553-12.44532,7.05-30.15039,0-17.69678-7.05-30.14942a50.59486,50.59486,0,0,0-18.14991-19.05078,45.644,45.644,0,0,0-23.69995-6.59961,47.22525,47.22525,0,0,0-23.8501,6.4502,50.09219,50.09219,0,0,0-18.45,18.89941q-7.20007,12.45264-7.19995,30.4502,0,17.70556,7.04981,30.15039a47.51275,47.51275,0,0,0,18.45019,18.75A48.90306,48.90306,0,0,0,1348.17877,227.999Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-2" d="M1451.6778,97.499h24v150h-24Zm75.60009-3a61.19889,61.19889,0,0,1,21.59986,3.59961,42.93367,42.93367,0,0,1,16.19995,10.5,47.69605,47.69605,0,0,1,10.20019,16.65039,63.35936,63.35936,0,0,1,3.59986,22.04981V247.499h-24V153.29883q0-17.395-8.09986-26.09961-8.10021-8.69824-24.30005-8.7002a43.50545,43.50545,0,0,0-22.8,6.29981,50.82419,50.82419,0,0,0-17.25,17.25,59.33705,59.33705,0,0,0-8.25,25.35058l-.3-17.40039a76.30363,76.30363,0,0,1,6.15014-22.7998,62.59136,62.59136,0,0,1,11.69995-17.54981A48.6879,48.6879,0,0,1,1527.27789,94.499Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-2" d="M1610.67365,199.19922h22.19995q.90014,12.90234,9.75,21,8.84546,8.09912,25.6499,8.09961,10.1953,0,16.05005-2.7002a18.37316,18.37316,0,0,0,8.55-7.34961,20.22721,20.22721,0,0,0,2.7-10.34961q0-6.89794-3.45-10.95019a26.64257,26.64257,0,0,0-9.3-6.75,118.23592,118.23592,0,0,0-13.34986-5.10059q-8.70483-3.29736-17.85009-7.0498a98.71491,98.71491,0,0,1-17.1001-9,42.28333,42.28333,0,0,1-12.75-12.89942q-4.80213-7.65087-4.79981-18.45019a40.61953,40.61953,0,0,1,3.59986-16.9502,39.856,39.856,0,0,1,10.3501-13.7998,49.80584,49.80584,0,0,1,15.8999-9.15039,59.3546,59.3546,0,0,1,20.25-3.29981q14.99779,0,25.3501,6a40.1128,40.1128,0,0,1,15.8999,16.9502q5.54772,10.95409,5.8501,25.34961h-20.7q-2.10242-13.5-8.55-19.64942-6.45484-6.14647-18.45-6.15039-12.30468,0-18.90014,5.40039a17.65551,17.65551,0,0,0-6.59986,14.39942,14.13684,14.13684,0,0,0,4.79981,10.95019,47.33568,47.33568,0,0,0,12.45019,7.79981q7.64979,3.45264,16.34986,7.0498,8.69787,3.60058,16.8,7.2002a71.8347,71.8347,0,0,1,14.3999,8.40039,36.01079,36.01079,0,0,1,10.05005,11.84961q3.74779,7.05322,3.75,17.5498a42.58439,42.58439,0,0,1-5.84986,22.35059,38.99288,38.99288,0,0,1-17.10009,15.14941q-11.25,5.40088-27.44995,5.40039-14.70228,0-25.05005-3.75a52.35854,52.35854,0,0,1-17.25-9.90039,48.754,48.754,0,0,1-10.64991-13.0498,45.14012,45.14012,0,0,1-4.95019-13.5A36.39132,36.39132,0,0,1,1610.67365,199.19922Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-2" d="M1854.87164,177.59863l.3,8.40039q-.30249,3.60058-1.6499,11.09961a113.47474,113.47474,0,0,1-4.5,16.65039,71.078,71.078,0,0,1-9,17.54981,47.3085,47.3085,0,0,1-15,13.7998q-9.15491,5.40088-22.65015,5.40039a66.458,66.458,0,0,1-17.84985-2.5498,50.65524,50.65524,0,0,1-16.9502-8.40039,41.3424,41.3424,0,0,1-12.59985-16.34961q-4.80249-10.49853-4.80005-26.10059V97.499h24v93.59961q0,13.5,4.3501,21.15039a25.03827,25.03827,0,0,0,11.84985,10.9502,41.21906,41.21906,0,0,0,16.8,3.2998q15.29993,0,25.5-7.7998a51.77732,51.77732,0,0,0,15.6001-19.2002A69.87363,69.87363,0,0,0,1854.87164,177.59863Zm22.5,69.90039h-24v-150h24Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-2" d="M1919.36725,37.499h24v210h-24Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-2" d="M1968.8692,97.499h88.19995v22.5H1968.8692Zm32.1001-39h24v189h-24Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-2" d="M2115.26593,37.499V66.59863h-31.2V37.499Zm-27.59985,60h24v150h-24Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-2" d="M2152.76569,97.499h24v150h-24Zm75.60009-3a61.19889,61.19889,0,0,1,21.59986,3.59961,42.93367,42.93367,0,0,1,16.2,10.5,47.69605,47.69605,0,0,1,10.20019,16.65039,63.35936,63.35936,0,0,1,3.59986,22.04981V247.499h-24V153.29883q0-17.395-8.09986-26.09961-8.10021-8.69824-24.30005-8.7002a43.50545,43.50545,0,0,0-22.8,6.29981,50.82419,50.82419,0,0,0-17.25,17.25,59.33705,59.33705,0,0,0-8.25,25.35058l-.30005-17.40039a76.30363,76.30363,0,0,1,6.15014-22.7998,62.59136,62.59136,0,0,1,11.69995-17.54981A48.6879,48.6879,0,0,1,2228.36578,94.499Z" transform="translate(-19.5 -37.49902)"/>
+        <path class="cls-2" d="M2372.66144,223.79883a62.819,62.819,0,0,1-30.1499-7.64942,60.25186,60.25186,0,0,1-23.1001-22.05078q-8.85241-14.39942-8.84986-34.5,0-20.09472,8.7-34.64941a62.25064,62.25064,0,0,1,63.1499-29.7002,50.31153,50.31153,0,0,1,8.8501,2.25h60.8999v25.79981a72.28435,72.28435,0,0,1-25.6499-4.79981,154.94411,154.94411,0,0,1-21.75-9.90039l-1.2-1.19922a60.96959,60.96959,0,0,1,17.25,13.5,54.3188,54.3188,0,0,1,10.2,17.54981,63.063,63.063,0,0,1,3.45,21.14941q0,20.10352-8.55005,34.5a58.46693,58.46693,0,0,1-22.6499,22.05078A63.17044,63.17044,0,0,1,2372.66144,223.79883Zm44.1001,83.70019v-6.59961q0-15.90526-8.25-23.10058-8.25477-7.19972-24.75-7.2002h-30a79.70032,79.70032,0,0,1-17.25-1.64941,34.73836,34.73836,0,0,1-12.15015-4.9502,21.40867,21.40867,0,0,1-7.2-8.09961,23.78863,23.78863,0,0,1-2.3999-10.80078q0-11.39648,6.8999-17.25a33.32573,33.32573,0,0,1,17.1001-7.34961,63.84084,63.84084,0,0,1,19.5,0l14.3999,3.29981q-16.20007.90087-25.05,3.2998-8.85206,2.40528-8.84985,10.2002a9.09208,9.09208,0,0,0,3.45,7.35058q3.4453,2.85353,10.35009,2.84961h31.2a88.74625,88.74625,0,0,1,28.5,4.34961,42.07215,42.07215,0,0,1,20.7,14.7002q7.79772,10.35059,7.8,28.35058V307.499Zm-44.1001-106.20019a36.71026,36.71026,0,0,0,32.40014-18.89942q5.39979-9.29589,5.39991-22.80078,0-13.5-5.25-22.94922a36.53376,36.53376,0,0,0-13.95-14.40039,37.41913,37.41913,0,0,0-37.2,0,37.832,37.832,0,0,0-14.10009,14.25q-5.40015,9.30177-5.39991,23.09961,0,13.5,5.39991,22.80078a36.67112,36.67112,0,0,0,14.10009,14.09961A37.89171,37.89171,0,0,0,2372.66144,201.29883Z" transform="translate(-19.5 -37.49902)"/>
+      </g>
+    </g>
+  </g>
+</svg>
+</div>
+      <h1>Готовы обсудить внедрение AI в вашу компанию?</h1>
+      <p class="subtitle">Свяжитесь с нами для бесплатной консультации и аудита процессов</p>
+      
+      <div class="final-speaker">
+        <div class="final-speaker-photo">
+          <img src="file:///Users/avelivitsgmail.com/Documents/Windsurf/CascadeProjects/panfilov-consulting/public/ceo-photo.jpg" alt="Максим Панфилов" />
+        </div>
+        <div class="final-speaker-info">
+          <div class="final-speaker-name">Максим Панфилов</div>
+          <div class="final-speaker-title">Основатель и генеральный директор</div>
+          <div class="final-contacts">
+            <div>+7 916 557 70 25</div>
+            <div>Telegram: @mpanfilov</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="contact">
+      <a href="https://panfilov.consulting">panfilov.consulting</a> • <a href="mailto:contact@panfilov.consulting">contact@panfilov.consulting</a>
+    </div>
+    <div class="title-image">
+      <img src="./exported-homepage/neuronet.png" alt="Neural Network" />
+    </div>
+  </div>
+
+  <!-- Подключение Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+
+</body>
+</html>
