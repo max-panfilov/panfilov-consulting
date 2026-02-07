@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { motion } from 'framer-motion'
 
 const NeuralNetworkScene = dynamic(
   () => import('@/components/NeuralNetworkScene').then((mod) => mod.NeuralNetworkScene),
@@ -52,7 +53,13 @@ export const HeroHomeBlock: React.FC<HeroHomeBlockType> = ({
     <section className="pt-0 pb-16 md:pb-24 -mt-12 md:-mt-8">
       <div className="container">
         <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
-          <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+            className="flex flex-col items-center text-center lg:items-start lg:text-left"
+          >
             {/* Заголовок */}
             <h1 className="my-6 text-pretty text-4xl font-semibold tracking-tight lg:text-5xl xl:text-6xl">
               {heading}
@@ -87,36 +94,43 @@ export const HeroHomeBlock: React.FC<HeroHomeBlockType> = ({
                 </Button>
               )}
             </div>
-          </div>
+          </motion.div>
 
           {/* 3D Neural Network Animation или видео/изображение */}
-          {mediaType === 'video' && bgVideoUrl ? (
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="max-h-96 w-full rounded-md object-cover"
-            >
-              <source src={bgVideoUrl} type="video/mp4" />
-            </video>
-          ) : bgImageUrl ? (
-            <div className="relative max-h-96 w-full aspect-video">
-              <Image
-                src={bgImageUrl}
-                alt={heading || 'Hero image'}
-                fill
-                className="rounded-md object-cover"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                priority
-              />
-            </div>
-          ) : (
-            // 3D анимация нейронной сети вместо placeholder изображения
-            <div className="relative h-96 w-full rounded-md overflow-hidden">
-              <NeuralNetworkScene />
-            </div>
-          )}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            {mediaType === 'video' && bgVideoUrl ? (
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="max-h-96 w-full rounded-md object-cover"
+              >
+                <source src={bgVideoUrl} type="video/mp4" />
+              </video>
+            ) : bgImageUrl ? (
+              <div className="relative max-h-96 w-full aspect-video">
+                <Image
+                  src={bgImageUrl}
+                  alt={heading || 'Hero image'}
+                  fill
+                  className="rounded-md object-cover"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  priority
+                />
+              </div>
+            ) : (
+              // 3D анимация нейронной сети вместо placeholder изображения
+              <div className="relative h-96 w-full rounded-md overflow-hidden">
+                <NeuralNetworkScene />
+              </div>
+            )}
+          </motion.div>
         </div>
       </div>
     </section>

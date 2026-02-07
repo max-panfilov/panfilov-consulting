@@ -22,6 +22,7 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { motion } from 'framer-motion'
 
 const iconMap: Record<string, LucideIcon> = {
   CircleHelp,
@@ -62,7 +63,13 @@ export const SolutionApproachBlock: React.FC<SolutionApproachBlockType> = ({
   }
 
   return (
-    <section className="py-16 md:py-24">
+    <motion.section
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      viewport={{ once: true }}
+      className="py-16 md:py-24"
+    >
       <div className="container">
         {heading && (
           <div className="mb-12 md:mb-16 max-w-2xl">
@@ -97,6 +104,6 @@ export const SolutionApproachBlock: React.FC<SolutionApproachBlockType> = ({
           </div>
         )}
       </div>
-    </section>
+    </motion.section>
   )
 }

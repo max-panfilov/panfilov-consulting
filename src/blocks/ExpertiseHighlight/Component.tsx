@@ -8,6 +8,7 @@ import { getPayload } from 'payload'
 import { ArrowRightIcon } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { AnimateIn } from '@/components/AnimateIn'
 
 export const ExpertiseHighlightBlock: React.FC<ExpertiseHighlightBlockType> = async ({
   heading,
@@ -51,7 +52,7 @@ export const ExpertiseHighlightBlock: React.FC<ExpertiseHighlightBlockType> = as
   const categoryName = category && typeof category === 'object' ? category.title : null
 
   return (
-    <section className="py-16 md:py-24">
+    <AnimateIn as="section" className="py-16 md:py-24">
       <div className="container">
         {/* Заголовок секции */}
         <div className="mb-10 md:mb-14 max-w-2xl">
@@ -148,6 +149,6 @@ export const ExpertiseHighlightBlock: React.FC<ExpertiseHighlightBlockType> = as
           </div>
         )}
       </div>
-    </section>
+    </AnimateIn>
   )
 }

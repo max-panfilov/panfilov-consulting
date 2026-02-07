@@ -14,6 +14,7 @@ import {
   CardHeader,
 } from '@/components/ui/card'
 import { Media } from '@/components/Media'
+import { AnimateIn } from '@/components/AnimateIn'
 
 export const ArchiveBlock: React.FC<
   ArchiveBlockProps & {
@@ -79,7 +80,7 @@ export const ArchiveBlock: React.FC<
   const collectionSlug = relationTo === 'cases' ? 'cases' : 'posts'
 
   return (
-    <section className="py-16 md:py-24" id={`block-${id}`}>
+    <AnimateIn as="section" className="py-16 md:py-24">
       <div className="container">
         {introContent && (
           <div className="mb-10 md:mb-14 max-w-2xl">
@@ -139,6 +140,6 @@ export const ArchiveBlock: React.FC<
           })}
         </div>
       </div>
-    </section>
+    </AnimateIn>
   )
 }
