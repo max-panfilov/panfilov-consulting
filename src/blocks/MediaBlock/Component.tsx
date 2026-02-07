@@ -7,6 +7,7 @@ import RichText from '@/components/RichText'
 import type { MediaBlock as MediaBlockProps } from '@/payload-types'
 
 import { Media } from '../../components/Media'
+import { AnimateIn } from '@/components/AnimateIn'
 
 type Props = MediaBlockProps & {
   breakout?: boolean
@@ -33,7 +34,7 @@ export const MediaBlock: React.FC<Props> = (props) => {
   if (media && typeof media === 'object') caption = media.caption
 
   return (
-    <div
+    <AnimateIn
       className={cn(
         '',
         {
@@ -62,6 +63,6 @@ export const MediaBlock: React.FC<Props> = (props) => {
           <RichText data={caption} enableGutter={false} />
         </div>
       )}
-    </div>
+    </AnimateIn>
   )
 }

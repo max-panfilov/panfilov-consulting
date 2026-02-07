@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { motion } from 'framer-motion'
 
 // Тип для сериализованного кейса
 type SerializedCase = {
@@ -29,7 +30,14 @@ export const FeaturedCasesClient: React.FC<FeaturedCasesClientProps> = ({
   cases,
 }) => {
   return (
-    <section className="py-16 md:py-24" id="cases">
+    <motion.section
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      viewport={{ once: true }}
+      className="py-16 md:py-24"
+      id="cases"
+    >
       <div className="container">
         {/* Заголовок секции */}
         {heading && (
@@ -91,6 +99,6 @@ export const FeaturedCasesClient: React.FC<FeaturedCasesClientProps> = ({
           </Button>
         </div>
       </div>
-    </section>
+    </motion.section>
   )
 }

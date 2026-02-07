@@ -10,6 +10,7 @@ import {
   Database,
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
+import { motion } from 'framer-motion'
 
 // Маппинг иконок
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -43,7 +44,13 @@ export const TargetAudienceBlock: React.FC<TargetAudienceBlockType> = ({
   }
 
   return (
-    <section className="py-16 md:py-24">
+    <motion.section
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      viewport={{ once: true }}
+      className="py-16 md:py-24"
+    >
       <div className="container">
         {/* Заголовок секции */}
         {(label || heading) && (
@@ -79,6 +86,6 @@ export const TargetAudienceBlock: React.FC<TargetAudienceBlockType> = ({
           })}
         </div>
       </div>
-    </section>
+    </motion.section>
   )
 }
