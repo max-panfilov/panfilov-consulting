@@ -12,7 +12,8 @@ export async function Footer() {
     title: 'Panfilov Consulting',
   }
   
-  const copyright = footerData?.copyright || `© ${new Date().getFullYear()} Panfilov Consulting. Все права защищены.`
+  const currentYear = new Date().getFullYear()
+  const copyright = footerData?.copyright || `© 2025${currentYear > 2025 ? `–${currentYear}` : ''} Panfilov Consulting. Все права защищены.`
 
   // Данные формы обратной связи
   const contactFormHeading = footerData?.contactFormHeading
