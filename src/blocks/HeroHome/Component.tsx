@@ -54,10 +54,9 @@ export const HeroHomeBlock: React.FC<HeroHomeBlockType> = ({
       <div className="container">
         <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
             className="flex flex-col items-center text-center lg:items-start lg:text-left"
           >
             {/* Заголовок */}
@@ -98,10 +97,9 @@ export const HeroHomeBlock: React.FC<HeroHomeBlockType> = ({
 
           {/* 3D Neural Network Animation или видео/изображение */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            viewport={{ once: true }}
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
           >
             {mediaType === 'video' && bgVideoUrl ? (
               <video

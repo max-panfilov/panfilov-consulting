@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 
 type AnimateInProps = {
   children: React.ReactNode
@@ -17,14 +17,20 @@ export const AnimateIn: React.FC<AnimateInProps> = ({
   delay = 0,
   as = 'div',
 }) => {
+  const prefersReducedMotion = useReducedMotion()
   const Component = as === 'section' ? motion.section : motion.div
+
+  if (prefersReducedMotion) {
+    const Tag = as === 'section' ? 'section' : 'div'
+    return <Tag className={className}>{children}</Tag>
+  }
 
   return (
     <Component
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay }}
-      viewport={{ once: true }}
+      transition={{ duration: 0.6, delay, ease: [0.25, 0.1, 0.25, 1] }}
+      viewport={{ once: true, amount: 0.15 }}
       className={className}
     >
       {children}
