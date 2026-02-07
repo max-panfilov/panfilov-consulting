@@ -13,7 +13,12 @@ export async function Footer() {
   }
   
   const currentYear = new Date().getFullYear()
-  const copyright = footerData?.copyright || `© 2025${currentYear > 2025 ? `–${currentYear}` : ''} Panfilov Consulting. Все права защищены.`
+  const yearRange = `2025${currentYear > 2025 ? `–${currentYear}` : ''}`
+  const baseCopyright =
+    footerData?.copyright ||
+    `© ${yearRange} Panfilov Consulting. Все права защищены.`
+  // Нормализуем год или диапазон лет к формату 2025–<текущий>.
+  const copyright = baseCopyright.replace(/\b\d{4}(?:\s*–\s*\d{4})?\b/, yearRange)
 
   // Данные формы обратной связи
   const contactFormHeading = footerData?.contactFormHeading
