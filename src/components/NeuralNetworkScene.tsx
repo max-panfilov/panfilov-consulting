@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useRef, useMemo, useState } from 'react'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import React, { useRef, useMemo, useCallback } from 'react'
+import { Canvas, useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { useTheme } from '@/providers/Theme'
 
@@ -11,6 +11,15 @@ interface Node {
   basePosition: THREE.Vector3
   connections: number[]
   velocity: THREE.Vector3
+}
+
+// Общий объект для передачи позиции указателя в Three.js сцену
+interface PointerState {
+  // Нормализованные координаты указателя (-1 до 1)
+  x: number
+  y: number
+  // Активен ли указатель (мышь над канвасом или тач)
+  active: boolean
 }
 
 // Компонент отдельного узла
@@ -47,48 +56,62 @@ const NetworkNode: React.FC<{
   )
 }
 
-// Компонент связи между узлами
-const Connection: React.FC<{
-  start: THREE.Vector3
-  end: THREE.Vector3
-  color: string
-}> = ({ start, end, color }) => {
-  const lineRef = useRef<THREE.Line>(null)
+/**
+ * Пересчитывает связи для всех узлов на основе текущих позиций.
+ * Гарантирует минимум MIN_CONNECTIONS связей для каждого узла.
+ */
+const MIN_CONNECTIONS = 2
 
-  const points = useMemo(() => [start.clone(), end.clone()], [])
+function rebuildConnections(nodes: Node[], baseCount: number = 3, randomExtra: number = 3) {
+  // Сначала назначаем связи каждому узлу по ближайшим соседям
+  nodes.forEach((node, i) => {
+    const distances = nodes
+      .map((other, j) => ({ index: j, distance: node.position.distanceTo(other.position) }))
+      .filter((d) => d.index !== i)
+      .sort((a, b) => a.distance - b.distance)
 
-  useFrame((state) => {
-    if (lineRef.current && lineRef.current.geometry) {
-      // Обновляем позиции концов линии
-      const positions = lineRef.current.geometry.attributes.position
-      positions.setXYZ(0, start.x, start.y, start.z)
-      positions.setXYZ(1, end.x, end.y, end.z)
-      positions.needsUpdate = true
-
-      // Анимация прозрачности
-      const material = lineRef.current.material as THREE.LineBasicMaterial
-      material.opacity = 0.3 + Math.sin(state.clock.getElapsedTime() * 3) * 0.2
-    }
+    const count = baseCount + Math.floor(Math.random() * randomExtra)
+    node.connections = distances.slice(0, count).map((d) => d.index)
   })
 
-  const geometry = useMemo(() => {
-    const geom = new THREE.BufferGeometry().setFromPoints(points)
-    return geom
-  }, [points])
+  // Гарантируем, что каждый узел имеет минимум MIN_CONNECTIONS связей.
+  // Если узел A подключён к B, но B не подключён к A — добавляем обратную связь.
+  nodes.forEach((node, i) => {
+    if (node.connections.length >= MIN_CONNECTIONS) return
 
-  return (
-    // @ts-ignore - Three.js primitive type compatibility
-    <line ref={lineRef} geometry={geometry}>
-      <lineBasicMaterial color={color} transparent opacity={0.4} />
-    </line>
-  )
+    // Находим ближайшие узлы, которых ещё нет в connections
+    const distances = nodes
+      .map((other, j) => ({ index: j, distance: node.position.distanceTo(other.position) }))
+      .filter((d) => d.index !== i && !node.connections.includes(d.index))
+      .sort((a, b) => a.distance - b.distance)
+
+    const needed = MIN_CONNECTIONS - node.connections.length
+    for (let k = 0; k < needed && k < distances.length; k++) {
+      node.connections.push(distances[k].index)
+    }
+  })
 }
+
+/** Максимальное количество отрезков (line segments) для BufferGeometry */
+const MAX_SEGMENTS = 400
 
 // Основная сцена нейросети
 const NeuralNetwork: React.FC<{
   theme?: 'dark' | 'light' | null
-}> = ({ theme }) => {
+  pointer: PointerState
+}> = ({ theme, pointer }) => {
   const groupRef = useRef<THREE.Group>(null)
+  const linesRef = useRef<THREE.LineSegments>(null)
+  // Целевые значения вращения для плавной интерполяции
+  const targetRotation = useRef({ x: 0, y: 0 })
+
+  // Предаллоцированная геометрия для связей (lineSegments: каждый сегмент = 2 вершины)
+  const linesGeometry = useMemo(() => {
+    const geom = new THREE.BufferGeometry()
+    const positions = new Float32Array(MAX_SEGMENTS * 2 * 3) // 2 вершины * 3 координаты на сегмент
+    geom.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+    return geom
+  }, [])
 
   // Генерируем узлы сети
   const nodes = useMemo(() => {
@@ -114,19 +137,8 @@ const NeuralNetwork: React.FC<{
       })
     }
 
-    // Создаем связи между ближайшими узлами
-    generatedNodes.forEach((node, i) => {
-      const distances = generatedNodes
-        .map((otherNode, j) => ({
-          index: j,
-          distance: node.basePosition.distanceTo(otherNode.basePosition),
-        }))
-        .filter((d) => d.index !== i)
-        .sort((a, b) => a.distance - b.distance)
-
-      const connectionCount = 3 + Math.floor(Math.random() * 3)
-      node.connections = distances.slice(0, connectionCount).map((d) => d.index)
-    })
+    // Создаем начальные связи между ближайшими узлами
+    rebuildConnections(generatedNodes)
 
     return generatedNodes
   }, [])
@@ -147,10 +159,26 @@ const NeuralNetwork: React.FC<{
   useFrame((state) => {
     const time = state.clock.getElapsedTime()
 
-    // Плавное вращение всей сцены
+    // Вращение сцены: комбинация автовращения и реакции на указатель
     if (groupRef.current) {
-      groupRef.current.rotation.y += 0.001
-      groupRef.current.rotation.x = Math.sin(time * 0.2) * 0.1
+      // Базовое автовращение
+      targetRotation.current.y += 0.001
+
+      if (pointer.active) {
+        // Указатель активен — добавляем смещение вращения на основе позиции мыши/тача
+        // pointer.x: -1 (лево) до 1 (право), pointer.y: -1 (верх) до 1 (низ)
+        const pointerInfluenceX = pointer.y * 0.3 // вертикальное движение → вращение по X
+        const pointerInfluenceY = pointer.x * 0.4 // горизонтальное движение → вращение по Y
+        targetRotation.current.x = pointerInfluenceX
+        targetRotation.current.y += pointerInfluenceY * 0.002
+      } else {
+        // Без указателя — плавная осцилляция
+        targetRotation.current.x = Math.sin(time * 0.2) * 0.1
+      }
+
+      // Плавная интерполяция к целевому вращению (lerp)
+      groupRef.current.rotation.x += (targetRotation.current.x - groupRef.current.rotation.x) * 0.05
+      groupRef.current.rotation.y += (targetRotation.current.y - groupRef.current.rotation.y) * 0.05
     }
 
     // Обновляем позиции узлов с волновым движением
@@ -166,52 +194,80 @@ const NeuralNetwork: React.FC<{
 
       // Обновляем позицию с учетом базовой позиции и волнового смещения
       node.position.copy(node.basePosition).add(waveOffset)
+
+      // Эффект притяжения/отталкивания узлов к указателю
+      if (pointer.active) {
+        // Проецируем позицию указателя в пространство сцены (приблизительно)
+        const pointerWorld = new THREE.Vector3(
+          pointer.x * 4, // масштабируем к размеру сцены
+          -pointer.y * 4,
+          0,
+        )
+
+        // Расстояние от узла до позиции указателя (в плоскости XY)
+        const nodeXY = new THREE.Vector2(node.position.x, node.position.y)
+        const pointerXY = new THREE.Vector2(pointerWorld.x, pointerWorld.y)
+        const dist = nodeXY.distanceTo(pointerXY)
+
+        // Узлы в радиусе 3 единиц притягиваются к указателю
+        if (dist < 3) {
+          const strength = (1 - dist / 3) * 0.15 // сила затухает с расстоянием
+          const direction = new THREE.Vector3(
+            pointerWorld.x - node.position.x,
+            pointerWorld.y - node.position.y,
+            0,
+          ).normalize()
+          node.position.add(direction.multiplyScalar(strength))
+        }
+      }
     })
 
-    // Динамическое обновление связей каждые 3 секунды
-    const connectionUpdateInterval = 3
-    const currentCycle = Math.floor(time / connectionUpdateInterval)
+    // Перестройка связей: при наведении — каждые 0.3с, без наведения — каждые 3с
+    const interval = pointer.active ? 0.3 : 3
+    const currentCycle = Math.floor(time / interval)
 
     if (
       groupRef.current &&
       groupRef.current.userData.lastConnectionUpdate !== currentCycle
     ) {
       groupRef.current.userData.lastConnectionUpdate = currentCycle
+      rebuildConnections(nodes)
+    }
 
-      // Обновляем 30% узлов
-      const nodesToUpdate = Math.floor(nodes.length * 0.3)
-      for (let i = 0; i < nodesToUpdate; i++) {
-        const randomIndex = Math.floor(Math.random() * nodes.length)
-        const node = nodes[randomIndex]
-
-        // Пересчитываем ближайших соседей
-        const distances = nodes
-          .map((otherNode, j) => ({
-            index: j,
-            distance: node.position.distanceTo(otherNode.position),
-          }))
-          .filter((d) => d.index !== randomIndex)
-          .sort((a, b) => a.distance - b.distance)
-
-        const connectionCount = 3 + Math.floor(Math.random() * 3)
-        node.connections = distances.slice(0, connectionCount).map((d) => d.index)
+    // Обновляем геометрию связей (lineSegments)
+    if (linesRef.current) {
+      const posArr = linesRef.current.geometry.attributes.position as THREE.BufferAttribute
+      let seg = 0
+      for (let i = 0; i < nodes.length && seg < MAX_SEGMENTS; i++) {
+        const node = nodes[i]
+        for (let c = 0; c < node.connections.length && seg < MAX_SEGMENTS; c++) {
+          const other = nodes[node.connections[c]]
+          posArr.setXYZ(seg * 2, node.position.x, node.position.y, node.position.z)
+          posArr.setXYZ(seg * 2 + 1, other.position.x, other.position.y, other.position.z)
+          seg++
+        }
       }
+      // Обнуляем неиспользованные сегменты
+      for (let i = seg; i < MAX_SEGMENTS; i++) {
+        posArr.setXYZ(i * 2, 0, 0, 0)
+        posArr.setXYZ(i * 2 + 1, 0, 0, 0)
+      }
+      posArr.needsUpdate = true
+
+      // Анимация прозрачности
+      const mat = linesRef.current.material as THREE.LineBasicMaterial
+      mat.opacity = 0.3 + Math.sin(time * 3) * 0.2
     }
   })
 
+  const lineColor = theme === 'dark' || !theme ? '#c0c0c0' : '#3a3a3a'
+
   return (
     <group ref={groupRef}>
-      {/* Рендерим все связи */}
-      {nodes.map((node, i) =>
-        node.connections.map((connIndex) => (
-          <Connection
-            key={`${i}-${connIndex}`}
-            start={node.position}
-            end={nodes[connIndex].position}
-            color={getNodeColor(i)}
-          />
-        ))
-      )}
+      {/* Все связи — единый lineSegments с императивным обновлением */}
+      <lineSegments ref={linesRef} geometry={linesGeometry}>
+        <lineBasicMaterial color={lineColor} transparent opacity={0.4} />
+      </lineSegments>
 
       {/* Рендерим все узлы */}
       {nodes.map((node, i) => (
@@ -234,18 +290,70 @@ const NeuralNetwork: React.FC<{
 // Главный экспортируемый компонент
 export const NeuralNetworkScene: React.FC = () => {
   const { theme } = useTheme()
+  const containerRef = useRef<HTMLDivElement>(null)
+  const pointerRef = useRef<PointerState>({ x: 0, y: 0, active: false })
+
+  // Вычисляем нормализованные координаты указателя (-1 до 1) относительно контейнера
+  const updatePointer = useCallback((clientX: number, clientY: number) => {
+    if (!containerRef.current) return
+    const rect = containerRef.current.getBoundingClientRect()
+    pointerRef.current.x = ((clientX - rect.left) / rect.width) * 2 - 1
+    pointerRef.current.y = ((clientY - rect.top) / rect.height) * 2 - 1
+    pointerRef.current.active = true
+  }, [])
+
+  const handlePointerMove = useCallback(
+    (e: React.PointerEvent) => {
+      updatePointer(e.clientX, e.clientY)
+    },
+    [updatePointer],
+  )
+
+  const handlePointerLeave = useCallback(() => {
+    pointerRef.current.active = false
+  }, [])
+
+  const handleTouchMove = useCallback(
+    (e: React.TouchEvent) => {
+      if (e.touches.length > 0) {
+        const touch = e.touches[0]
+        updatePointer(touch.clientX, touch.clientY)
+      }
+    },
+    [updatePointer],
+  )
+
+  const handleTouchStart = useCallback(
+    (e: React.TouchEvent) => {
+      if (e.touches.length > 0) {
+        const touch = e.touches[0]
+        updatePointer(touch.clientX, touch.clientY)
+      }
+    },
+    [updatePointer],
+  )
+
+  const handleTouchEnd = useCallback(() => {
+    pointerRef.current.active = false
+  }, [])
 
   return (
     <div
+      ref={containerRef}
       className="h-full w-full flex items-center justify-center overflow-hidden"
       style={{ minHeight: '384px', maxWidth: '100%' }}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
+      onTouchMove={handleTouchMove}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       <Canvas
         camera={{ position: [0, 0, 11], fov: 45 }}
         style={{ background: 'transparent', width: '100%', height: '100%', maxWidth: '100%' }}
         gl={{ alpha: true, antialias: true }}
       >
-        <NeuralNetwork theme={theme} />
+        <NeuralNetwork theme={theme} pointer={pointerRef.current} />
       </Canvas>
     </div>
   )

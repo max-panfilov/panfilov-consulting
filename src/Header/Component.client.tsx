@@ -47,7 +47,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = () => {
             
             {/* Telegram и Email ссылки */}
             <Link
-              href="http://t.me/mpanfilov"
+              href="https://t.me/mpanfilov"
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-1"

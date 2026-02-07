@@ -2,9 +2,10 @@ import type { Metadata } from 'next'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import React from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowRight } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { getIndustryLabel } from '@/utilities/getIndustryLabel'
 
@@ -16,7 +17,6 @@ export const metadata: Metadata = {
 export default async function CasesPage() {
   const payload = await getPayload({ config: configPromise })
 
-  // Получаем опубликованные кейсы
   const casesResult = await payload.find({
     collection: 'cases',
     where: {
@@ -25,7 +25,6 @@ export default async function CasesPage() {
       },
     },
     limit: 100,
-    // Общий порядок: по sortOrder, затем по дате публикации
     sort: ['sortOrder', '-publishedAt'],
   })
 
@@ -34,7 +33,6 @@ export default async function CasesPage() {
   return (
     <section className="py-12 md:py-16">
       <div className="container mx-auto flex flex-col items-center gap-16 lg:px-16">
-        {/* Заголовок секции */}
         <div className="text-center">
           <Badge variant="secondary" className="mb-6">
             Наши проекты
@@ -48,43 +46,39 @@ export default async function CasesPage() {
           </p>
         </div>
 
-        {/* Сетка с кейсами */}
         {cases.length > 0 ? (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
             {cases.map((caseItem) => {
-              // Извлекаем изображение обложки (используем сжатую версию)
               const coverImage =
                 typeof caseItem.coverImage === 'object' ? caseItem.coverImage : null
-              
-              // Используем medium размер (900px) для карточек, fallback на оригинал
               const coverImageUrl = coverImage?.sizes?.medium?.url || coverImage?.url || null
-
-              // Получаем метку индустрии
               const industryLabel = getIndustryLabel(caseItem.industry || '')
 
               return (
                 <Card key={caseItem.id} className="grid grid-rows-[auto_auto_1fr_auto] pt-0">
-                  {/* Изображение */}
                   <div className="aspect-16/9 w-full">
-                    <a
+                    <Link
                       href={`/cases/${caseItem.slug}`}
                       className="fade-in transition-opacity duration-200 hover:opacity-70"
                     >
                       {coverImageUrl ? (
-                        <img
-                          src={coverImageUrl}
-                          alt={caseItem.title}
-                          className="h-full w-full object-cover object-center"
-                        />
+                        <div className="relative h-full w-full">
+                          <Image
+                            src={coverImageUrl}
+                            alt={caseItem.title}
+                            fill
+                            className="object-cover object-center"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          />
+                        </div>
                       ) : (
                         <div className="h-full w-full bg-muted flex items-center justify-center">
                           <span className="text-muted-foreground">Нет изображения</span>
                         </div>
                       )}
-                    </a>
+                    </Link>
                   </div>
 
-                  {/* Заголовок */}
                   <CardHeader>
                     {industryLabel && (
                       <Badge variant="outline" className="mb-2 w-fit">
@@ -92,11 +86,10 @@ export default async function CasesPage() {
                       </Badge>
                     )}
                     <h3 className="text-lg font-semibold hover:underline md:text-xl">
-                      <a href={`/cases/${caseItem.slug}`}>{caseItem.title}</a>
+                      <Link href={`/cases/${caseItem.slug}`}>{caseItem.title}</Link>
                     </h3>
                   </CardHeader>
 
-                  {/* Описание */}
                   <CardContent>
                     {caseItem.shortDescription && (
                       <p className="text-muted-foreground">
@@ -105,15 +98,14 @@ export default async function CasesPage() {
                     )}
                   </CardContent>
 
-                  {/* Футер */}
                   <CardFooter>
-                    <a
+                    <Link
                       href={`/cases/${caseItem.slug}`}
                       className="text-foreground flex items-center hover:underline"
                     >
                       Читать кейс
                       <ArrowRight className="ml-2 size-4" />
-                    </a>
+                    </Link>
                   </CardFooter>
                 </Card>
               )
@@ -128,4 +120,3 @@ export default async function CasesPage() {
     </section>
   )
 }
-

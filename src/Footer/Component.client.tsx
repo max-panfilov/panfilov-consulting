@@ -8,14 +8,6 @@ import { motion } from 'framer-motion'
 import type { Form } from '@/payload-types'
 import { Send, Mail } from 'lucide-react'
 
-interface MenuItem {
-  title: string
-  links: {
-    text: string
-    url: string
-  }[]
-}
-
 type FooterClientProps = {
   logo: {
     src: string
@@ -52,11 +44,11 @@ export const FooterClient: React.FC<FooterClientProps> = ({
               {/* Заголовок и описание */}
               <div className="mb-8 text-center">
                 {contactFormHeading && (
-                  <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                  <h2 className="text-3xl md:text-4xl font-semibold tracking-tight mb-4">
                     {contactFormHeading}
                   </h2>
                 )}
-                
+
                 {contactFormDescription && (
                   <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
                     {contactFormDescription}
@@ -65,7 +57,7 @@ export const FooterClient: React.FC<FooterClientProps> = ({
               </div>
 
               {/* Карточка с формой */}
-              <div className="bg-card rounded-lg shadow-md p-6 md:p-8">
+              <div className="bg-card border border-border rounded-lg p-6 md:p-8">
                 <FormBlock form={contactForm as any} enableIntro={false} />
               </div>
             </motion.div>
@@ -86,32 +78,32 @@ export const FooterClient: React.FC<FooterClientProps> = ({
 
           {/* Навигационные ссылки по центру */}
           <div className="flex justify-center mb-6">
-            <ul className="flex flex-wrap justify-center gap-6 md:gap-8 text-sm font-medium">
-              <li className="hover:text-primary">
-                <Link href="/">Главная</Link>
+            <ul className="flex flex-wrap justify-center gap-6 md:gap-8 text-sm text-muted-foreground">
+              <li>
+                <Link href="/" className="transition-colors hover:text-foreground">Главная</Link>
               </li>
-              <li className="hover:text-primary">
-                <Link href="/cases">Кейсы</Link>
+              <li>
+                <Link href="/cases" className="transition-colors hover:text-foreground">Кейсы</Link>
               </li>
-              <li className="hover:text-primary">
-                <Link href="/posts">Блог</Link>
+              <li>
+                <Link href="/posts" className="transition-colors hover:text-foreground">Блог</Link>
               </li>
-              <li className="hover:text-primary">
-                <Link 
-                  href="http://t.me/mpanfilov"
+              <li>
+                <Link
+                  href="https://t.me/mpanfilov"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1"
+                  className="flex items-center gap-1 transition-colors hover:text-foreground"
                   aria-label="Telegram"
                 >
                   <Send className="w-4 h-4" />
                   <span className="hidden md:inline">Telegram</span>
                 </Link>
               </li>
-              <li className="hover:text-primary">
-                <Link 
+              <li>
+                <Link
                   href="mailto:contact@panfilov.consulting"
-                  className="flex items-center gap-1"
+                  className="flex items-center gap-1 transition-colors hover:text-foreground"
                   aria-label="Email"
                 >
                   <Mail className="w-4 h-4" />
@@ -121,8 +113,8 @@ export const FooterClient: React.FC<FooterClientProps> = ({
             </ul>
           </div>
 
-          {/* Копирайт по центру */}
-          <div className="text-muted-foreground flex flex-col items-center gap-3 border-t pt-6 text-sm font-medium">
+          {/* Копирайт */}
+          <div className="text-muted-foreground flex flex-col items-center gap-3 border-t pt-6 text-sm">
             <p className="text-center">{copyright}</p>
           </div>
         </footer>

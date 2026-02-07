@@ -1,35 +1,12 @@
 import type { CollectionConfig } from 'payload'
 
-import { 
-  lexicalEditor,
-  HeadingFeature,
-  OrderedListFeature,
-  UnorderedListFeature,
-  BlockquoteFeature,
-  BoldFeature,
-  ItalicFeature,
-  UnderlineFeature,
-  StrikethroughFeature,
-  LinkFeature,
-  ChecklistFeature,
-  HorizontalRuleFeature,
-  InlineCodeFeature,
-  BlocksFeature,
-  FixedToolbarFeature,
-  InlineToolbarFeature,
-} from '@payloadcms/richtext-lexical'
 import { authenticated } from '../access/authenticated'
 import { authenticatedOrPublished } from '../access/authenticatedOrPublished'
 import { generatePreviewPath } from '../utilities/generatePreviewPath'
 import { revalidateCase, revalidateDelete } from './Cases/hooks/revalidateCase'
-
-import {
-  MetaDescriptionField,
-  MetaImageField,
-  MetaTitleField,
-  OverviewField,
-  PreviewField,
-} from '@payloadcms/plugin-seo/fields'
+import { INDUSTRY_OPTIONS } from '../utilities/getIndustryLabel'
+import { caseRichTextEditor } from '../fields/richTextEditor'
+import { seoTab } from '../fields/seoTab'
 import { slugField } from 'payload'
 
 export const Cases: CollectionConfig<'cases'> = {
@@ -44,7 +21,6 @@ export const Cases: CollectionConfig<'cases'> = {
     afterChange: [revalidateCase],
     afterDelete: [revalidateDelete],
   },
-  // Определяем что будет подтягиваться при связях с Cases
   defaultPopulate: {
     title: true,
     slug: true,
@@ -54,7 +30,6 @@ export const Cases: CollectionConfig<'cases'> = {
     featured: true,
   },
   admin: {
-    // Добавляем колонку sortOrder для удобного редактирования порядка в админке
     defaultColumns: ['sortOrder', 'title', 'industry', 'featured', 'updatedAt'],
     livePreview: {
       url: ({ data, req }) =>
@@ -90,40 +65,7 @@ export const Cases: CollectionConfig<'cases'> = {
               type: 'select',
               required: true,
               label: 'Отрасль',
-              options: [
-                {
-                  label: 'Электротехника',
-                  value: 'electronics',
-                },
-                {
-                  label: 'Юридические услуги',
-                  value: 'legal',
-                },
-                {
-                  label: 'Финансы',
-                  value: 'finance',
-                },
-                {
-                  label: 'Ритейл',
-                  value: 'retail',
-                },
-                {
-                  label: 'Логистика',
-                  value: 'logistics',
-                },
-                {
-                  label: 'Промышленность',
-                  value: 'industry',
-                },
-                {
-                  label: 'Медицина',
-                  value: 'healthcare',
-                },
-                {
-                  label: 'Другое',
-                  value: 'other',
-                },
-              ],
+              options: INDUSTRY_OPTIONS,
             },
             {
               name: 'coverImage',
@@ -150,49 +92,7 @@ export const Cases: CollectionConfig<'cases'> = {
               admin: {
                 description: 'Описание проблемы или задачи, которую нужно было решить',
               },
-              editor: lexicalEditor({
-                features: () => [
-                  HeadingFeature({ enabledHeadingSizes: ['h2', 'h3', 'h4'] }),
-                  BoldFeature(),
-                  ItalicFeature(),
-                  UnderlineFeature(),
-                  StrikethroughFeature(),
-                  InlineCodeFeature(),
-                  OrderedListFeature(),
-                  UnorderedListFeature(),
-                  ChecklistFeature(),
-                  LinkFeature({
-                    enabledCollections: ['pages', 'posts'],
-                  }),
-                  BlockquoteFeature(),
-                  HorizontalRuleFeature(),
-                  BlocksFeature({
-                    blocks: [
-                      {
-                        slug: 'mediaBlock',
-                        interfaceName: 'MediaBlock',
-                        fields: [
-                          {
-                            name: 'media',
-                            type: 'upload',
-                            relationTo: 'media',
-                            required: true,
-                            label: 'Изображение',
-                          },
-                          {
-                            name: 'caption',
-                            type: 'text',
-                            label: 'Подпись',
-                          },
-                        ],
-                      },
-                    ],
-                  }),
-                  // Панели форматирования
-                  FixedToolbarFeature(),
-                  InlineToolbarFeature(),
-                ],
-              }),
+              editor: caseRichTextEditor,
             },
             {
               name: 'solution',
@@ -202,49 +102,7 @@ export const Cases: CollectionConfig<'cases'> = {
                 description: 'Подробное описание предложенного решения',
               },
               required: true,
-              editor: lexicalEditor({
-                features: () => [
-                  HeadingFeature({ enabledHeadingSizes: ['h2', 'h3', 'h4'] }),
-                  BoldFeature(),
-                  ItalicFeature(),
-                  UnderlineFeature(),
-                  StrikethroughFeature(),
-                  InlineCodeFeature(),
-                  OrderedListFeature(),
-                  UnorderedListFeature(),
-                  ChecklistFeature(),
-                  LinkFeature({
-                    enabledCollections: ['pages', 'posts'],
-                  }),
-                  BlockquoteFeature(),
-                  HorizontalRuleFeature(),
-                  BlocksFeature({
-                    blocks: [
-                      {
-                        slug: 'mediaBlock',
-                        interfaceName: 'MediaBlock',
-                        fields: [
-                          {
-                            name: 'media',
-                            type: 'upload',
-                            relationTo: 'media',
-                            required: true,
-                            label: 'Изображение',
-                          },
-                          {
-                            name: 'caption',
-                            type: 'text',
-                            label: 'Подпись',
-                          },
-                        ],
-                      },
-                    ],
-                  }),
-                  // Панели форматирования
-                  FixedToolbarFeature(),
-                  InlineToolbarFeature(),
-                ],
-              }),
+              editor: caseRichTextEditor,
             },
             {
               name: 'results',
@@ -254,49 +112,7 @@ export const Cases: CollectionConfig<'cases'> = {
                 description: 'Достигнутые результаты с конкретными метриками',
               },
               required: true,
-              editor: lexicalEditor({
-                features: () => [
-                  HeadingFeature({ enabledHeadingSizes: ['h2', 'h3', 'h4'] }),
-                  BoldFeature(),
-                  ItalicFeature(),
-                  UnderlineFeature(),
-                  StrikethroughFeature(),
-                  InlineCodeFeature(),
-                  OrderedListFeature(),
-                  UnorderedListFeature(),
-                  ChecklistFeature(),
-                  LinkFeature({
-                    enabledCollections: ['pages', 'posts'],
-                  }),
-                  BlockquoteFeature(),
-                  HorizontalRuleFeature(),
-                  BlocksFeature({
-                    blocks: [
-                      {
-                        slug: 'mediaBlock',
-                        interfaceName: 'MediaBlock',
-                        fields: [
-                          {
-                            name: 'media',
-                            type: 'upload',
-                            relationTo: 'media',
-                            required: true,
-                            label: 'Изображение',
-                          },
-                          {
-                            name: 'caption',
-                            type: 'text',
-                            label: 'Подпись',
-                          },
-                        ],
-                      },
-                    ],
-                  }),
-                  // Панели форматирования
-                  FixedToolbarFeature(),
-                  InlineToolbarFeature(),
-                ],
-              }),
+              editor: caseRichTextEditor,
             },
             {
               name: 'technologies',
@@ -329,7 +145,6 @@ export const Cases: CollectionConfig<'cases'> = {
               },
             },
             {
-              // Поле порядка сортировки: меньшее число — выше в списках (главная и /cases)
               name: 'sortOrder',
               type: 'number',
               label: 'Порядок отображения',
@@ -353,7 +168,6 @@ export const Cases: CollectionConfig<'cases'> = {
               hooks: {
                 beforeChange: [
                   ({ siblingData, value }) => {
-                    // Автоматически устанавливаем дату при первой публикации
                     if (siblingData._status === 'published' && !value) {
                       return new Date()
                     }
@@ -364,29 +178,7 @@ export const Cases: CollectionConfig<'cases'> = {
             },
           ],
         },
-        {
-          name: 'meta',
-          label: 'SEO',
-          fields: [
-            OverviewField({
-              titlePath: 'meta.title',
-              descriptionPath: 'meta.description',
-              imagePath: 'meta.image',
-            }),
-            MetaTitleField({
-              hasGenerateFn: true,
-            }),
-            MetaImageField({
-              relationTo: 'media',
-            }),
-            MetaDescriptionField({}),
-            PreviewField({
-              hasGenerateFn: true,
-              titlePath: 'meta.title',
-              descriptionPath: 'meta.description',
-            }),
-          ],
-        },
+        seoTab,
       ],
     },
     slugField(),
@@ -394,7 +186,7 @@ export const Cases: CollectionConfig<'cases'> = {
   versions: {
     drafts: {
       autosave: {
-        interval: 100, // Оптимальный интервал для live preview
+        interval: 100,
       },
       schedulePublish: true,
     },

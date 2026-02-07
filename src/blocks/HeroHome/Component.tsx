@@ -2,13 +2,17 @@
 
 import React from 'react'
 import type { HeroHomeBlock as HeroHomeBlockType } from '@/payload-types'
-import { ArrowRight, ArrowUpRight } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
+import dynamic from 'next/dynamic'
+import Image from 'next/image'
+import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { NeuralNetworkScene } from '@/components/NeuralNetworkScene'
+
+const NeuralNetworkScene = dynamic(
+  () => import('@/components/NeuralNetworkScene').then((mod) => mod.NeuralNetworkScene),
+  { ssr: false, loading: () => <div className="h-full w-full animate-pulse bg-muted rounded-md" /> },
+)
 
 export const HeroHomeBlock: React.FC<HeroHomeBlockType> = ({
-  badge,
   heading,
   subheading,
   primaryCTA,
@@ -16,7 +20,6 @@ export const HeroHomeBlock: React.FC<HeroHomeBlockType> = ({
   mediaType,
   backgroundImage,
   backgroundVideo,
-  backgroundOverlay,
 }) => {
   // Функция для плавной прокрутки к элементу
   const scrollToElement = (e: React.MouseEvent<HTMLAnchorElement>, href?: string | null) => {
@@ -36,10 +39,9 @@ export const HeroHomeBlock: React.FC<HeroHomeBlockType> = ({
     }
   }
 
-  // Функция для определения типа медиа объекта
-  const getMediaUrl = (media: any): string | null => {
+  const getMediaUrl = (media: HeroHomeBlockType['backgroundImage']): string | null => {
     if (!media) return null
-    if (typeof media === 'string') return media
+    if (typeof media === 'number' || typeof media === 'string') return null
     return media.url || null
   }
 
@@ -47,25 +49,25 @@ export const HeroHomeBlock: React.FC<HeroHomeBlockType> = ({
   const bgVideoUrl = getMediaUrl(backgroundVideo)
 
   return (
-    <section className="pt-0 pb-16 md:pb-32 -mt-12 md:-mt-8">
+    <section className="pt-0 pb-16 md:pb-24 -mt-12 md:-mt-8">
       <div className="container">
-        <div className="grid items-center gap-8 lg:grid-cols-2">
+        <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
           <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
             {/* Заголовок */}
-            <h1 className="my-6 text-pretty text-4xl font-bold lg:text-6xl">
+            <h1 className="my-6 text-pretty text-4xl font-semibold tracking-tight lg:text-5xl xl:text-6xl">
               {heading}
             </h1>
 
             {/* Подзаголовок */}
-            <p className="text-muted-foreground mb-8 max-w-xl lg:text-xl">
+            <p className="text-muted-foreground mb-8 max-w-xl lg:text-lg">
               {subheading}
             </p>
 
             {/* Кнопки CTA */}
-            <div className="flex w-full flex-col justify-center gap-2 sm:flex-row lg:justify-start">
+            <div className="flex w-full flex-col justify-center gap-3 sm:flex-row lg:justify-start">
               {primaryCTA?.text && primaryCTA?.link && (
-                <Button asChild className="w-full sm:w-auto">
-                  <a 
+                <Button asChild size="lg" className="w-full sm:w-auto">
+                  <a
                     href={primaryCTA.link}
                     onClick={(e) => scrollToElement(e, primaryCTA.link)}
                   >
@@ -74,8 +76,8 @@ export const HeroHomeBlock: React.FC<HeroHomeBlockType> = ({
                 </Button>
               )}
               {secondaryCTA?.text && secondaryCTA?.link && (
-                <Button asChild variant="outline" className="w-full sm:w-auto">
-                  <a 
+                <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
+                  <a
                     href={secondaryCTA.link}
                     onClick={(e) => scrollToElement(e, secondaryCTA.link)}
                   >
@@ -99,11 +101,16 @@ export const HeroHomeBlock: React.FC<HeroHomeBlockType> = ({
               <source src={bgVideoUrl} type="video/mp4" />
             </video>
           ) : bgImageUrl ? (
-            <img
-              src={bgImageUrl}
-              alt={heading || 'Hero image'}
-              className="max-h-96 w-full rounded-md object-cover"
-            />
+            <div className="relative max-h-96 w-full aspect-video">
+              <Image
+                src={bgImageUrl}
+                alt={heading || 'Hero image'}
+                fill
+                className="rounded-md object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                priority
+              />
+            </div>
           ) : (
             // 3D анимация нейронной сети вместо placeholder изображения
             <div className="relative h-96 w-full rounded-md overflow-hidden">

@@ -2,6 +2,7 @@
 
 import React from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -28,17 +29,17 @@ export const FeaturedCasesClient: React.FC<FeaturedCasesClientProps> = ({
   cases,
 }) => {
   return (
-    <section className="py-16 md:py-32" id="cases">
+    <section className="py-16 md:py-24" id="cases">
       <div className="container">
-        {/* Заголовок секции по центру */}
+        {/* Заголовок секции */}
         {heading && (
-          <div className="mx-auto mb-16 max-w-3xl text-center">
-            <Badge variant="outline" className="mb-4">
+          <div className="mb-10 md:mb-14 max-w-2xl">
+            <Badge variant="outline" className="mb-3">
               Кейсы
             </Badge>
-            <h2 className="text-pretty text-3xl font-semibold md:text-4xl lg:text-5xl">{heading}</h2>
+            <h2 className="text-pretty text-3xl font-semibold tracking-tight md:text-4xl">{heading}</h2>
             {subheading && (
-              <p className="text-muted-foreground mt-4 text-lg">{subheading}</p>
+              <p className="text-muted-foreground mt-3 text-lg">{subheading}</p>
             )}
           </div>
         )}
@@ -48,40 +49,41 @@ export const FeaturedCasesClient: React.FC<FeaturedCasesClientProps> = ({
           {cases.map((caseItem) => {
             const url = `/cases/${caseItem.slug}`
             return (
-              <div
+              <Link
                 key={caseItem.id}
-                className="border-border flex flex-col overflow-clip rounded-xl border"
+                href={url}
+                className="group flex flex-col overflow-clip rounded-lg border border-border transition-colors hover:bg-card"
               >
                 {/* Изображение */}
-                <Link href={url}>
-                  <img
+                <div className="relative block aspect-16/9 w-full overflow-hidden">
+                  <Image
                     src={
                       caseItem.coverImage ||
                       'https://deifkwefumgah.cloudfront.net/shadcnblocks/block/placeholder-1.svg'
                     }
                     alt={caseItem.title || 'Case image'}
-                    className="aspect-16/9 h-full w-full object-cover object-center transition-opacity hover:opacity-80"
+                    fill
+                    className="object-cover object-center transition-transform duration-300 group-hover:scale-[1.02]"
+                    sizes="(max-width: 768px) 100vw, 50vw"
                   />
-                </Link>
+                </div>
                 {/* Контент карточки */}
-                <div className="px-6 py-8 md:px-8 md:py-10 lg:px-10 lg:py-12">
-                  <h3 className="mb-3 text-lg font-semibold md:mb-4 md:text-2xl lg:mb-6">
-                    <Link href={url} className="hover:text-primary transition-colors">
-                      {caseItem.title}
-                    </Link>
+                <div className="px-6 py-6 md:px-8 md:py-8">
+                  <h3 className="mb-2 text-lg font-semibold md:text-xl">
+                    {caseItem.title}
                   </h3>
-                  <p className="text-muted-foreground lg:text-lg">
+                  <p className="text-muted-foreground text-sm leading-relaxed md:text-base">
                     {caseItem.shortDescription || 'Описание кейса'}
                   </p>
                 </div>
-              </div>
+              </Link>
             )
           })}
         </div>
 
-        {/* Кнопка "Все кейсы" после списка кейсов */}
-        <div className="mt-14 flex justify-center">
-          <Button asChild>
+        {/* Кнопка */}
+        <div className="mt-10 md:mt-14">
+          <Button asChild variant="outline">
             <Link href="/cases">
               Все кейсы
               <ArrowRight className="ml-2 size-4" />
