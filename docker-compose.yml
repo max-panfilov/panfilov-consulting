@@ -1,31 +1,25 @@
-version: '3'
+version: "3.9"
 
 services:
-  payload:
-    image: node:18-alpine
-    ports:
-      - '3000:3000'
-    volumes:
-      - .:/home/node/app
-      - node_modules:/home/node/app/node_modules
-    working_dir: /home/node/app/
-    command: sh -c "yarn install && yarn dev"
-    depends_on:
-      - mongo
-    env_file:
-      - .env
+  # Next.js сайт (panfilov.consulting)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=production
+      - PORT=3002
+      - HOSTNAME=0.0.0.0
+    networks:
+      - traefik
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.panfilov-consulting.rule=Host(`panfilov.consulting`)
+      - traefik.http.routers.panfilov-consulting.entrypoints=websecure
+      - traefik.http.routers.panfilov-consulting.tls.certresolver=le
+      - traefik.http.services.panfilov-consulting.loadbalancer.server.port=3002
 
-  mongo:
-    image: mongo:latest
-    ports:
-      - '27017:27017'
-    command:
-      - --storageEngine=wiredTiger
-    volumes:
-      - data:/data/db
-    logging:
-      driver: none
-
-volumes:
-  data:
-  node_modules:
+networks:
+  # Общая сеть Traefik (создаётся в /opt/docker)
+  traefik:
+    external: true

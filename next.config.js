@@ -36,6 +36,8 @@ const nextConfig = {
     return webpackConfig
   },
   reactStrictMode: true,
+  // Включаем standalone-вывод, чтобы Dockerfile мог копировать .next/standalone
+  output: 'standalone',
   redirects,
 }
 

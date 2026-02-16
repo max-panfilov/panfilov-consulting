@@ -29,3 +29,16 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+.env.*
+dist/
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+# Directus/DB data
+*.db
+backend/data.db
+backend/uploads/
+# Build artifacts
+.next/
