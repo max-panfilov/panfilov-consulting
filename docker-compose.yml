@@ -3,6 +3,8 @@ version: "3.9"
 services:
   # Next.js сайт (panfilov.consulting)
   app:
+    container_name: panfilov-consulting
+    restart: unless-stopped
     build:
       context: .
       dockerfile: Dockerfile
@@ -11,7 +13,7 @@ services:
       - PORT=3002
       - HOSTNAME=0.0.0.0
     networks:
-      - traefik
+      - panfilov
     labels:
       - traefik.enable=true
       - traefik.http.routers.panfilov-consulting.rule=Host(`panfilov.consulting`)
@@ -20,6 +22,6 @@ services:
       - traefik.http.services.panfilov-consulting.loadbalancer.server.port=3002
 
 networks:
-  # Общая сеть Traefik (создаётся в /opt/docker)
-  traefik:
+  # Per-app network; Traefik (file provider) joins it to route panfilov.consulting.
+  panfilov:
     external: true
